@@ -1,0 +1,15 @@
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\bin\Debug\net6.0\Repository.deps.json
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\bin\Debug\net6.0\Repository.runtimeconfig.json
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\bin\Debug\net6.0\Repository.dll
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\bin\Debug\net6.0\Repository.pdb
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\Repository.csproj.AssemblyReference.cache
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\Repository.GeneratedMSBuildEditorConfig.editorconfig
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\Repository.AssemblyInfoInputs.cache
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\Repository.AssemblyInfo.cs
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\Repository.csproj.CoreCompileInputs.cache
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\Repository.sourcelink.json
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\Repository.dll
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\refint\Repository.dll
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\Repository.pdb
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\Repository.genruntimeconfig.cache
+D:\student-management-system\student-management-system-backend\StudentManagementSystem\Repository\obj\Debug\net6.0\ref\Repository.dll
