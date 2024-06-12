@@ -19,6 +19,10 @@ namespace Repository
 
         public virtual DbSet<Subject> Subjects { get; set; }
 
+        public virtual DbSet<Attendance> Attendance { get; set; }
+
+        public virtual DbSet<Grades> Grades { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
