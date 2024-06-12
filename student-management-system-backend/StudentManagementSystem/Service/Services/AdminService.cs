@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class AdminService: IAdminService
+    public class AdminService : IAdminService
     {
         private readonly IAdminRepository _adminRepository;
         private readonly IPasswordEncryption _passwordEncryption;
@@ -26,13 +26,14 @@ namespace Service.Services
             _context = context;
         }
 
+        #region teacher register
         public async Task<ResponseDTO> teacherRegister(TeacherRegisterDTO teacherRegisterDTO)
         {
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-              
+
                 // Check if the email already exists
                 if (await _adminRepository.IsEmailExist(teacherRegisterDTO.Email))
                 {
@@ -96,7 +97,7 @@ namespace Service.Services
                 {
                     UserId = userDetail.UserId,
                     Qualification = teacherRegisterDTO.Qualification,
-                    ClassId = (Classes)teacherRegisterDTO.Class,
+                    ClassId = teacherRegisterDTO.Class,
                     SubjectId = teacherRegisterDTO.Subject,
                     CreatedOn = DateTime.Now,
                     ModifiedOn = DateTime.Now,
@@ -128,7 +129,7 @@ namespace Service.Services
 
 
         }
-
+        #endregion  
         private bool IsValidEmail(string email)
         {
             try
@@ -141,5 +142,112 @@ namespace Service.Services
                 return false;
             }
         }
+
+        #region studenr register
+        public async Task<ResponseDTO> studentRegister(StudentRegisterDTO studentRegisterDTO)
+        {
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+
+                // Check if the email already exists
+                if (await _adminRepository.IsEmailExist(studentRegisterDTO.Email))
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 400,
+                        Message = "Email already registered."
+                    };
+                }
+
+                // Validate the email format
+                if (!IsValidEmail(studentRegisterDTO.Email))
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 400,
+                        Message = "Invalid email format."
+                    };
+                }
+
+                // Validate the date of enrollment
+                if (studentRegisterDTO.DateOfEnrollment <= studentRegisterDTO.DateOfBirth)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 400,
+                        Message = "Date of enrollment must be after the date of birth."
+                    };
+                }
+
+                if(await _adminRepository.IsRollNumberIsExist(studentRegisterDTO.RollNumber))
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 400,
+                        Message = "RollNumber is already register with student"
+                    };
+                }
+
+
+                var password = $"{studentRegisterDTO.Name}@{studentRegisterDTO.DateOfBirth.Year}";
+                var hashedPassword = _passwordEncryption.HashPassword(password);
+
+                var user = new Users
+                {
+                    Name = studentRegisterDTO.Name,
+                    Email = studentRegisterDTO.Email,
+                    Role = Roles.Student,
+                    Password = hashedPassword,
+                    DateOfBirth = studentRegisterDTO.DateOfBirth,
+                    DateOfEnrollment = studentRegisterDTO.DateOfEnrollment,
+                    IsActive = true,
+                    IsPasswordReset = false,
+                };
+
+                await _adminRepository.AddUserAsync(user);
+
+                var userDetail = await _adminRepository.GetUsersAsync(studentRegisterDTO.Email);
+
+                var student = new Students
+                {
+                    UserId = userDetail.UserId,
+                    ClassId = studentRegisterDTO.Class,
+                    RollNumber = studentRegisterDTO.RollNumber,
+                    CreatedOn = DateTime.Now,
+                    ModifiedOn = DateTime.Now,
+                    CreatedBy = userDetail.UserId, // here admin or teacher id who is created (get with token)
+                    ModifiedBy = userDetail.UserId  // here admin or teacher id who is modified (get with token)
+                };
+
+                await _adminRepository. AddStudentAsync(student);
+
+                await transaction.CommitAsync();
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Student is register"
+                };
+
+            }
+            catch (Exception ex)
+            {
+
+                await transaction.RollbackAsync();
+
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+
+
+        }
+        #endregion
+
+
     }
 }

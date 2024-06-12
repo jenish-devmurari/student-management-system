@@ -10,5 +10,6 @@ namespace Service.Interfaces
     public interface IAdminService
     {
         public  Task<ResponseDTO> teacherRegister(TeacherRegisterDTO teacherRegisterDTO);
+        public Task<ResponseDTO> studentRegister(StudentRegisterDTO studentRegisterDTO);
     }
 }

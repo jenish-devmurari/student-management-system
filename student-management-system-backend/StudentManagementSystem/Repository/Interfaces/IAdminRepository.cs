@@ -13,8 +13,12 @@ namespace Repository.Interfaces
         Task<bool> IsEmailExist(string email);
         Task AddUserAsync(Users user);
         Task AddTeacherAsync(Teachers teachers);
+
+        Task AddStudentAsync(Students student);
         Task<bool> IsTeacherExistInClass(Classes classId, int teacherId);
         Task<Users> GetUsersAsync(string email);
+
+        Task<bool> IsRollNumberIsExist(int number);
 
     }
 }

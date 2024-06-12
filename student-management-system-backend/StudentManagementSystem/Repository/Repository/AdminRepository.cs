@@ -31,6 +31,12 @@ namespace Repository.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddStudentAsync(Students student)
+        {
+            await _context.Students.AddAsync(student);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Users> GetUsersAsync(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
@@ -42,9 +48,14 @@ namespace Repository.Repository
             return await _context.Users.AnyAsync(u => u.Email == email);
         }
 
-        public async Task<bool> IsTeacherExistInClass(Classes classId,int subject)
+        public async Task<bool> IsTeacherExistInClass(Classes classId, int subject)
         {
             return await _context.Teachers.AnyAsync(t => t.ClassId == classId && t.SubjectId == subject);
+        }
+
+        public async Task<bool> IsRollNumberIsExist(int number)
+        {
+            return await _context.Students.AnyAsync(s => s.RollNumber == number);
         }
 
 

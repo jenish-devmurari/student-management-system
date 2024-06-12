@@ -5,41 +5,16 @@ using Service.Interfaces;
 
 namespace StudentManagementSystem.Controllers
 {
-
-    public class AdminController : BaseController
+   
+    public class TeacherController : BaseController
     {
-        #region DI
         private readonly IAdminService _adminService;
-
-        public AdminController(IAdminService adminService)
-        {
-            _adminService = adminService;
+        private readonly ITeacherService _teacherService;
+        public TeacherController(IAdminService adminService, ITeacherService teacherService) 
+        { 
+          _adminService = adminService;
+          _teacherService = _teacherService;
         }
-        #endregion
-
-
-        #region Register Teacher
-        [HttpPost("RegisterTeacher")]
-        public async Task<IActionResult> teacherRegister([FromBody] TeacherRegisterDTO teacherRegisterDTO)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var response = await _adminService.teacherRegister(teacherRegisterDTO);
-
-            if (response.Status == 200)
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return BadRequest(response);
-            }
-        }
-        #endregion
 
         #region Register Student
         [HttpPost("RegisterStudent")]
