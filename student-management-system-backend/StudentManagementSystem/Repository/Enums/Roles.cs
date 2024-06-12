@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Modals
+namespace Repository.Enums
 {
-    public class Class1
+    public enum Roles
     {
+        Admin,
+        Teacher,
+        Student
     }
 }
