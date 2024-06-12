@@ -35,6 +35,8 @@ namespace Repository.Modals
         [Column(TypeName = "date")]
         public DateTime CreatedOn { get; set; }
 
+        public float Salary { get; set; }
+
         public Users Users { get; set; }
         public Subject Subject { get; set; }
 

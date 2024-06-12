@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using Repository.Interfaces;
+using Repository.Repository;
+using Service.Interfaces;
+using Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +14,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbcs"));
 });
+#endregion
+
+#region DI
+
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<IPasswordEncryption, PasswordEncryption>();
+
 #endregion
 
 builder.Services.AddControllers();

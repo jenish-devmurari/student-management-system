@@ -211,6 +211,9 @@ namespace Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<float>("Salary")
+                        .HasColumnType("real");
+
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
 

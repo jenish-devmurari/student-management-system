@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "GVr+135WViUuqPkUbLbfiG6roAWjdc0m1pDPvrCBG+/ttH7PFYdDQAo7JWL1HKzRRY+63GfrhRzrFyLHtDjEWw==",
+  "dgSpecHash": "kNSzipB9/yj6YF8u1Z7AodTcttVrXw8jw9I166t4jNOCAZgqyyBD3KoTo2gJgPv9GhhxQGxv2H8APQeifbgnow==",
   "success": true,
   "projectFilePath": "D:\\student-management-system\\student-management-system-backend\\StudentManagementSystem\\StudentManagementSystem\\StudentManagementSystem.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\DELL\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.31\\microsoft.aspnetcore.authentication.jwtbearer.6.0.31.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
