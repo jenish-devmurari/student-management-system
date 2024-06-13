@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace Repository.Interfaces
 {
-    public interface IUserRepository
+    public interface IStudentRepository
     {
-        Task<bool> IsEmailExist(string email);
-        Task AddUserAsync(Users user);
+        Task<bool> IsRollNumberIsExist(int number);
 
-        Task<Users> GetUsersAsync(string email);
-
+        Task AddStudentAsync(Students student);
     }
 }

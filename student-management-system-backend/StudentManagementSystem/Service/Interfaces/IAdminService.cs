@@ -9,7 +9,7 @@ namespace Service.Interfaces
 {
     public interface IAdminService
     {
-        public  Task<ResponseDTO> teacherRegister(TeacherRegisterDTO teacherRegisterDTO);
-        public Task<ResponseDTO> studentRegister(StudentRegisterDTO studentRegisterDTO);
+        public  Task<ResponseDTO> teacherRegister(TeacherRegisterDTO teacherRegisterDTO,int id);
+        public Task<ResponseDTO> studentRegister(StudentRegisterDTO studentRegisterDTO,int id);
     }
 }

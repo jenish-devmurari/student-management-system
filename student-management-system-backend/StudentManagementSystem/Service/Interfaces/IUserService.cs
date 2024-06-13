@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Service.Interfaces
 {
     public interface IUserService
     {
-
+        Task<ResponseDTO> Login(LoginDTO login);
     }
 }

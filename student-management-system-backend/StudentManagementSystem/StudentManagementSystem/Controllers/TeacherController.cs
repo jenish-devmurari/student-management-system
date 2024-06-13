@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs;
 using Service.Interfaces;
 
 namespace StudentManagementSystem.Controllers
 {
-   
+    [Authorize(Roles = ("Teacher"))]
     public class TeacherController : BaseController
     {
         private readonly IAdminService _adminService;
@@ -26,9 +27,12 @@ namespace StudentManagementSystem.Controllers
                 return BadRequest(ModelState);
             }
 
-            var response = await _adminService.studentRegister(studentRegisterDTO);
+            // var userId = int.Parse(User.FindFirst("UserId")?.Value) ;
+            var userId = 1;
 
-            if (response.Status == 200)
+            var response = await _adminService.studentRegister(studentRegisterDTO,userId);
+
+            if (response.Status == 201)
             {
                 return Ok(response);
             }
