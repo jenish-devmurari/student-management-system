@@ -10,5 +10,7 @@ namespace Service.Interfaces
     public interface IUserService
     {
         Task<ResponseDTO> Login(LoginDTO login);
+
+        Task<ResponseDTO> ChangePassword(string newPassword, string email);
     }
 }

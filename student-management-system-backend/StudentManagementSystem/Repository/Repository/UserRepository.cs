@@ -41,6 +41,10 @@ namespace Repository.Repository
             return await _context.Users.AnyAsync(u => u.Email == email);
         }
 
-        
+        public async Task UpdateUserAsync(Users user)
+        {
+             _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

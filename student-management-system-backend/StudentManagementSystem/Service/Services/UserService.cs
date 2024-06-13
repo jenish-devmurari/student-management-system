@@ -76,5 +76,32 @@ namespace Service.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
+        public async Task<ResponseDTO> ChangePassword(string newPassword, string email)
+        {
+
+            Users user = await _userRepository.GetUsersAsync(email);
+
+            if (user == null)
+            {
+                return new ResponseDTO
+                {
+                    Status = 404,
+                    Message = "User not found."
+                };
+            }
+
+            string hashedPassword = _passwordEncryption.HashPassword(newPassword);
+
+            user.Password = hashedPassword;
+            user.IsPasswordReset = true;
+            await _userRepository.UpdateUserAsync(user);
+
+            return new ResponseDTO
+            {
+                Status = 200,
+                Message = "Password has been reset successfully."
+            };
+        }
     }
 }

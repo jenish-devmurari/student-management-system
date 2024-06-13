@@ -14,5 +14,7 @@ namespace Repository.Interfaces
 
         Task<Users> GetUsersAsync(string email);
 
+        Task UpdateUserAsync(Users user);
+
     }
 }

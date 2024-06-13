@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Service.DTOs;
 using Service.Interfaces;
+using System.Security.Claims;
 
 namespace StudentManagementSystem.Controllers
 {
@@ -20,6 +21,14 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> Login(LoginDTO login)
         {
             return Ok(await _userService.Login(login));
+        }
+
+        [HttpPost("ChangePassword")]
+
+        public async Task<IActionResult> ChangePassword(string newPassword)
+        {
+            string email = User.FindFirst(ClaimTypes.Email)?.Value;
+            return Ok(await _userService.ChangePassword(newPassword,email));
         }
 
     }
