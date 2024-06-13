@@ -37,5 +37,16 @@ namespace Repository.Repository
                           select user.Email).ToListAsync();
         }
 
+        public async Task<List<Teachers>> GetAllTeacherAsync()
+        {
+            return await _context.Teachers.Include(s => s.Users).ToListAsync();
+        }
+
+        public async Task<Teachers> GetTeacherDetailsByIdAsync(int id)
+        {
+            return await _context.Teachers
+                                 .Include(s => s.Users)
+                                 .FirstOrDefaultAsync(s => s.UserId == id);
+        }
     }
 }

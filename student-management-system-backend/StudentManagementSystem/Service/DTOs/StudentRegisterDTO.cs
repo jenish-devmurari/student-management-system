@@ -7,20 +7,11 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class StudentRegisterDTO
+    public class StudentRegisterDTO : BaseDTO
     {
-     
-            public string Name { get; set; }
-
-            public string Email { get; set; }
-
             public Classes Class { get; set; }
 
             public int RollNumber { get; set; }
-
-            public DateTime DateOfBirth { get; set; }
-
-            public DateTime DateOfEnrollment { get; set; }
 
     }
 }

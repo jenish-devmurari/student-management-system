@@ -88,6 +88,8 @@ namespace Service.Services
 
                 await transaction.CommitAsync();
 
+                await _emailService.SendEmailAsync(teacherRegisterDTO.Email, "Thank You For Registration", teacherRegisterDTO.Email, password);
+
                 return new ResponseDTO
                 {
                     Status = 201,
@@ -153,8 +155,8 @@ namespace Service.Services
                     RollNumber = studentRegisterDTO.RollNumber,
                     CreatedOn = DateTime.Now,
                     ModifiedOn = DateTime.Now,
-                    CreatedBy = id, 
-                    ModifiedBy = id 
+                    CreatedBy = id,
+                    ModifiedBy = id
                 };
 
                 await _studentRepository.AddStudentAsync(student);
@@ -162,7 +164,7 @@ namespace Service.Services
                 await transaction.CommitAsync();
 
                 List<string> teacherList = await _teacherRepository.GetTeacherEmailsByClassAsync((int)studentRegisterDTO.Class);
-                await _emailService.SendEmailAsync(studentRegisterDTO.Email,"Thank You For Registration",studentRegisterDTO.Email,password,teacherList);
+                await _emailService.SendEmailAsync(studentRegisterDTO.Email, "Thank You For Registration", studentRegisterDTO.Email, password, teacherList);
 
                 return new ResponseDTO
                 {
@@ -186,5 +188,123 @@ namespace Service.Services
         }
         #endregion
 
+
+        #region get all student data
+        public async Task<ResponseDTO> GetAllStudentDetailsAsync()
+        {
+            var students = await _studentRepository.GetAllStudentsAsync();
+            var studentDetailDTOs = students.Select(student => new StudentDetailDTO
+            {
+                Id = student.Users.UserId,
+                StudentId = student.StudentId,
+                Name = student.Users.Name,
+                Email = student.Users.Email,
+                ClassId = student.ClassId,
+                RollNumber = student.RollNumber,
+                DateOfBirth = student.Users.DateOfBirth,
+                DateOfEnrollment = student.Users.DateOfEnrollment
+            }).ToList();
+
+            return new ResponseDTO
+            {
+                Status = 200,
+                Message = "all Students data retrieved successfully",
+                Data = studentDetailDTOs
+            };
+        }
+        #endregion
+
+
+        #region get student data by id
+        public async Task<ResponseDTO> GetStudentDetailsByIdAsync(int id)
+        {
+            var student = await _studentRepository.GetStudentDetailsByIdAsync(id);
+            if (student == null)
+            {
+                return new ResponseDTO
+                {
+                    Status = 404,
+                    Message = "Student not found"
+                };
+            }
+
+            StudentDetailDTO studentDetailDTO = new StudentDetailDTO
+            {
+                Id = student.Users.UserId,
+                StudentId = student.StudentId,
+                Name = student.Users.Name,
+                Email = student.Users.Email,
+                ClassId = student.ClassId,
+                RollNumber = student.RollNumber,
+                DateOfBirth = student.Users.DateOfBirth,
+                DateOfEnrollment = student.Users.DateOfEnrollment
+            };
+
+            return new ResponseDTO
+            {
+                Status = 200,
+                Message = "Student retrieved successfully",
+                Data = studentDetailDTO
+            };
+        }
+        #endregion
+
+
+        #region get all teacher data
+        public async Task<ResponseDTO> GetAllTecherDetailsAsync()
+        {
+            var teachers = await _teacherRepository.GetAllTeacherAsync();
+            var teacherDetailDTOs = teachers.Select(teacher => new TeacherDetailDTO
+            {
+                id = teacher.Users.UserId,
+                TeacherId = teacher.TeacherId,
+                SubjectId = teacher.SubjectId,
+                Name = teacher.Users.Name,
+                Email = teacher.Users.Email,
+                ClassId = teacher.ClassId,
+                DateOfBirth = teacher.Users.DateOfBirth,
+                DateOfEnrollment = teacher.Users.DateOfEnrollment,
+                Qualification = teacher.Qualification,
+                Salary = teacher.Salary
+
+            }).ToList();
+
+            return new ResponseDTO
+            {
+                Status = 200,
+                Message = "all Teachers data retrieved successfully",
+                Data = teacherDetailDTOs
+            };
+        }
+        #endregion
+
+
+        #region get teacher data by id
+        public async Task<ResponseDTO> GetTecherDetailsByIdAsync(int id)
+        {
+            var teacher = await _teacherRepository.GetTeacherDetailsByIdAsync(id);
+            TeacherDetailDTO teacherDetailDTOs = new TeacherDetailDTO
+            {
+                id = teacher.Users.UserId,
+                TeacherId = teacher.TeacherId,
+                SubjectId = teacher.SubjectId,
+                Name = teacher.Users.Name,
+                Email = teacher.Users.Email,
+                ClassId = teacher.ClassId,
+                DateOfBirth = teacher.Users.DateOfBirth,
+                DateOfEnrollment = teacher.Users.DateOfEnrollment,
+                Qualification = teacher.Qualification,
+                Salary = teacher.Salary
+
+            };
+
+            return new ResponseDTO
+            {
+                Status = 200,
+                Message = "Teacher retrieved successfully",
+                Data = teacherDetailDTOs
+            };
+        }
+        #endregion
     }
 }

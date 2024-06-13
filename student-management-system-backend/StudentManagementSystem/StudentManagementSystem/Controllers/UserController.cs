@@ -23,7 +23,7 @@ namespace StudentManagementSystem.Controllers
             return Ok(await _userService.Login(login));
         }
 
-        [HttpPost("ChangePassword")]
+        [HttpPut("ChangePassword")]
 
         public async Task<IActionResult> ChangePassword(string newPassword)
         {

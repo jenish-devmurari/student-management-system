@@ -15,5 +15,8 @@ namespace Repository.Interfaces
 
         Task<List<string>> GetTeacherEmailsByClassAsync(int classId);
 
+        Task<List<Teachers>> GetAllTeacherAsync();
+
+        Task<Teachers> GetTeacherDetailsByIdAsync(int id);
     }
 }

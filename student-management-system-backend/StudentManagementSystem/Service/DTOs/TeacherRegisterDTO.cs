@@ -7,19 +7,12 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class TeacherRegisterDTO
+    public class TeacherRegisterDTO : BaseDTO
     {
-        public string Name { get; set; }
-
-        public string Email { get; set; }
 
         public Classes Class { get; set; }
 
         public int Subject { get; set; }
-
-        public DateTime DateOfBirth { get; set; }
-
-        public DateTime DateOfEnrollment { get; set; }
 
         public string Qualification { get; set; }
 

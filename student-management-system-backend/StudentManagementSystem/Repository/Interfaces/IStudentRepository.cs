@@ -12,5 +12,10 @@ namespace Repository.Interfaces
         Task<bool> IsRollNumberIsExist(int number);
 
         Task AddStudentAsync(Students student);
+
+        Task<List<Students>> GetAllStudentsAsync();
+
+        Task<Students> GetStudentDetailsByIdAsync(int studentId);
+
     }
 }

@@ -28,5 +28,17 @@ namespace Repository.Repository
         {
             return await _context.Students.AnyAsync(s => s.RollNumber == number);
         }
+
+        public async Task<List<Students>> GetAllStudentsAsync()
+        {
+            return await _context.Students.Include(s => s.Users).ToListAsync();
+        }
+
+        public async Task<Students> GetStudentDetailsByIdAsync(int id)
+        {
+            return await _context.Students
+                                 .Include(s => s.Users)
+                                 .FirstOrDefaultAsync(s => s.UserId == id);
+        }
     }
 }
