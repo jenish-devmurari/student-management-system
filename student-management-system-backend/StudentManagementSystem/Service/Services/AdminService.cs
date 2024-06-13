@@ -24,9 +24,10 @@ namespace Service.Services
         private readonly IPasswordEncryption _passwordEncryption;
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
+        private readonly IValidationService _validationService;
         private readonly AppDbContext _context;
 
-        public AdminService(IPasswordEncryption passwordEncryption, AppDbContext context, IStudentRepository studentRepository, ITeacherRepository teacherRepository, IUserRepository userRepository, IEmailService emailService)
+        public AdminService(IPasswordEncryption passwordEncryption, AppDbContext context, IStudentRepository studentRepository, ITeacherRepository teacherRepository, IUserRepository userRepository, IEmailService emailService, IValidationService validationService)
         {
             _studentRepository = studentRepository;
             _passwordEncryption = passwordEncryption;
@@ -34,6 +35,7 @@ namespace Service.Services
             _teacherRepository = teacherRepository;
             _userRepository = userRepository;
             _emailService = emailService;
+            _validationService = validationService;
         }
         #endregion
 
@@ -44,95 +46,18 @@ namespace Service.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                #region validation for teacher registration
-                // name validation
-                if (string.IsNullOrEmpty(teacherRegisterDTO.Name.Trim()))
+
+                // Validate the teacher registration data
+                ResponseDTO validationResponse = await _validationService.ValidateTeacherRegistrationAsync(teacherRegisterDTO);
+                if (validationResponse.Status != 200)
                 {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "name is required"
-                    };
+                    return validationResponse;
                 }
 
-                // Check if the email already exists
-                if (await _userRepository.IsEmailExist(teacherRegisterDTO.Email))
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "Email already registered."
-                    };
-                }
+                string password = $"{teacherRegisterDTO.Name}@{teacherRegisterDTO.DateOfBirth.Year}";
+                string hashedPassword = _passwordEncryption.HashPassword(password);
 
-
-                // Validate the email format
-                if (string.IsNullOrEmpty(teacherRegisterDTO.Email?.Trim()) || !Regex.IsMatch(teacherRegisterDTO.Email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "Invalid email format."
-                    };
-                }
-
-                // validate date of birth 
-                if (teacherRegisterDTO.DateOfBirth >= DateTime.Now.Date)
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "Date of birth must be before the current date."
-                    };
-                }
-
-                // Validate the date of enrollment
-                if (teacherRegisterDTO.DateOfEnrollment <= teacherRegisterDTO.DateOfBirth)
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "Date of enrollment must be after the date of birth."
-                    };
-                }
-
-                // class validation
-                if ((int)teacherRegisterDTO.Class > 12 || (int)teacherRegisterDTO.Class < 1)
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "Only 1 to 12 classes are available"
-                    };
-                }
-
-                // Check if a teacher already exists in the class for the given subject
-                if (await _teacherRepository.IsTeacherExistInClass(teacherRegisterDTO.Class, teacherRegisterDTO.Subject))
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "A teacher already exists for this class and subject."
-                    };
-                }
-
-                // validation of salary
-                if(teacherRegisterDTO.Salary < 0)
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "A salary is not negative"
-                    };
-                }
-
-                #endregion
-
-
-                var password = $"{teacherRegisterDTO.Name}@{teacherRegisterDTO.DateOfBirth.Year}";
-                var hashedPassword = _passwordEncryption.HashPassword(password);
-
-                var user = new Users
+                Users user = new Users
                 {
                     Name = teacherRegisterDTO.Name,
                     Email = teacherRegisterDTO.Email,
@@ -146,9 +71,9 @@ namespace Service.Services
 
                 await _userRepository.AddUserAsync(user);
 
-                var userDetail = await _userRepository.GetUsersAsync(teacherRegisterDTO.Email);
+                Users userDetail = await _userRepository.GetUsersAsync(teacherRegisterDTO.Email);
 
-                var teacher = new Teachers
+                Teachers teacher = new Teachers
                 {
                     UserId = userDetail.UserId,
                     Qualification = teacherRegisterDTO.Qualification,
@@ -195,84 +120,17 @@ namespace Service.Services
             try
             {
 
-                #region validation for student registration
-                // check if name is not empty
-                if (string.IsNullOrEmpty(studentRegisterDTO.Name.Trim()))
+                ResponseDTO validationResponse = await _validationService.ValidateStudentRegistrationAsync(studentRegisterDTO);
+                if (validationResponse.Status != 200)
                 {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "name is required"
-                    };
-                }
-                   
-
-                // Check if the email already exists
-                if (await _userRepository.IsEmailExist(studentRegisterDTO.Email))
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "Email already registered."
-                    };
-                }
-
-                // Validate the email format
-                if(string.IsNullOrEmpty(studentRegisterDTO.Email?.Trim()) || !Regex.IsMatch(studentRegisterDTO.Email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "Invalid email format."
-                    };
+                    return validationResponse;
                 }
 
 
-                // validate date of birth 
-                if (studentRegisterDTO.DateOfBirth >= DateTime.Now.Date)
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "Date of birth must be before the current date."
-                    };
-                }
+                string password = $"{studentRegisterDTO.Name}@{studentRegisterDTO.DateOfBirth.Year}";
+                string hashedPassword = _passwordEncryption.HashPassword(password);
 
-                // Validate the date of enrollment
-                if (studentRegisterDTO.DateOfEnrollment <= studentRegisterDTO.DateOfBirth)
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "Date of enrollment must be after the date of birth."
-                    };
-                }
-
-                // class validation
-                if((int)studentRegisterDTO.Class > 12 && (int)studentRegisterDTO.Class < 1)
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "Only 1 to 12 class is availabel"
-                    };
-                }
-
-                // Role number validation
-                if(await _studentRepository.IsRollNumberIsExist(studentRegisterDTO.RollNumber))
-                {
-                    return new ResponseDTO
-                    {
-                        Status = 400,
-                        Message = "RollNumber is already register with student"
-                    };
-                }
-                #endregion
-
-                var password = $"{studentRegisterDTO.Name}@{studentRegisterDTO.DateOfBirth.Year}";
-                var hashedPassword = _passwordEncryption.HashPassword(password);
-
-                var user = new Users
+                Users user = new Users
                 {
                     Name = studentRegisterDTO.Name,
                     Email = studentRegisterDTO.Email,
@@ -286,24 +144,24 @@ namespace Service.Services
 
                 await _userRepository.AddUserAsync(user);
 
-                var userDetail = await _userRepository.GetUsersAsync(studentRegisterDTO.Email);
+                Users userDetail = await _userRepository.GetUsersAsync(studentRegisterDTO.Email);
 
-                var student = new Students
+                Students student = new Students
                 {
                     UserId = userDetail.UserId,
                     ClassId = studentRegisterDTO.Class,
                     RollNumber = studentRegisterDTO.RollNumber,
                     CreatedOn = DateTime.Now,
                     ModifiedOn = DateTime.Now,
-                    CreatedBy = id, // here admin or teacher id who is created (get with token)
-                    ModifiedBy = id // here admin or teacher id who is modified (get with token)
+                    CreatedBy = id, 
+                    ModifiedBy = id 
                 };
 
                 await _studentRepository.AddStudentAsync(student);
 
                 await transaction.CommitAsync();
 
-                var teacherList = await _teacherRepository.GetTeacherEmailsByClassAsync((int)studentRegisterDTO.Class);
+                List<string> teacherList = await _teacherRepository.GetTeacherEmailsByClassAsync((int)studentRegisterDTO.Class);
                 await _emailService.SendEmailAsync(studentRegisterDTO.Email,"Thank You For Registration",studentRegisterDTO.Email,password,teacherList);
 
                 return new ResponseDTO

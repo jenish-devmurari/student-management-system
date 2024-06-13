@@ -31,11 +31,11 @@ namespace Service.Services
         {
             try
             {
-                var user = await _userRepository.GetUsersAsync(login.Email);
+                Users user = await _userRepository.GetUsersAsync(login.Email);
 
                 if (user != null && _passwordEncryption.VerifyPassword(login.Password, user.Password))
                 {
-                    var token = GenerateToken(user);
+                    string token = GenerateToken(user);
                     return new ResponseDTO
                     {
                         Status = 200,
