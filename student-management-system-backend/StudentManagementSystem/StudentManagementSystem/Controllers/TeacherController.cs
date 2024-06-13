@@ -27,8 +27,8 @@ namespace StudentManagementSystem.Controllers
                 return BadRequest(ModelState);
             }
 
-            // var userId = int.Parse(User.FindFirst("UserId")?.Value) ;
-            var userId = 1;
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            //var userId = 1;
 
             var response = await _adminService.studentRegister(studentRegisterDTO,userId);
 

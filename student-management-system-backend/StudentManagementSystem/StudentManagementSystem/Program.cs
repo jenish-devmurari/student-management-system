@@ -29,6 +29,7 @@ builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IPasswordEncryption, PasswordEncryption>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 #endregion
 

@@ -12,6 +12,8 @@ namespace Repository.Interfaces
     {
         Task AddTeacherAsync(Teachers teachers);
         Task<bool> IsTeacherExistInClass(Classes classId, int teacherId);
-        
+
+        Task<List<string>> GetTeacherEmailsByClassAsync(int classId);
+
     }
 }

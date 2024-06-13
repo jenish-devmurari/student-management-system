@@ -42,7 +42,8 @@ namespace Service.Services
                         Data = new
                         {
                             Token = token,
-                            Expiration = DateTime.UtcNow.AddHours(1)
+                            Expiration = DateTime.UtcNow.AddHours(1),
+                            IsPasswordReset = user.IsPasswordReset
                         },
                         Message = "Login successful"
                     };

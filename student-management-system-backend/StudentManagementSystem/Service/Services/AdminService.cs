@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Service.Services
 {
@@ -22,15 +23,17 @@ namespace Service.Services
         private readonly ITeacherRepository _teacherRepository;
         private readonly IPasswordEncryption _passwordEncryption;
         private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
         private readonly AppDbContext _context;
 
-        public AdminService(IPasswordEncryption passwordEncryption, AppDbContext context, IStudentRepository studentRepository, ITeacherRepository teacherRepository, IUserRepository userRepository)
+        public AdminService(IPasswordEncryption passwordEncryption, AppDbContext context, IStudentRepository studentRepository, ITeacherRepository teacherRepository, IUserRepository userRepository, IEmailService emailService)
         {
             _studentRepository = studentRepository;
             _passwordEncryption = passwordEncryption;
             _context = context;
             _teacherRepository = teacherRepository;
             _userRepository = userRepository;
+            _emailService = emailService;
         }
         #endregion
 
@@ -299,6 +302,9 @@ namespace Service.Services
                 await _studentRepository.AddStudentAsync(student);
 
                 await transaction.CommitAsync();
+
+                var teacherList = await _teacherRepository.GetTeacherEmailsByClassAsync((int)studentRegisterDTO.Class);
+                await _emailService.SendEmailAsync(studentRegisterDTO.Email,"Thank You For Registration",studentRegisterDTO.Email,password,teacherList);
 
                 return new ResponseDTO
                 {
