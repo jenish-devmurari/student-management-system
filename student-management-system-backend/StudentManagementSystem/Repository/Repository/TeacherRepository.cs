@@ -26,7 +26,7 @@ namespace Repository.Repository
         }
         public async Task<bool> IsTeacherExistInClass(Classes classId, int subject)
         {
-            return await _context.Teachers.AnyAsync(t => t.ClassId == classId && t.SubjectId == subject);
+            return await _context.Teachers.AnyAsync(t => t.ClassId == classId && t.SubjectId == subject && t.Users.IsActive == true);
         }
 
         public async Task<List<string>> GetTeacherEmailsByClassAsync(int classId)

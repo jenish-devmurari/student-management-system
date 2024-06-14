@@ -26,7 +26,7 @@ namespace Repository.Repository
 
         public async Task<bool> IsRollNumberIsExist(int number)
         {
-            return await _context.Students.AnyAsync(s => s.RollNumber == number);
+            return await _context.Students.AnyAsync(s => s.RollNumber == number && s.Users.IsActive == true);
         }
 
         public async Task<List<Students>> GetAllStudentsAsync()

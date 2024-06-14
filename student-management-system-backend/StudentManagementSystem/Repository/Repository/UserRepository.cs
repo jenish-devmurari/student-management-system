@@ -32,13 +32,12 @@ namespace Repository.Repository
 
         public async Task<Users> GetUsersAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
-
+            return await _context.Users.FirstOrDefaultAsync(x => x.Email == email && x.IsActive == true);
         }
 
         public async Task<bool> IsEmailExist(string email)
         {
-            return await _context.Users.AnyAsync(u => u.Email == email);
+            return await _context.Users.AnyAsync(u => u.Email == email && u.IsActive == true);
         }
 
         public async Task UpdateUserAsync(Users user)

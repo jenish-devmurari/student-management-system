@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace Service.Interfaces
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string toEmail, string subject, string loginEmail, string loginPassword, List<string> ccEmails = null);
+        Task SendEmailToStudentAsync(StudentRegisterDTO student, List<string> ccEmails = null);
+
+        Task SendEmailTeacherAsync(string toEmail);
     }
 }

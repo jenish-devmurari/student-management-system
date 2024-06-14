@@ -42,7 +42,7 @@ namespace Service.Services
                     };
                 }
 
-                if (user != null && _passwordEncryption.VerifyPassword(login.Password, user.Password) && user.IsActive)
+                if (user != null && _passwordEncryption.VerifyPassword(login.Password, user.Password))
                 {
                     string token = GenerateToken(user);
                     return new ResponseDTO

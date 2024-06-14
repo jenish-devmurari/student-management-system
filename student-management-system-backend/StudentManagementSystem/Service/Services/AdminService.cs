@@ -65,7 +65,7 @@ namespace Service.Services
                     DateOfBirth = teacherRegisterDTO.DateOfBirth,
                     DateOfEnrollment = teacherRegisterDTO.DateOfEnrollment,
                     IsActive = true,
-                    IsPasswordReset = true,
+                    IsPasswordReset = false,
                 };
 
                 await _userRepository.AddUserAsync(user);
@@ -87,7 +87,7 @@ namespace Service.Services
 
                 await transaction.CommitAsync();
 
-                await _emailService.SendEmailAsync(teacherRegisterDTO.Email, "Thank You For Registration", teacherRegisterDTO.Email, password);
+                await _emailService.SendEmailTeacherAsync(teacherRegisterDTO.Email);
 
                 return new ResponseDTO
                 {
@@ -162,7 +162,7 @@ namespace Service.Services
                 await transaction.CommitAsync();
 
                 List<string> teacherList = await _teacherRepository.GetTeacherEmailsByClassAsync((int)studentRegisterDTO.Class);
-                await _emailService.SendEmailAsync(studentRegisterDTO.Email, "Thank You For Registration", studentRegisterDTO.Email, password, teacherList);
+                await _emailService.SendEmailToStudentAsync(studentRegisterDTO, teacherList);
 
                 return new ResponseDTO
                 {
