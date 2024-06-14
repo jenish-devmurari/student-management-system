@@ -11,10 +11,10 @@ namespace StudentManagementSystem.Controllers
     {
         private readonly IAdminService _adminService;
         private readonly ITeacherService _teacherService;
-        public TeacherController(IAdminService adminService, ITeacherService teacherService) 
-        { 
-          _adminService = adminService;
-          _teacherService = _teacherService;
+        public TeacherController(IAdminService adminService, ITeacherService teacherService)
+        {
+            _adminService = adminService;
+            _teacherService = teacherService;
         }
 
         #region Register Student
@@ -28,9 +28,8 @@ namespace StudentManagementSystem.Controllers
             }
 
             var userId = int.Parse(User.FindFirst("UserId")?.Value);
-            //var userId = 1;
 
-            var response = await _adminService.studentRegister(studentRegisterDTO,userId);
+            var response = await _adminService.studentRegister(studentRegisterDTO, userId);
 
             if (response.Status == 201)
             {
@@ -42,5 +41,26 @@ namespace StudentManagementSystem.Controllers
             }
         }
         #endregion
+
+
+        #region get all student which is teacher class
+        [HttpGet("GetAllStudentOfTeacherClass")]
+        public async Task<IActionResult> GetAllStudentOfTeacherClass()
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _teacherService.GetAllStudentOfTeacherClass(userId));
+        }
+
+        #endregion
+
+        #region Mark Attendance of student
+        [HttpPost("MarkAttendance")]
+        public async Task<IActionResult> MarkAttendance(List<StudentAttendanceDTO> attendanceDTO)
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _teacherService.MarkAttendance(attendanceDTO, userId));
+        }
+        #endregion
+
     }
 }

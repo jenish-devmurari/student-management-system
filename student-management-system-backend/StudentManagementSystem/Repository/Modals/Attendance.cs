@@ -28,6 +28,7 @@ namespace Repository.Modals
         public int SubjectId { get; set; }
 
         [Required]
+        [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
         [Required]

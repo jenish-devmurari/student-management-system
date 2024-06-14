@@ -38,14 +38,19 @@ namespace Repository.Repository
         {
             return await _context.Students
                                  .Include(s => s.Users)
-                                 .FirstOrDefaultAsync(s => s.UserId == id );
+                                 .FirstOrDefaultAsync(s => s.UserId == id);
         }
 
         public async Task UpdateStudentAsync(Students student)
         {
             _context.Students.Update(student);
-            _context.Users.Update(student.Users); 
+            _context.Users.Update(student.Users);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Students>> GetAllStudentByTeacherClass(int classId)
+        {
+           return  await _context.Students.Include(u => u.Users).Where(t => (int)t.ClassId == classId && t.Users.IsActive == true).ToListAsync();
         }
     }
 }

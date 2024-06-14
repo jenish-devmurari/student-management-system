@@ -19,6 +19,7 @@ namespace Service.Services
         private readonly IUserRepository _userRepository;
         private readonly IPasswordEncryption _passwordEncryption;
         private readonly IConfiguration _configuration;
+        
 
         public UserService(IUserRepository userRepository,IPasswordEncryption passwordEncryption,IConfiguration configuration)
         {
@@ -77,7 +78,7 @@ namespace Service.Services
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes. Role, user.Role.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
