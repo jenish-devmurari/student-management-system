@@ -17,5 +17,6 @@ namespace Repository.Interfaces
 
         Task<Students> GetStudentDetailsByIdAsync(int studentId);
 
+        Task UpdateStudentAsync(Students student);
     }
 }

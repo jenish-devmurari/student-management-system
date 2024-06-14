@@ -33,7 +33,16 @@ namespace Service.Services
             {
                 Users user = await _userRepository.GetUsersAsync(login.Email);
 
-                if (user != null && _passwordEncryption.VerifyPassword(login.Password, user.Password))
+                if (user == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "User not found."
+                    };
+                }
+
+                if (user != null && _passwordEncryption.VerifyPassword(login.Password, user.Password) && user.IsActive)
                 {
                     string token = GenerateToken(user);
                     return new ResponseDTO
@@ -75,33 +84,43 @@ namespace Service.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+
         }
 
         public async Task<ResponseDTO> ChangePassword(string newPassword, string email)
         {
+            try
+            {
+                Users user = await _userRepository.GetUsersAsync(email);
 
-            Users user = await _userRepository.GetUsersAsync(email);
+                if (user == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "User not found."
+                    };
+                }
 
-            if (user == null)
+                string hashedPassword = _passwordEncryption.HashPassword(newPassword);
+                user.Password = hashedPassword;
+                user.IsPasswordReset = true;
+                await _userRepository.UpdateUserAsync(user);
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Password has been reset successfully."
+                };
+            }
+            catch (Exception ex)
             {
                 return new ResponseDTO
                 {
-                    Status = 404,
-                    Message = "User not found."
+                    Status = 500,
+                    Message = "An error occurred while processing your request"
                 };
             }
-
-            string hashedPassword = _passwordEncryption.HashPassword(newPassword);
-
-            user.Password = hashedPassword;
-            user.IsPasswordReset = true;
-            await _userRepository.UpdateUserAsync(user);
-
-            return new ResponseDTO
-            {
-                Status = 200,
-                Message = "Password has been reset successfully."
-            };
         }
     }
 }

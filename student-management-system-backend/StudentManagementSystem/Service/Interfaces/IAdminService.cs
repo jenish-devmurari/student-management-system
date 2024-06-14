@@ -19,5 +19,13 @@ namespace Service.Interfaces
         public Task<ResponseDTO> GetAllTecherDetailsAsync();
 
         public Task<ResponseDTO> GetTecherDetailsByIdAsync(int id);
+
+        public Task<ResponseDTO> UpdateStudent(StudentUpdateDTO studentUpdate, int id, int Id);
+
+        public Task<ResponseDTO> DeleteStudent(int id);
+
+        public Task<ResponseDTO> UpdateTeacher(TeacherUpdateDTO teacherUpdate, int id);
+
+        public Task<ResponseDTO> DeleteTeacher(int id);
     }
 }

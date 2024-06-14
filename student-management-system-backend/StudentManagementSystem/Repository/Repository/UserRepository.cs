@@ -43,8 +43,13 @@ namespace Repository.Repository
 
         public async Task UpdateUserAsync(Users user)
         {
-             _context.Users.Update(user);
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Users> GetUserByIdAsync(int id)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.UserId == id);
         }
     }
 }

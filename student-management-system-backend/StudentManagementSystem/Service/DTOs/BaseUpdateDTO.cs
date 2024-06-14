@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class BaseDTO
+    public class BaseUpdateDTO
     {
         public string Name { get; set; }
-        public string Email { get; set; }
+
         public DateTime DateOfBirth { get; set; }
+
         public DateTime DateOfEnrollment { get; set; }
     }
 }

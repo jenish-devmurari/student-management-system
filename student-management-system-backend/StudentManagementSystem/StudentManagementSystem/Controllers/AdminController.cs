@@ -43,6 +43,42 @@ namespace StudentManagementSystem.Controllers
         }
         #endregion
 
+        #region Get All Teacher Details
+        [HttpGet("GetAllTeacher")]
+        public async Task<IActionResult> GetAllTeacherDetails()
+        {
+            return Ok(await _adminService.GetAllTecherDetailsAsync());
+        }
+        #endregion
+
+        #region Get Teacher Details by id
+        [HttpGet("GetTeacherById/{id}")]
+        public async Task<IActionResult> GetTeacherDetailsById(int id)
+        {
+
+            return Ok(await _adminService.GetTecherDetailsByIdAsync(id));
+        }
+        #endregion
+
+        #region Update Teacher Details by id
+        [HttpPut("UpdateTeacher/{id}")]
+        public async Task<IActionResult> UpdateTeacher([FromBody] TeacherUpdateDTO teacherUpdate, int id)
+        {
+            int Id = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _adminService.UpdateTeacher(teacherUpdate, id));
+        }
+        #endregion
+
+
+        #region delete teacher 
+        [HttpDelete("DeleteTeacher/{id}")]
+        public async Task<IActionResult> DeleteTeacher(int id)
+        {
+            return Ok(await _adminService.DeleteTeacher(id));
+        }
+        #endregion
+
+
         #region Register Student
         [HttpPost("RegisterStudent")]
         public async Task<IActionResult> studentRegister([FromBody] StudentRegisterDTO studentRegisterDTO)
@@ -79,26 +115,25 @@ namespace StudentManagementSystem.Controllers
         [HttpGet("GetStudentById/{id}")]
         public async Task<IActionResult> GetStudentDetailsById(int id)
         {
-
             return Ok(await _adminService.GetStudentDetailsByIdAsync(id));
         }
         #endregion
 
-
-        #region Get All Teacher Details
-        [HttpGet("GetAllTeacher")]
-        public async Task<IActionResult> GetAllTeacherDetails()
+        #region Update Student Details by id
+        [HttpPut("UpdateStudent/{id}")]
+        public async Task<IActionResult> UpdateStudent([FromBody] StudentUpdateDTO studentUpdate, int id)
         {
-            return Ok(await _adminService.GetAllTecherDetailsAsync()); 
+            int Id = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _adminService.UpdateStudent(studentUpdate, id, Id));
         }
         #endregion
 
-        #region Get Teacher Details by id
-        [HttpGet("GetTeacherById/{id}")]
-        public async Task<IActionResult> GetTeacherDetailsById(int id)
-        {
 
-            return Ok(await _adminService.GetTecherDetailsByIdAsync(id));
+        #region delete student 
+        [HttpDelete("DeleteStudent/{id}")]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            return Ok(await _adminService.DeleteStudent(id));
         }
         #endregion
     }

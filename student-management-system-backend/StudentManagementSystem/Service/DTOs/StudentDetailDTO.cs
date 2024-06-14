@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class StudentDetailDTO :BaseDTO
+    public class StudentDetailDTO : BaseDTO
     {
         public int Id { get; set; }
 
@@ -15,6 +15,8 @@ namespace Service.DTOs
 
         public Classes ClassId { get; set; }
         public int RollNumber { get; set; }
- 
+
+        public bool IsActive { get; set; }
+
     }
 }

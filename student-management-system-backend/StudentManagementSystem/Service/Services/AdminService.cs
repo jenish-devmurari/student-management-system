@@ -46,7 +46,6 @@ namespace Service.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-
                 // Validate the teacher registration data
                 ResponseDTO validationResponse = await _validationService.ValidateTeacherRegistrationAsync(teacherRegisterDTO);
                 if (validationResponse.Status != 200)
@@ -121,7 +120,6 @@ namespace Service.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-
                 ResponseDTO validationResponse = await _validationService.ValidateStudentRegistrationAsync(studentRegisterDTO);
                 if (validationResponse.Status != 200)
                 {
@@ -192,25 +190,37 @@ namespace Service.Services
         #region get all student data
         public async Task<ResponseDTO> GetAllStudentDetailsAsync()
         {
-            var students = await _studentRepository.GetAllStudentsAsync();
-            var studentDetailDTOs = students.Select(student => new StudentDetailDTO
+            try
             {
-                Id = student.Users.UserId,
-                StudentId = student.StudentId,
-                Name = student.Users.Name,
-                Email = student.Users.Email,
-                ClassId = student.ClassId,
-                RollNumber = student.RollNumber,
-                DateOfBirth = student.Users.DateOfBirth,
-                DateOfEnrollment = student.Users.DateOfEnrollment
-            }).ToList();
+                var students = await _studentRepository.GetAllStudentsAsync();
+                var studentDetailDTOs = students.Select(student => new StudentDetailDTO
+                {
+                    Id = student.Users.UserId,
+                    StudentId = student.StudentId,
+                    Name = student.Users.Name,
+                    Email = student.Users.Email,
+                    ClassId = student.ClassId,
+                    RollNumber = student.RollNumber,
+                    DateOfBirth = student.Users.DateOfBirth,
+                    DateOfEnrollment = student.Users.DateOfEnrollment,
+                    IsActive = student.Users.IsActive,
+                }).ToList();
 
-            return new ResponseDTO
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "all Students data retrieved successfully",
+                    Data = studentDetailDTOs
+                };
+            }
+            catch (Exception ex)
             {
-                Status = 200,
-                Message = "all Students data retrieved successfully",
-                Data = studentDetailDTOs
-            };
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
         }
         #endregion
 
@@ -218,63 +228,198 @@ namespace Service.Services
         #region get student data by id
         public async Task<ResponseDTO> GetStudentDetailsByIdAsync(int id)
         {
-            var student = await _studentRepository.GetStudentDetailsByIdAsync(id);
-            if (student == null)
+            try
+            {
+                var student = await _studentRepository.GetStudentDetailsByIdAsync(id);
+                if (student == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Student not found"
+                    };
+                }
+
+                StudentDetailDTO studentDetailDTO = new StudentDetailDTO
+                {
+                    Id = student.Users.UserId,
+                    StudentId = student.StudentId,
+                    Name = student.Users.Name,
+                    Email = student.Users.Email,
+                    ClassId = student.ClassId,
+                    RollNumber = student.RollNumber,
+                    DateOfBirth = student.Users.DateOfBirth,
+                    DateOfEnrollment = student.Users.DateOfEnrollment,
+                    IsActive = student.Users.IsActive,
+                };
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Student retrieved successfully",
+                    Data = studentDetailDTO
+                };
+            }
+            catch (Exception ex)
             {
                 return new ResponseDTO
                 {
-                    Status = 404,
-                    Message = "Student not found"
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
                 };
             }
-
-            StudentDetailDTO studentDetailDTO = new StudentDetailDTO
-            {
-                Id = student.Users.UserId,
-                StudentId = student.StudentId,
-                Name = student.Users.Name,
-                Email = student.Users.Email,
-                ClassId = student.ClassId,
-                RollNumber = student.RollNumber,
-                DateOfBirth = student.Users.DateOfBirth,
-                DateOfEnrollment = student.Users.DateOfEnrollment
-            };
-
-            return new ResponseDTO
-            {
-                Status = 200,
-                Message = "Student retrieved successfully",
-                Data = studentDetailDTO
-            };
         }
         #endregion
 
+        #region delete student by id 
+        public async Task<ResponseDTO> DeleteStudent(int id)
+        {
+            try
+            {
+                var user = await _userRepository.GetUserByIdAsync(id);
+
+                if (user == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "User not found."
+                    };
+                }
+
+                if(user.Role != Roles.Student)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "This User is not a student"
+                    };
+                }
+
+                user.IsActive = false;
+                await _userRepository.UpdateUserAsync(user);
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Student Deleted successfully",
+                    Data = user.UserId
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+
+        }
+        #endregion
+
+        #region update student by id 
+        public async Task<ResponseDTO> UpdateStudent(StudentUpdateDTO studentUpdate, int id,int Id)
+        {
+            try
+            {
+                ResponseDTO validationResponse = await _validationService.ValidateStudentUpdateAsync(studentUpdate);
+                if (validationResponse.Status != 200)
+                {
+                    return validationResponse;
+                }
+
+                var student = await _studentRepository.GetStudentDetailsByIdAsync(id);
+
+                if (student == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "User not found."
+                    };
+                }
+
+                if (student.RollNumber != studentUpdate.RollNumber)
+                { 
+                    // Roll number validation
+                    if (await _studentRepository.IsRollNumberIsExist(studentUpdate.RollNumber))
+                    {
+                        return new ResponseDTO
+                        {
+                            Status = 400,
+                            Message = "Roll number is already registered with a student."
+                        };
+                    }
+                }
+
+                // Update the user-related details
+                student.Users.Name = studentUpdate.Name;
+                student.Users.DateOfBirth = studentUpdate.DateOfBirth;
+                student.Users.DateOfEnrollment = studentUpdate.DateOfEnrollment;
+
+                // Update the student-specific details
+                student.ClassId = studentUpdate.ClassId;
+                student.RollNumber = studentUpdate.RollNumber;
+                student.ModifiedOn = DateTime.Now;
+                student.ModifiedBy = Id;
+
+                await _studentRepository.UpdateStudentAsync(student);
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Student Updated successfully",
+                    Data = student.UserId
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+
+        }
+        #endregion
 
         #region get all teacher data
         public async Task<ResponseDTO> GetAllTecherDetailsAsync()
         {
-            var teachers = await _teacherRepository.GetAllTeacherAsync();
-            var teacherDetailDTOs = teachers.Select(teacher => new TeacherDetailDTO
+            try
             {
-                id = teacher.Users.UserId,
-                TeacherId = teacher.TeacherId,
-                SubjectId = teacher.SubjectId,
-                Name = teacher.Users.Name,
-                Email = teacher.Users.Email,
-                ClassId = teacher.ClassId,
-                DateOfBirth = teacher.Users.DateOfBirth,
-                DateOfEnrollment = teacher.Users.DateOfEnrollment,
-                Qualification = teacher.Qualification,
-                Salary = teacher.Salary
+                var teachers = await _teacherRepository.GetAllTeacherAsync();
+                var teacherDetailDTOs = teachers.Select(teacher => new TeacherDetailDTO
+                {
+                    id = teacher.Users.UserId,
+                    TeacherId = teacher.TeacherId,
+                    SubjectId = teacher.SubjectId,
+                    Name = teacher.Users.Name,
+                    Email = teacher.Users.Email,
+                    ClassId = teacher.ClassId,
+                    DateOfBirth = teacher.Users.DateOfBirth,
+                    DateOfEnrollment = teacher.Users.DateOfEnrollment,
+                    Qualification = teacher.Qualification,
+                    Salary = teacher.Salary,
+                    IsActive = teacher.Users.IsActive
 
-            }).ToList();
+                }).ToList();
 
-            return new ResponseDTO
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "all Teachers data retrieved successfully",
+                    Data = teacherDetailDTOs
+                };
+            }
+            catch (Exception ex)
             {
-                Status = 200,
-                Message = "all Teachers data retrieved successfully",
-                Data = teacherDetailDTOs
-            };
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
         }
         #endregion
 
@@ -282,29 +427,152 @@ namespace Service.Services
         #region get teacher data by id
         public async Task<ResponseDTO> GetTecherDetailsByIdAsync(int id)
         {
-            var teacher = await _teacherRepository.GetTeacherDetailsByIdAsync(id);
-            TeacherDetailDTO teacherDetailDTOs = new TeacherDetailDTO
+            try
             {
-                id = teacher.Users.UserId,
-                TeacherId = teacher.TeacherId,
-                SubjectId = teacher.SubjectId,
-                Name = teacher.Users.Name,
-                Email = teacher.Users.Email,
-                ClassId = teacher.ClassId,
-                DateOfBirth = teacher.Users.DateOfBirth,
-                DateOfEnrollment = teacher.Users.DateOfEnrollment,
-                Qualification = teacher.Qualification,
-                Salary = teacher.Salary
+                var teacher = await _teacherRepository.GetTeacherDetailsByIdAsync(id);
 
-            };
+                if (teacher == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Teacher not found"
+                    };
+                }
 
-            return new ResponseDTO
+                TeacherDetailDTO teacherDetailDTOs = new TeacherDetailDTO
+                {
+                    id = teacher.Users.UserId,
+                    TeacherId = teacher.TeacherId,
+                    SubjectId = teacher.SubjectId,
+                    Name = teacher.Users.Name,
+                    Email = teacher.Users.Email,
+                    ClassId = teacher.ClassId,
+                    DateOfBirth = teacher.Users.DateOfBirth,
+                    DateOfEnrollment = teacher.Users.DateOfEnrollment,
+                    Qualification = teacher.Qualification,
+                    Salary = teacher.Salary,
+                    IsActive = teacher.Users.IsActive
+                };
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Teacher retrieved successfully",
+                    Data = teacherDetailDTOs
+                };
+            }
+            catch (Exception ex)
             {
-                Status = 200,
-                Message = "Teacher retrieved successfully",
-                Data = teacherDetailDTOs
-            };
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
         }
         #endregion
+
+
+        #region delete teacher by id 
+        public async Task<ResponseDTO> DeleteTeacher(int id)
+        {
+            try
+            {
+                var user = await _userRepository.GetUserByIdAsync(id);
+
+                if (user == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "User not found."
+                    };
+                }
+
+                if (user.Role != Roles.Teacher)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "This User is not a Teacher"
+                    };
+                }
+
+                user.IsActive = false;
+                await _userRepository.UpdateUserAsync(user);
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Teacher Deleted successfully",
+                    Data = user.UserId
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+
+        }
+        #endregion
+
+        #region update teacher by id 
+        public async Task<ResponseDTO> UpdateTeacher(TeacherUpdateDTO teacherUpdate, int id)
+        {
+            try
+            {
+                ResponseDTO validationResponse = await _validationService.ValidateTeacherUpdateAsync(teacherUpdate);
+                if (validationResponse.Status != 200)
+                {
+                    return validationResponse;
+                }
+
+                var teacher = await _teacherRepository.GetTeacherDetailsByIdAsync(id);
+
+                if (teacher == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "User not found."
+                    };
+                }
+
+                // Update the user-related details
+                teacher.Users.Name = teacherUpdate.Name;
+                teacher.Users.DateOfBirth = teacherUpdate.DateOfBirth;
+                teacher.Users.DateOfEnrollment = teacherUpdate.DateOfEnrollment;
+
+                // Update the teacher-specific details
+                teacher.Salary = teacherUpdate.Salary;
+                teacher.Qualification = teacherUpdate.Qualification;
+                teacher.ModifiedOn = DateTime.Now;
+
+
+                await _teacherRepository.UpdateTeacherAsync(teacher);
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Teacher Updated successfully",
+                    Data = teacher.UserId
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+
+        }
+        #endregion
+
+
     }
 }

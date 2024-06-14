@@ -12,5 +12,9 @@ namespace Service.Interfaces
         Task<ResponseDTO> ValidateTeacherRegistrationAsync(TeacherRegisterDTO teacherRegisterDTO);
 
         Task<ResponseDTO> ValidateStudentRegistrationAsync(StudentRegisterDTO studentRegisterDTO);
+
+        Task<ResponseDTO> ValidateStudentUpdateAsync(StudentUpdateDTO studentUpdate);
+
+        Task<ResponseDTO> ValidateTeacherUpdateAsync(TeacherUpdateDTO teacherRegisterDTO);
     }
 }

@@ -7,14 +7,10 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class TeacherDetailDTO : TeacherRegisterDTO
+    public  class StudentUpdateDTO :BaseUpdateDTO
     {
-        public int id { get; set; }
-        public int TeacherId { get; set; }
-        public int SubjectId { get; set; }
         public Classes ClassId { get; set; }
-
-        public bool IsActive { get; set; }
+        public int RollNumber { get; set; }
 
     }
 }

@@ -16,5 +16,7 @@ namespace Repository.Interfaces
 
         Task UpdateUserAsync(Users user);
 
+        Task<Users> GetUserByIdAsync(int id);
+
     }
 }

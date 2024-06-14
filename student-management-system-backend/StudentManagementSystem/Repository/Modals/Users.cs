@@ -45,6 +45,5 @@ namespace Repository.Modals
         [Required]
         public bool IsPasswordReset { get; set; }
 
-
     }
 }

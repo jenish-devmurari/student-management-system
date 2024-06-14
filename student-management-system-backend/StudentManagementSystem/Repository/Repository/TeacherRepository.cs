@@ -48,5 +48,12 @@ namespace Repository.Repository
                                  .Include(s => s.Users)
                                  .FirstOrDefaultAsync(s => s.UserId == id);
         }
+
+        public async Task UpdateTeacherAsync(Teachers teacher)
+        {
+            _context.Teachers.Update(teacher);
+            _context.Users.Update(teacher.Users);
+            await _context.SaveChangesAsync();
+        }
     }
 }
