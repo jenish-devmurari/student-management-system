@@ -16,7 +16,7 @@ namespace Service.Services
         private readonly ITeacherRepository _teacherRepository;
         private readonly IStudentRepository _studentRepository;
         private readonly IAttendanceRepository _attendanceRepository;
-        public TeacherService(ITeacherRepository teacherRepository, IStudentRepository studentRepository,IAttendanceRepository attendanceRepository)
+        public TeacherService(ITeacherRepository teacherRepository, IStudentRepository studentRepository, IAttendanceRepository attendanceRepository)
         {
             _teacherRepository = teacherRepository;
             _studentRepository = studentRepository;
@@ -70,13 +70,16 @@ namespace Service.Services
                 };
             }
         }
+        #endregion
 
+        #region MarkAttendance
         public async Task<ResponseDTO> MarkAttendance(List<StudentAttendanceDTO> attendanceDTOs, int userId)
         {
             try
             {
                 Teachers teacher = await _teacherRepository.GetTeacherDetailsByIdAsync(userId);
 
+                // if teacher not found 
                 if (teacher == null)
                 {
                     return new ResponseDTO
@@ -85,6 +88,17 @@ namespace Service.Services
                         Message = "Teacher Not Found"
                     };
                 }
+
+
+                // check attendence is already done or not 
+                if (await _attendanceRepository.IsAttendenceDone(DateTime.Now, teacher.TeacherId))
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Attendance is already Done."
+                    };
+                };
 
                 var attendances = attendanceDTOs.Select(a => new Attendance
                 {
@@ -122,6 +136,89 @@ namespace Service.Services
         #endregion
 
 
+        #region Attendance History Of Teacher Class 
+        public async Task<ResponseDTO> AttendancHistory(int userId)
+        {
+            try
+            {
+                Teachers teacher = await _teacherRepository.GetTeacherDetailsByIdAsync(userId);
 
+                if (teacher == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Teacher Not Found"
+                    };
+                }
+
+                List<Attendance> attendanceDetails = await _attendanceRepository.GetAttendanceDetailsOfStudent((int)teacher.TeacherId);
+
+                List<StudentAttendanceHistoryDTO> studentAttendanceDTOs = attendanceDetails.Select(attendance => new StudentAttendanceHistoryDTO
+                {
+                    Id = attendance.id,
+                    Name = attendance.Students.Users.Name,
+                    Date = attendance.Date,
+                    SubjectName = attendance.Subjects.SubjectName,
+                    IsPresent = attendance.IsPresent
+                }).ToList();
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Data = studentAttendanceDTOs,
+                    Message = "Get all student attendance data of teacher class."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+        #endregion
+
+        #region edit attendance history of student
+        public async Task<ResponseDTO> editAttendancHistory(int id, int userId, StudentAttendanceHistoryDTO editattendance)
+        {
+            try
+            {
+                Attendance attendance = await _attendanceRepository.GetAttendanceAsync(id);
+
+                if (attendance == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Attendance Not Found"
+                    };
+                }
+
+                attendance.IsPresent = editattendance.IsPresent;
+                attendance.ModifiedBy = userId;
+                attendance.ModifiedOn = DateTime.Now;
+
+                await _attendanceRepository.UpdateAttendanceAsync(attendance);
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Data = attendance.id,
+                    Message = "successfully edit attendance of student"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+        #endregion
     }
 }

@@ -62,5 +62,23 @@ namespace StudentManagementSystem.Controllers
         }
         #endregion
 
+        #region Attendance History of student
+        [HttpGet("AttendanceHistory")]
+        public async Task<IActionResult> AttendanceHistory()
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _teacherService.AttendancHistory(userId));
+        }
+        #endregion
+
+        #region edit Attendance History of student
+        [HttpPut("EditAttendanceHistory/{id}")]
+        public async Task<IActionResult> EditAttendanceHistory( int id,StudentAttendanceHistoryDTO attendance)
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _teacherService.editAttendancHistory(id,userId,attendance));
+        }
+        #endregion
+
     }
 }
