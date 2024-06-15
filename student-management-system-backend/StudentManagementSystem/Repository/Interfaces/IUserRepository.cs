@@ -18,5 +18,7 @@ namespace Repository.Interfaces
 
         Task<Users> GetUserByIdAsync(int id);
 
+        Task<Users> GetUserByEmailAsync(string email);
+
     }
 }

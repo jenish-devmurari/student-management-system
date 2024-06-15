@@ -64,7 +64,6 @@ namespace StudentManagementSystem.Controllers
         [HttpPut("UpdateTeacher/{id}")]
         public async Task<IActionResult> UpdateTeacher([FromBody] TeacherUpdateDTO teacherUpdate, int id)
         {
-            int Id = int.Parse(User.FindFirst("UserId")?.Value);
             return Ok(await _adminService.UpdateTeacher(teacherUpdate, id));
         }
         #endregion

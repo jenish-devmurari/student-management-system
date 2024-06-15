@@ -50,5 +50,12 @@ namespace Repository.Repository
         {
             return await _context.Users.FirstOrDefaultAsync(x => x.UserId == id);
         }
+
+        public async Task<Users> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users
+            .Include(u => u.Student)
+            .FirstOrDefaultAsync(u => u.Email == email);
+        }
     }
 }

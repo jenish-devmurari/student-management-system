@@ -26,7 +26,8 @@ namespace Repository.Modals
         public int TotalMarks { get; set; }
 
         [Required]
-        public int ExamMonth { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime Date { get; set; }
     
 
         [Column(TypeName = "date")]

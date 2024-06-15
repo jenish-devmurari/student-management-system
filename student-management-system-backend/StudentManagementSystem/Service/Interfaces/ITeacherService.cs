@@ -16,6 +16,12 @@ namespace Service.Interfaces
 
         public Task<ResponseDTO> AttendancHistory(int userId);
 
-        public Task<ResponseDTO> editAttendancHistory(int id, int userId,StudentAttendanceHistoryDTO attendance);
+        public Task<ResponseDTO> editAttendancHistory(int id, int userId, StudentAttendanceHistoryDTO attendance);
+
+        public Task<ResponseDTO> AddMarks(StudentMarksDTO marksDetails, int userId);
+
+        public Task<ResponseDTO> GetAllStudentGrades(int userId);
+
+        public Task<ResponseDTO> UpdateStudentGrades(StudentMarksDTO updateMarks,int userId);
     }
 }

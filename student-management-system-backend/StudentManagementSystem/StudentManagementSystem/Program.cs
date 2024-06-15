@@ -27,11 +27,13 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IPasswordEncryption, PasswordEncryption>();
 builder.Services.AddTransient<IValidationService, ValidationService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+builder.Services.AddScoped<IGradeRepository, GradeRepository>();
 
 #endregion
 

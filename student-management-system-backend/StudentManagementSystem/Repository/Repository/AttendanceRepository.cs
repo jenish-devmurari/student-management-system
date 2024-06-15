@@ -4,6 +4,7 @@ using Repository.Modals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,6 +49,16 @@ namespace Repository.Repository
             _context.Attendance.Update(attendance);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Attendance>> GetStudentAllAttendance(int studentId)
+        {
+            return await _context.Attendance
+                .Include(a => a.Students) 
+                .Include(a => a.Subjects) 
+                .Where(a => a.StudentId == studentId)
+                .ToListAsync();
+        }
+
 
     }
 }

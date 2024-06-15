@@ -17,5 +17,7 @@ namespace Repository.Interfaces
         Task<bool> IsAttendenceDone(DateTime date, int teacherId);
 
         Task UpdateAttendanceAsync(Attendance attendance);
+
+        Task<List<Attendance>> GetStudentAllAttendance(int studentId);
     }
 }

@@ -73,10 +73,38 @@ namespace StudentManagementSystem.Controllers
 
         #region edit Attendance History of student
         [HttpPut("EditAttendanceHistory/{id}")]
-        public async Task<IActionResult> EditAttendanceHistory( int id,StudentAttendanceHistoryDTO attendance)
+        public async Task<IActionResult> EditAttendanceHistory(int id, StudentAttendanceHistoryDTO attendance)
         {
             var userId = int.Parse(User.FindFirst("UserId")?.Value);
-            return Ok(await _teacherService.editAttendancHistory(id,userId,attendance));
+            return Ok(await _teacherService.editAttendancHistory(id, userId, attendance));
+        }
+        #endregion
+
+
+        #region add marks of student by teacher
+        [HttpPost("AddMarks")]
+        public async Task<IActionResult> AddMarks(StudentMarksDTO marksDetails)
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _teacherService.AddMarks(marksDetails, userId));
+        }
+        #endregion
+
+        #region Get AllStudents Grades of teacher
+        [HttpGet("GetAllStudentGrades")]
+        public async Task<IActionResult> GetAllStudentGrades()
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _teacherService.GetAllStudentGrades(userId));
+        }
+        #endregion
+
+        #region
+        [HttpPut("UpdateMarksOfStudent")]
+        public async Task<IActionResult> UpdateMarksOfStudent([FromBody] StudentMarksDTO updateMarks)
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _teacherService.UpdateStudentGrades(updateMarks,userId));
         }
         #endregion
 

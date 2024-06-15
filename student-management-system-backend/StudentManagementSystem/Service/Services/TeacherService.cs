@@ -1,13 +1,8 @@
 ﻿using Repository.Interfaces;
 using Repository.Modals;
-using Repository.Repository;
 using Service.DTOs;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Service.Services
 {
@@ -16,11 +11,15 @@ namespace Service.Services
         private readonly ITeacherRepository _teacherRepository;
         private readonly IStudentRepository _studentRepository;
         private readonly IAttendanceRepository _attendanceRepository;
-        public TeacherService(ITeacherRepository teacherRepository, IStudentRepository studentRepository, IAttendanceRepository attendanceRepository)
+        private readonly IUserRepository _userRepository;
+        private readonly IGradeRepository _gradeRepository;
+        public TeacherService(ITeacherRepository teacherRepository, IStudentRepository studentRepository, IAttendanceRepository attendanceRepository, IUserRepository userRepository, IGradeRepository gradeRepository)
         {
             _teacherRepository = teacherRepository;
             _studentRepository = studentRepository;
             _attendanceRepository = attendanceRepository;
+            _userRepository = userRepository;
+            _gradeRepository = gradeRepository;
         }
 
         #region Get All Students list of teacher
@@ -220,5 +219,179 @@ namespace Service.Services
             }
         }
         #endregion
+
+        #region AddMarks of student by teacher 
+        public async Task<ResponseDTO> AddMarks(StudentMarksDTO marksDetails, int userId)
+        {
+            try
+            {
+
+                // Validate email format before checking if it exists
+                if (string.IsNullOrEmpty(marksDetails.Email?.Trim()) ||
+                    !Regex.IsMatch(marksDetails.Email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 400,
+                        Message = "Invalid email format."
+                    };
+                }
+
+                Users user = await _userRepository.GetUserByEmailAsync(marksDetails.Email);
+
+                if (user == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "User not found."
+                    };
+                }
+
+                var teacher = await _teacherRepository.GetTeacherDetailsByIdAsync(userId);
+
+                if (teacher == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Teacher not found."
+                    };
+                }
+
+                if (user.Student == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Student not found."
+                    };
+                }
+
+                Grades grades = new Grades
+                {
+                    StudentId = user.Student.StudentId,
+                    TeacherId = teacher.TeacherId,
+                    Marks = marksDetails.Marks,
+                    TotalMarks = marksDetails.TotalMarks,
+                    Date = marksDetails.Date,
+                    CreatedBy = userId,
+                    CreatedOn = DateTime.Now,
+                    ModifiedBy = userId,
+                    ModifiedOn = DateTime.Now,
+                };
+
+                await _gradeRepository.AddMarks(grades);
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Marks added successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+        #endregion
+
+        #region Get All Student Grades Detail
+        public async Task<ResponseDTO> GetAllStudentGrades(int userId)
+        {
+            try
+            {
+                Teachers teacher = await _teacherRepository.GetTeacherDetailsByIdAsync(userId);
+
+                if (teacher == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Teacher not found."
+                    };
+                }
+
+                List<Grades> studentMarksDTOs = await _gradeRepository.GetAllStudentGradesOfTeacherSubject(teacher.TeacherId);
+
+                List<StudentMarksDTO> studentMarks = studentMarksDTOs.Select(grade => new StudentMarksDTO
+                {
+                    GradeId = grade.id,
+                    Email = grade.Students.Users.Email,
+                    SubjectId = grade.Teachers.SubjectId,
+                    Marks = grade.Marks,
+                    TotalMarks = grade.TotalMarks,
+                    Date = grade.Date
+                }).ToList();
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Data = studentMarks,
+                    Message = "Student marks retrieved successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+
+
+        }
+
+
+        #endregion
+
+        #region Update Grades of Student
+        public async Task<ResponseDTO> UpdateStudentGrades(StudentMarksDTO updateMarks, int userId)
+        {
+            try
+            {
+
+                Grades gradesDetails = await _gradeRepository.GetGradeDetailsByID(updateMarks.GradeId);
+
+                if(gradesDetails == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Grades are not found."
+                    };
+                }
+
+                gradesDetails.Marks = updateMarks.Marks;
+                gradesDetails.TotalMarks = updateMarks.TotalMarks;
+                gradesDetails.ModifiedBy = userId;
+                gradesDetails.ModifiedOn = DateTime.Now;
+
+                await _gradeRepository.UpdateGrades(gradesDetails);
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Data = gradesDetails.id,
+                    Message = "Grades are update successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+        #endregion
+
+
     }
 }

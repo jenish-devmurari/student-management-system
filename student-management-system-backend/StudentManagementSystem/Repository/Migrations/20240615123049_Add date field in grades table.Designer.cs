@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository;
 
@@ -11,9 +12,10 @@ using Repository;
 namespace Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240615123049_Add date field in grades table")]
+    partial class Adddatefieldingradestable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,8 +148,7 @@ namespace Repository.Migrations
 
                     b.HasKey("StudentId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Students");
                 });
@@ -225,8 +226,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Teachers");
                 });
@@ -335,8 +335,8 @@ namespace Repository.Migrations
             modelBuilder.Entity("Repository.Modals.Students", b =>
                 {
                     b.HasOne("Repository.Modals.Users", "Users")
-                        .WithOne("Student")
-                        .HasForeignKey("Repository.Modals.Students", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -352,23 +352,14 @@ namespace Repository.Migrations
                         .IsRequired();
 
                     b.HasOne("Repository.Modals.Users", "Users")
-                        .WithOne("Teacher")
-                        .HasForeignKey("Repository.Modals.Teachers", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Subject");
 
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Repository.Modals.Users", b =>
-                {
-                    b.Navigation("Student")
-                        .IsRequired();
-
-                    b.Navigation("Teacher")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

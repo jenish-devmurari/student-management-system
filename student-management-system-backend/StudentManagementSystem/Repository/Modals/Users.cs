@@ -45,5 +45,7 @@ namespace Repository.Modals
         [Required]
         public bool IsPasswordReset { get; set; }
 
+        public virtual Students Student { get; set; }
+        public virtual Teachers Teacher { get; set; }
     }
 }
