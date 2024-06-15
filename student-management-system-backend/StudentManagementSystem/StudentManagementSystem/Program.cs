@@ -34,6 +34,7 @@ builder.Services.AddTransient<IValidationService, ValidationService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 builder.Services.AddScoped<IGradeRepository, GradeRepository>();
+builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 
 #endregion
 

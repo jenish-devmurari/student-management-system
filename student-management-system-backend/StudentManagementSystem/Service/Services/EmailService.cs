@@ -1,8 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Repository.Interfaces;
+using Repository.Modals;
+using Repository.Repository;
 using Service.DTOs;
 using Service.Interfaces;
 using System.Net;
 using System.Net.Mail;
+using System.Runtime.InteropServices;
 
 namespace Service.Services
 {
@@ -11,13 +15,17 @@ namespace Service.Services
         #region DI
         private readonly SmtpClient _smtpClient;
         private readonly IConfiguration _configuration;
+        private readonly ISubjectRepository _subjectRepository;
 
-        public EmailService(IConfiguration configuration)
+        public EmailService(IConfiguration configuration, ISubjectRepository subjectRepository)
         {
             _configuration = configuration;
+            _subjectRepository = subjectRepository;
         }
         #endregion
 
+
+        #region email for student when enroll
         public async Task SendEmailToStudentAsync(StudentRegisterDTO student, List<string> ccEmails = null)
         {
             var smtpSettings = _configuration.GetSection("SmtpSettings");
@@ -126,8 +134,9 @@ namespace Service.Services
 
             await smtpClient.SendMailAsync(mailMessage);
         }
+        #endregion
 
-
+        #region  email when teacher register 
         public async Task SendEmailTeacherAsync(string email)
         {
             var smtpSettings = _configuration.GetSection("SmtpSettings");
@@ -172,6 +181,69 @@ namespace Service.Services
 
             await smtpClient.SendMailAsync(mailMessage);
         }
+        #endregion
+
+        #region email when marks are recorded by teacher
+        public async Task SendGradeNotificationEmailAsync(string toEmail, string studentName, int subjectId, int grade,bool isedit)
+        {
+            var smtpSettings = _configuration.GetSection("SmtpSettings");
+
+            var smtpClient = new SmtpClient(smtpSettings["Server"])
+            {
+                Port = int.Parse(smtpSettings["Port"]),
+                Credentials = new NetworkCredential(smtpSettings["Username"], smtpSettings["Password"]),
+                EnableSsl = true
+            };
+
+            var subjectname  = await _subjectRepository.GetSubjectAsync(subjectId);
+
+            string htmlContent = $@"
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset='UTF-8'>
+                    <title>Grade Notification</title>
+                </head>
+                <body style='font-family: Arial, sans-serif; margin: 0; padding: 0;'>
+                    <div style='background-color: #f8f9fa; padding: 20px;'>
+                        <div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px;'>
+                            <h1 style='color: #333333;'>Grade Notification</h1>
+                            <p style='color: #555555;'>Dear {studentName},</p>
+                            <p style='color: #555555;'>Your grade for the course <strong>{subjectname}</strong> has been recorded as: <strong>{grade}</strong>.</p>
+                            <p style='color: #555555;'>Best regards,<br>The Bacancy School</p>
+                        </div>
+                    </div>
+                </body>
+                </html>";
+
+            string subject = "";
+
+            if (isedit)
+            {
+                subject = "Grades are updated";
+            }
+            else
+            {
+                subject = "Grades are Added";
+            }
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(smtpSettings["Email"]),
+                Subject = subject,
+                Body = htmlContent,
+                IsBodyHtml = true,
+            };
+
+            mailMessage.To.Add(toEmail);
+
+
+            await smtpClient.SendMailAsync(mailMessage);
+        }
+
+
+
+        #endregion
 
     }
 }

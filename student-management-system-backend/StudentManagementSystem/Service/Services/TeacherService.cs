@@ -13,14 +13,16 @@ namespace Service.Services
         private readonly IAttendanceRepository _attendanceRepository;
         private readonly IUserRepository _userRepository;
         private readonly IGradeRepository _gradeRepository;
-        public TeacherService(ITeacherRepository teacherRepository, IStudentRepository studentRepository, IAttendanceRepository attendanceRepository, IUserRepository userRepository, IGradeRepository gradeRepository)
+        private readonly IEmailService _emailService;
+
+        public TeacherService(ITeacherRepository teacherRepository, IStudentRepository studentRepository, IAttendanceRepository attendanceRepository, IEmailService emailService)
         {
             _teacherRepository = teacherRepository;
             _studentRepository = studentRepository;
             _attendanceRepository = attendanceRepository;
-            _userRepository = userRepository;
-            _gradeRepository = gradeRepository;
+            _emailService = emailService;
         }
+
 
         #region Get All Students list of teacher
         public async Task<ResponseDTO> GetAllStudentOfTeacherClass(int userId)
@@ -237,7 +239,7 @@ namespace Service.Services
                     };
                 }
 
-                Users user = await _userRepository.GetUserByEmailAsync(marksDetails.Email);
+                Users user = await _userRepository.GetUsersAsync(marksDetails.Email);
 
                 if (user == null)
                 {
@@ -282,6 +284,9 @@ namespace Service.Services
                 };
 
                 await _gradeRepository.AddMarks(grades);
+
+                // email to student about their grade 
+                await _emailService.SendGradeNotificationEmailAsync(user.Email, user.Name, user.Teacher.SubjectId, marksDetails.Marks,false);
 
                 return new ResponseDTO
                 {
@@ -373,6 +378,8 @@ namespace Service.Services
                 gradesDetails.ModifiedOn = DateTime.Now;
 
                 await _gradeRepository.UpdateGrades(gradesDetails);
+
+                await _emailService.SendGradeNotificationEmailAsync(updateMarks.Email,gradesDetails.Students.Users.Name, updateMarks.Marks,gradesDetails.Teachers.SubjectId, true);
 
                 return new ResponseDTO
                 {
