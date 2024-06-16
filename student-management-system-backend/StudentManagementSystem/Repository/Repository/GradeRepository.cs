@@ -32,7 +32,10 @@ namespace Repository.Repository
 
         public async Task<Grades> GetGradeDetailsByID(int id)
         {
-            return await _context.Grades.FirstOrDefaultAsync(g => g.id == id);
+            return await _context.Grades
+        .Include(g => g.Students).ThenInclude(u => u.Users)
+        .Include(g => g.Teachers)
+        .SingleOrDefaultAsync(g => g.id == id);
         }
 
         public async Task UpdateGrades(Grades grades)

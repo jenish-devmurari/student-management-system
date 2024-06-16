@@ -383,8 +383,7 @@ namespace Service.Services
                 await _gradeRepository.UpdateGrades(gradesDetails);
 
 
-                // email when marks are update 
-                //await _emailService.SendGradeNotificationEmailAsync(updateMarks.Email,gradesDetails.Students.Users.Name, updateMarks.Marks,gradesDetails.Teachers.SubjectId, true);
+              
 
                 return new ResponseDTO
                 {
