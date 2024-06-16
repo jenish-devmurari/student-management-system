@@ -8,6 +8,7 @@ namespace Service.DTOs
 {
     public class StudentMarksDTO 
     {
+        public int userId {  get; set; }
         public int GradeId { get; set; }
         public string Email { get; set; }
 

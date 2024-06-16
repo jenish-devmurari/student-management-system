@@ -216,21 +216,11 @@ namespace Service.Services
                 </body>
                 </html>";
 
-            string subject = "";
-
-            if (isedit)
-            {
-                subject = "Grades are updated";
-            }
-            else
-            {
-                subject = "Grades are Added";
-            }
 
             var mailMessage = new MailMessage
             {
                 From = new MailAddress(smtpSettings["Email"]),
-                Subject = subject,
+                Subject = "Grade Notification",
                 Body = htmlContent,
                 IsBodyHtml = true,
             };

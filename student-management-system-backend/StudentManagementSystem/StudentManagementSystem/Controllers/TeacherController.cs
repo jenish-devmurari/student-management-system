@@ -99,12 +99,32 @@ namespace StudentManagementSystem.Controllers
         }
         #endregion
 
-        #region
+        #region update marks of student
         [HttpPut("UpdateMarksOfStudent")]
         public async Task<IActionResult> UpdateMarksOfStudent([FromBody] StudentMarksDTO updateMarks)
         {
             var userId = int.Parse(User.FindFirst("UserId")?.Value);
-            return Ok(await _teacherService.UpdateStudentGrades(updateMarks,userId));
+            return Ok(await _teacherService.UpdateStudentGrades(updateMarks, userId));
+        }
+        #endregion
+
+
+        #region get student details by teacher with user id of student
+
+        [HttpGet("GetStudentDetailById/{id}")]
+        public async Task<IActionResult> GetStudentDetailsWithGradeByTeacher(int id)
+        {
+            return Ok(await _adminService.GetStudentDetailsByIdAsync(id));
+        }
+
+        #endregion
+
+        #region get student grade details of teacher subject by user id
+        [HttpGet("GetStudentGradesDetailById/{id}")]
+        public async Task<IActionResult> GetStudentGradeDetailsByTeacher(int studentUserId)
+        {
+            var teacherUserID = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _teacherService.GetStudentGradeDetailsByStudentID(studentUserId, teacherUserID));
         }
         #endregion
 

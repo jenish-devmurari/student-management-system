@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repository
 {
-    public class GradeRepository :IGradeRepository
+    public class GradeRepository : IGradeRepository
     {
         private readonly AppDbContext _context;
 
@@ -27,7 +27,7 @@ namespace Repository.Repository
 
         public async Task<List<Grades>> GetAllStudentGradesOfTeacherSubject(int teacherId)
         {
-            return await _context.Grades.Include(s =>s.Students).ThenInclude(u => u.Users).Include(t => t.Teachers).Where(g => g.TeacherId == teacherId).ToListAsync();
+            return await _context.Grades.Include(s => s.Students).ThenInclude(u => u.Users).Include(t => t.Teachers).Where(g => g.TeacherId == teacherId).ToListAsync();
         }
 
         public async Task<Grades> GetGradeDetailsByID(int id)
@@ -40,5 +40,86 @@ namespace Repository.Repository
             _context.Grades.Update(grades);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Grades>> GetGradeDetailsByUserID(int studentUserId, int teacherUserId)
+        {
+            return await _context.Grades.Where(g => g.Students.UserId == studentUserId && g.Teachers.UserId == teacherUserId).ToListAsync();
+
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

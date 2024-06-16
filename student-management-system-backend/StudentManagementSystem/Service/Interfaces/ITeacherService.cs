@@ -22,6 +22,9 @@ namespace Service.Interfaces
 
         public Task<ResponseDTO> GetAllStudentGrades(int userId);
 
-        public Task<ResponseDTO> UpdateStudentGrades(StudentMarksDTO updateMarks,int userId);
+        public Task<ResponseDTO> UpdateStudentGrades(StudentMarksDTO updateMarks, int userId);
+
+
+        public Task<ResponseDTO> GetStudentGradeDetailsByStudentID(int studentUserID, int userID);
     }
 }

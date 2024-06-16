@@ -16,6 +16,8 @@ namespace Repository.Interfaces
         Task<Grades> GetGradeDetailsByID(int id);
         Task UpdateGrades(Grades grades);
 
+        Task<List<Grades>> GetGradeDetailsByUserID(int studentUserId, int subjectId);
+
 
     }
 }

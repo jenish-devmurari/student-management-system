@@ -15,12 +15,14 @@ namespace Service.Services
         private readonly IGradeRepository _gradeRepository;
         private readonly IEmailService _emailService;
 
-        public TeacherService(ITeacherRepository teacherRepository, IStudentRepository studentRepository, IAttendanceRepository attendanceRepository, IEmailService emailService)
+        public TeacherService(ITeacherRepository teacherRepository, IStudentRepository studentRepository, IAttendanceRepository attendanceRepository, IEmailService emailService, IGradeRepository gradeRepository, IUserRepository userRepository)
         {
             _teacherRepository = teacherRepository;
             _studentRepository = studentRepository;
             _attendanceRepository = attendanceRepository;
             _emailService = emailService;
+            _gradeRepository = gradeRepository;
+            _userRepository = userRepository;
         }
 
 
@@ -239,7 +241,7 @@ namespace Service.Services
                     };
                 }
 
-                Users user = await _userRepository.GetUsersAsync(marksDetails.Email);
+                Users user = await _userRepository.GetUserByEmailAsync(marksDetails.Email);
 
                 if (user == null)
                 {
@@ -286,7 +288,7 @@ namespace Service.Services
                 await _gradeRepository.AddMarks(grades);
 
                 // email to student about their grade 
-                await _emailService.SendGradeNotificationEmailAsync(user.Email, user.Name, user.Teacher.SubjectId, marksDetails.Marks,false);
+                await _emailService.SendGradeNotificationEmailAsync(user.Email, user.Name, teacher.SubjectId, marksDetails.Marks, false);
 
                 return new ResponseDTO
                 {
@@ -325,6 +327,7 @@ namespace Service.Services
 
                 List<StudentMarksDTO> studentMarks = studentMarksDTOs.Select(grade => new StudentMarksDTO
                 {
+                    userId = grade.Students.Users.UserId,
                     GradeId = grade.id,
                     Email = grade.Students.Users.Email,
                     SubjectId = grade.Teachers.SubjectId,
@@ -363,7 +366,7 @@ namespace Service.Services
 
                 Grades gradesDetails = await _gradeRepository.GetGradeDetailsByID(updateMarks.GradeId);
 
-                if(gradesDetails == null)
+                if (gradesDetails == null)
                 {
                     return new ResponseDTO
                     {
@@ -379,7 +382,9 @@ namespace Service.Services
 
                 await _gradeRepository.UpdateGrades(gradesDetails);
 
-                await _emailService.SendGradeNotificationEmailAsync(updateMarks.Email,gradesDetails.Students.Users.Name, updateMarks.Marks,gradesDetails.Teachers.SubjectId, true);
+
+                // email when marks are update 
+                //await _emailService.SendGradeNotificationEmailAsync(updateMarks.Email,gradesDetails.Students.Users.Name, updateMarks.Marks,gradesDetails.Teachers.SubjectId, true);
 
                 return new ResponseDTO
                 {
@@ -399,6 +404,51 @@ namespace Service.Services
         }
         #endregion
 
+
+        #region get student grade details of teacher subject
+        public async Task<ResponseDTO> GetStudentGradeDetailsByStudentID(int studentUserID,int userID)
+        {
+            try
+            {
+
+                // retrive student grade for particular teacher
+                List<Grades> gradesDetails = await _gradeRepository.GetGradeDetailsByUserID(studentUserID, userID);
+
+                if (gradesDetails == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Grades are not found."
+                    };
+                }
+
+                List<StudentMarksDTO> studentMarks = gradesDetails.Select(grade => new StudentMarksDTO
+                {
+                    userId = studentUserID,
+                    GradeId = grade.id,
+                    Marks = grade.Marks,
+                    TotalMarks = grade.TotalMarks,
+                    Date = grade.Date
+                }).ToList();
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Data = studentMarks,
+                    Message = "Grades are retrive successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+        #endregion
 
     }
 }
