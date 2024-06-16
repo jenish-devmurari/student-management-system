@@ -135,5 +135,22 @@ namespace StudentManagementSystem.Controllers
             return Ok(await _adminService.DeleteStudent(id));
         }
         #endregion
+
+        #region get attendance details of student using 
+        [HttpGet("GetStudentAttendanceDetails/{id}")]
+        public async Task<IActionResult> GetStudentAttendanceDetails(int studentId)
+        {
+            return Ok(await _adminService.GetStudentAttendanceDetailsById(studentId));
+        }
+        #endregion
+
+
+        #region get grades details of student using 
+        [HttpGet("GetStudentGradesDetails/{id}")]
+        public async Task<IActionResult> GetStudentGradesDetails(int studentId)
+        {
+            return Ok(await _adminService.GetStudentGradesDetailsById(studentId));
+        }
+        #endregion
     }
 }

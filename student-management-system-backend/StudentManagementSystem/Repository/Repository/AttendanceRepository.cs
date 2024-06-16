@@ -53,12 +53,18 @@ namespace Repository.Repository
         public async Task<List<Attendance>> GetStudentAllAttendance(int studentId)
         {
             return await _context.Attendance
-                .Include(a => a.Students) 
-                .Include(a => a.Subjects) 
+                .Include(a => a.Students)
+                .Include(a => a.Subjects)
                 .Where(a => a.StudentId == studentId)
                 .ToListAsync();
         }
 
+        public async Task<List<Attendance>> GetAttedanceOfStudent(int studentId)
+        {
+            return await _context.Attendance.Include(s => s.Students).ThenInclude(u => u.Users).Include(s => s.Subjects).Where(s => s.StudentId == studentId).ToListAsync();
+        }
+
+     
 
     }
 }

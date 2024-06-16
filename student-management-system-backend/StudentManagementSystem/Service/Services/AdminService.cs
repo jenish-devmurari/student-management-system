@@ -21,13 +21,15 @@ namespace Service.Services
         #region DI
         private readonly IStudentRepository _studentRepository;
         private readonly ITeacherRepository _teacherRepository;
+        private readonly IAttendanceRepository _attendanceRepository;
+        private readonly IGradeRepository _gradeRepository;
         private readonly IPasswordEncryption _passwordEncryption;
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
         private readonly IValidationService _validationService;
         private readonly AppDbContext _context;
 
-        public AdminService(IPasswordEncryption passwordEncryption, AppDbContext context, IStudentRepository studentRepository, ITeacherRepository teacherRepository, IUserRepository userRepository, IEmailService emailService, IValidationService validationService)
+        public AdminService(IPasswordEncryption passwordEncryption, AppDbContext context, IStudentRepository studentRepository, ITeacherRepository teacherRepository, IUserRepository userRepository, IEmailService emailService, IValidationService validationService, IAttendanceRepository attendanceRepository, IGradeRepository gradeRepository)
         {
             _studentRepository = studentRepository;
             _passwordEncryption = passwordEncryption;
@@ -36,6 +38,8 @@ namespace Service.Services
             _userRepository = userRepository;
             _emailService = emailService;
             _validationService = validationService;
+            _attendanceRepository = attendanceRepository;
+            _gradeRepository = gradeRepository;
         }
         #endregion
 
@@ -287,7 +291,7 @@ namespace Service.Services
                     };
                 }
 
-                if(user.Role != Roles.Student)
+                if (user.Role != Roles.Student)
                 {
                     return new ResponseDTO
                     {
@@ -318,7 +322,7 @@ namespace Service.Services
         #endregion
 
         #region update student by id 
-        public async Task<ResponseDTO> UpdateStudent(StudentUpdateDTO studentUpdate, int id,int Id)
+        public async Task<ResponseDTO> UpdateStudent(StudentUpdateDTO studentUpdate, int id, int Id)
         {
             try
             {
@@ -340,7 +344,7 @@ namespace Service.Services
                 }
 
                 if (student.RollNumber != studentUpdate.RollNumber)
-                { 
+                {
                     // Roll number validation
                     if (await _studentRepository.IsRollNumberIsExist(studentUpdate.RollNumber))
                     {
@@ -570,6 +574,101 @@ namespace Service.Services
                 };
             }
 
+        }
+        #endregion
+
+        #region  Get Student Attendance Details
+        public async Task<ResponseDTO> GetStudentAttendanceDetailsById(int studentId)
+        {
+            try
+            {
+                List<Attendance> attendances = await _attendanceRepository.GetAttedanceOfStudent(studentId);
+
+                if (attendances == null || !attendances.Any())
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "No attendance records found for the student.",
+                        Data = null
+                    };
+                }
+
+                List<StudentAttendanceDetailsDTO> attendanceDetails = attendances.Select(a => new StudentAttendanceDetailsDTO
+                {
+                    Id = a.id,
+                    Name = a.Students.Users.Name,
+                    SubjectName = a.Subjects.SubjectName,
+                    classId = a.ClassId,
+                    IsPresent = a.IsPresent,
+                    Date = a.Date,
+                }).ToList();
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Student attendance retrieved successfully",
+                    Data = attendanceDetails
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        #endregion
+
+
+        #region  Get Student Grades Details
+        public async Task<ResponseDTO> GetStudentGradesDetailsById(int studentId)
+        {
+            try
+            {
+                List<Grades> grades = await _gradeRepository.GetGradesOfStudent(studentId);
+
+                if (grades == null || !grades.Any())
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "No Grades records found for the student.",
+                        Data = null
+                    };
+                }
+
+                List<StudentGradesDetailsDTO> gradesDetails = grades.Select(a => new StudentGradesDetailsDTO
+                {
+                    gradeId = a.id,
+                    Name = a.Students.Users.Name,
+                    SubjectName = a.Teachers.Subject.SubjectName,
+                    ClassId = a.Students.ClassId,
+                    Marks = a.Marks,
+                    TotalMarks = a.TotalMarks,
+                    Date = a.Date,
+                }).ToList();
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Student grades retrieved successfully",
+                    Data = gradesDetails
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
         }
         #endregion
 

@@ -20,6 +20,8 @@ namespace Repository.Interfaces
 
         Task<List<Grades>> StudentGradesBySubject(int studentId, int subjectId);
 
+        Task<List<Grades>> GetGradesOfStudent(int studentId);
+
 
     }
 }

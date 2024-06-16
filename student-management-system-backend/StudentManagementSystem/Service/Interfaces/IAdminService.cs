@@ -1,4 +1,5 @@
-﻿using Service.DTOs;
+﻿using Repository.Modals;
+using Service.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,5 +28,10 @@ namespace Service.Interfaces
         public Task<ResponseDTO> UpdateTeacher(TeacherUpdateDTO teacherUpdate, int id);
 
         public Task<ResponseDTO> DeleteTeacher(int id);
+
+
+        Task<ResponseDTO> GetStudentAttendanceDetailsById(int studentId);
+
+        Task<ResponseDTO> GetStudentGradesDetailsById(int studentId);
     }
 }

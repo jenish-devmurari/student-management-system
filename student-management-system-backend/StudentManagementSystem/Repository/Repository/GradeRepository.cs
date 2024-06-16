@@ -58,6 +58,12 @@ namespace Repository.Repository
                 .ThenInclude(t => t.Subject)
                 .Where(g => g.StudentId == studentId && g.Teachers.SubjectId == subjectId).ToListAsync();
         }
+
+        public async Task<List<Grades>> GetGradesOfStudent(int studentId)
+        {
+            return await _context.Grades.Include(s => s.Students).ThenInclude(u => u.Users).Include(t => t.Teachers).ThenInclude(s => s.Subject).Where(s => s.StudentId == studentId).ToListAsync();
+        }
+
     }
 }
 

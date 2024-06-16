@@ -19,5 +19,7 @@ namespace Repository.Interfaces
         Task UpdateAttendanceAsync(Attendance attendance);
 
         Task<List<Attendance>> GetStudentAllAttendance(int studentId);
+
+        Task<List<Attendance>> GetAttedanceOfStudent(int studentId);
     }
 }
