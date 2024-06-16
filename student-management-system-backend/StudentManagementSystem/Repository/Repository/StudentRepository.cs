@@ -41,6 +41,13 @@ namespace Repository.Repository
                                  .FirstOrDefaultAsync(s => s.UserId == id);
         }
 
+        public async Task<Students> GetStudentDetailsByStudentIdAsync(int id)
+        {
+            return await _context.Students
+                                 .Include(s => s.Users)
+                                 .Where(s => s.StudentId == id).FirstOrDefaultAsync();
+        }
+
         public async Task UpdateStudentAsync(Students student)
         {
             _context.Students.Update(student);

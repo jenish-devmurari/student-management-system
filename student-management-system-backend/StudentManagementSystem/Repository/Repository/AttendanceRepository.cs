@@ -64,7 +64,9 @@ namespace Repository.Repository
             return await _context.Attendance.Include(s => s.Students).ThenInclude(u => u.Users).Include(s => s.Subjects).Where(s => s.StudentId == studentId).ToListAsync();
         }
 
-     
-
+        public async Task<List<Attendance>> GetAttendanceDetailsByDate(DateTime date, int teacherId)
+        {
+            return await _context.Attendance.Include(s => s.Students).ThenInclude(u => u.Users).Include(s => s.Subjects).Where(a => a.Date ==  date && a.TeacherId == teacherId).ToListAsync();
+        }
     }
 }

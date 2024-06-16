@@ -184,7 +184,7 @@ namespace Service.Services
         #endregion
 
         #region email when marks are recorded by teacher
-        public async Task SendGradeNotificationEmailAsync(string toEmail, string studentName, int subjectId, int grade,bool isedit)
+        public async Task SendGradeNotificationEmailAsync(string toEmail, string studentName, int subjectId, int grade, bool isedit)
         {
             var smtpSettings = _configuration.GetSection("SmtpSettings");
 
@@ -195,7 +195,7 @@ namespace Service.Services
                 EnableSsl = true
             };
 
-            var subjectname  = await _subjectRepository.GetSubjectAsync(subjectId);
+            var subjectname = await _subjectRepository.GetSubjectAsync(subjectId);
 
             string htmlContent = $@"
                 <!DOCTYPE html>
@@ -231,9 +231,64 @@ namespace Service.Services
             await smtpClient.SendMailAsync(mailMessage);
         }
 
-
-
         #endregion
+
+        #region send email to student who is absent 
+        public async Task SendAttendanceNotificationEmailAsync(string studentEmail, string studentName, bool isPresent, List<string> ccEmails = null)
+        {
+            // Load SMTP settings
+            var smtpSettings = _configuration.GetSection("SmtpSettings");
+
+            var smtpClient = new SmtpClient(smtpSettings["Server"])
+            {
+                Port = int.Parse(smtpSettings["Port"]),
+                Credentials = new NetworkCredential(smtpSettings["Username"], smtpSettings["Password"]),
+                EnableSsl = true
+            };
+
+            // Construct the email content
+            string emailSubject = "Attendance Notification";
+            string emailBody = $@"
+                                <!DOCTYPE html>
+                                <html>
+                                <head>
+                                    <meta charset='UTF-8'>
+                                    <title>{emailSubject}</title>
+                                </head>
+                                <body style='font-family: Arial, sans-serif; margin: 0; padding: 0;'>
+                                    <div style='background-color: #f8f9fa; padding: 20px;'>
+                                        <div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px;'>
+                                            <h1 style='color: #333333;'>{emailSubject}</h1>
+                                            <p style='color: #555555;'>Dear {studentName},</p>
+                                            <p style='color: #555555;'>You have been marked as {(isPresent ? "present" : "absent" )} for today's class.</p>
+                                            <p style='color: #555555;'>Best regards,<br>The Bacancy School</p>
+                                        </div>
+                                    </div>
+                                </body>
+                                </html>";
+
+            // Create the email message
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(smtpSettings["Email"]),
+                Subject = emailSubject,
+                Body = emailBody,
+                IsBodyHtml = true,
+            };
+
+            // Add recipient and CC addresses
+            mailMessage.To.Add(studentEmail);
+            foreach (var email in ccEmails)
+            {
+                mailMessage.CC.Add(email);
+            }
+
+            // Send the email
+            await smtpClient.SendMailAsync(mailMessage);
+        }
+
+
+        #endregion 
 
     }
 }

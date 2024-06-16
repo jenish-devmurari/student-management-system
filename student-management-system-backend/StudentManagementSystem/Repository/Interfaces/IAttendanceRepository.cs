@@ -21,5 +21,7 @@ namespace Repository.Interfaces
         Task<List<Attendance>> GetStudentAllAttendance(int studentId);
 
         Task<List<Attendance>> GetAttedanceOfStudent(int studentId);
+
+        Task<List<Attendance>> GetAttendanceDetailsByDate(DateTime date, int teacherId);
     }
 }

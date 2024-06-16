@@ -128,5 +128,15 @@ namespace StudentManagementSystem.Controllers
         }
         #endregion
 
+        #region get Attendance data of monts's date 
+        [HttpGet("GetStudentAttendanceDetailByDate/{date}")]
+        public async Task<IActionResult> GetStudentGradeDetailsByTeacher(DateTime date)
+        {
+            var teacherUserID = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _teacherService.GetAttendanceDetailsByDate(date, teacherUserID));
+        }
+
+        #endregion
+
     }
 }

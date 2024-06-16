@@ -673,5 +673,52 @@ namespace Service.Services
         #endregion
 
 
+        //#region update student details on attendance page 
+        //public async Task<ResponseDTO> UpdateStudentDetailByAtteandanceId(int attendanceId)
+        //{
+        //    try
+        //    {
+        //        List<Attendance> attendances = await _attendanceRepository.GetAttedanceOfStudent(studentId);
+
+        //        if (attendances == null || !attendances.Any())
+        //        {
+        //            return new ResponseDTO
+        //            {
+        //                Status = 404,
+        //                Message = "No attendance records found for the student.",
+        //                Data = null
+        //            };
+        //        }
+
+        //        StudentAttendanceDetailsDTO attendanceDetails = attendances.Select(a => new StudentAttendanceDetailsDTO
+        //        {
+        //            Id = a.id,
+        //            Name = a.Students.Users.Name,
+        //            SubjectName = a.Subjects.SubjectName,
+        //            classId = a.ClassId,
+        //            IsPresent = a.IsPresent,
+        //            Date = a.Date,
+        //        }).ToList();
+
+        //        return new ResponseDTO
+        //        {
+        //            Status = 200,
+        //            Message = "Student update successfully",
+        //            Data = attendanceDetails
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return new ResponseDTO
+        //        {
+        //            Status = 500,
+        //            Message = $"An error occurred: {ex.Message}"
+        //        };
+        //    }
+        //}
+
+        //#endregion
+
     }
 }

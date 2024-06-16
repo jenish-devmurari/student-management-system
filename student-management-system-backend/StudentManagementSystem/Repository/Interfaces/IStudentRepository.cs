@@ -21,5 +21,7 @@ namespace Repository.Interfaces
 
 
         Task<List<Students>> GetAllStudentByTeacherClass(int classId);
+
+        Task<Students> GetStudentDetailsByStudentIdAsync(int id);
     }
 }

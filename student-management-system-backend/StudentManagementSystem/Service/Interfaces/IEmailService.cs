@@ -14,5 +14,7 @@ namespace Service.Interfaces
         Task SendEmailTeacherAsync(string toEmail);
 
         Task SendGradeNotificationEmailAsync(string toEmail, string studentName, int subjectId, int grade, bool isedit);
+
+        Task SendAttendanceNotificationEmailAsync(string studentEmail, string studentName, bool isAbsent, List<string> ccEmails = null);
     }
 }

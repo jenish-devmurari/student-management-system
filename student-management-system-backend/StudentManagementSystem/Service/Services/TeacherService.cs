@@ -118,6 +118,25 @@ namespace Service.Services
                 }).ToList();
 
                 await _attendanceRepository.AddAttendancesAsync(attendances);
+                List<string> teacherList = await _teacherRepository.GetTeacherEmailsByClassAsync((int)teacher.ClassId);
+
+                foreach (var a in attendanceDTOs)
+                {
+                    if (!a.IsPresent)
+                    {
+                        var student = await _studentRepository.GetStudentDetailsByStudentIdAsync(a.StudentId);
+                      
+                        if (student != null)
+                        {
+                            await _emailService.SendAttendanceNotificationEmailAsync(
+                                student.Users.Email,
+                                student.Users.Name,
+                                a.IsPresent,
+                                teacherList
+                            );
+                        }
+                    }
+                }
 
                 return new ResponseDTO
                 {
@@ -383,7 +402,7 @@ namespace Service.Services
                 await _gradeRepository.UpdateGrades(gradesDetails);
 
 
-              
+
 
                 return new ResponseDTO
                 {
@@ -405,7 +424,7 @@ namespace Service.Services
 
 
         #region get student grade details of teacher subject
-        public async Task<ResponseDTO> GetStudentGradeDetailsByStudentID(int studentUserID,int userID)
+        public async Task<ResponseDTO> GetStudentGradeDetailsByStudentID(int studentUserID, int userID)
         {
             try
             {
@@ -449,5 +468,60 @@ namespace Service.Services
         }
         #endregion
 
+
+        #region particular month's date attendance for teacher
+        public async Task<ResponseDTO> GetAttendanceDetailsByDate(DateTime date,int userId)
+        {
+            try
+            {
+                Teachers teacher = await _teacherRepository.GetTeacherDetailsByIdAsync(userId);
+
+                if (teacher == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Teacher Not Found"
+                    };
+                }
+
+                List<Attendance> attendanceDetails = await _attendanceRepository.GetAttendanceDetailsOfStudent((int)teacher.TeacherId);
+
+                if(attendanceDetails == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "No attendance found for this date"
+                    };
+                }
+
+                List<StudentAttendanceHistoryDTO> studentAttendanceDTOs = attendanceDetails.Select(attendance => new StudentAttendanceHistoryDTO
+                {
+                    Id = attendance.id,
+                    Name = attendance.Students.Users.Name,
+                    Date = attendance.Date,
+                    SubjectName = attendance.Subjects.SubjectName,
+                    IsPresent = attendance.IsPresent
+                }).ToList();
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Data = studentAttendanceDTOs,
+                    Message = "Get all student attendance data of teacher class of specific date."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        #endregion
     }
 }
