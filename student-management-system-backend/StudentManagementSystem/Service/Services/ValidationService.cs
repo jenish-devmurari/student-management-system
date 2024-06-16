@@ -53,7 +53,7 @@ namespace Service.Services
         }
 
 
-       
+
 
         public async Task<ResponseDTO> ValidateTeacherUpdateAsync(TeacherUpdateDTO teacherUpdateDTO)
         {
@@ -72,7 +72,7 @@ namespace Service.Services
             return new ResponseDTO { Status = 200 };
         }
 
-        
+
 
         public async Task<ResponseDTO> ValidateStudentRegistrationAsync(StudentRegisterDTO studentRegisterDTO)
         {
@@ -98,7 +98,7 @@ namespace Service.Services
         }
 
 
-       
+
 
         public async Task<ResponseDTO> ValidateStudentUpdateAsync(StudentUpdateDTO studentUpdateDTO)
         {
@@ -234,6 +234,106 @@ namespace Service.Services
             }
             return new ResponseDTO { Status = 200 };
         }
+
+
+        #region validation for edit attendance by admin
+        public ResponseDTO ValidateUpdateDetails(StudentAttendanceDetailsDTO updateDetails)
+        {
+            var errors = new List<string>();
+
+            if (string.IsNullOrEmpty(updateDetails.Name))
+            {
+                errors.Add("Student name is required.");
+            }
+
+            if ((int)updateDetails.classId < 0 && (int)updateDetails.classId > 12)
+            {
+                errors.Add("Valid class ID is required.");
+            }
+
+            if (string.IsNullOrEmpty(updateDetails.SubjectName))
+            {
+                errors.Add("Subject name is required.");
+            }
+
+            if (updateDetails.Date == default(DateTime))
+            {
+                errors.Add("Valid date is required.");
+            }
+
+            // If there are any validation errors, return a ResponseDTO with status 400
+            if (errors.Any())
+            {
+                return new ResponseDTO
+                {
+                    Status = 400,
+                    Message = "Validation failed",
+                    Data = errors
+                };
+            }
+
+            // Return null if validation passes
+            return null;
+        }
+        #endregion
+
+
+        #region validation for edit grades by admin
+        public  ResponseDTO ValidateUpdateGradeDetails(StudentGradesDetailsDTO updateDetails)
+        {
+            var errors = new List<string>();
+
+            if (string.IsNullOrEmpty(updateDetails.Name))
+            {
+                errors.Add("Student name is required.");
+            }
+
+            if ((int)updateDetails.ClassId < 0 && (int)updateDetails.ClassId > 12)
+            {
+                errors.Add("Valid class ID is required.");
+            }
+
+            if (string.IsNullOrEmpty(updateDetails.SubjectName))
+            {
+                errors.Add("Subject name is required.");
+            }
+
+            if (updateDetails.Date == default(DateTime))
+            {
+                errors.Add("Valid date is required.");
+            }
+
+            if (updateDetails.Marks < 0)
+            {
+                errors.Add("Marks is not negative");
+            }
+
+
+            if (updateDetails.TotalMarks < 0)
+            {
+                errors.Add("Total Marks is not negative");
+            }
+
+
+            if (updateDetails.Marks > updateDetails.TotalMarks)
+            {
+                errors.Add("Marks is not Greter than Total Marks");
+            }
+            // If there are any validation errors, return a ResponseDTO with status 400
+            if (errors.Any())
+            {
+                return new ResponseDTO
+                {
+                    Status = 400,
+                    Message = "Validation failed",
+                    Data = errors
+                };
+            }
+
+            // Return null if validation passes
+            return null;
+        }
+        #endregion
     }
 }
 

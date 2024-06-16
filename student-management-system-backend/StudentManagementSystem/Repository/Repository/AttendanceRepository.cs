@@ -37,7 +37,7 @@ namespace Repository.Repository
 
         public async Task<Attendance> GetAttendanceAsync(int id)
         {
-            return await _context.Attendance.FirstOrDefaultAsync(a => a.id == id);
+            return await _context.Attendance.Include(s => s.Students).ThenInclude(u => u.Users).Include(s =>s.Subjects).SingleOrDefaultAsync(a => a.id == id);
         }
 
         public async Task<bool> IsAttendenceDone(DateTime date, int teacherId)

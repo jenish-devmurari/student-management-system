@@ -33,5 +33,10 @@ namespace Service.Interfaces
         Task<ResponseDTO> GetStudentAttendanceDetailsById(int studentId);
 
         Task<ResponseDTO> GetStudentGradesDetailsById(int studentId);
+
+
+        Task<ResponseDTO> UpdateStudentDetailByAtteandanceId(StudentAttendanceDetailsDTO updateDetails, int userId);
+
+        Task<ResponseDTO> UpdateStudentDetailByGradeId(StudentGradesDetailsDTO updateDetails, int userId);
     }
 }

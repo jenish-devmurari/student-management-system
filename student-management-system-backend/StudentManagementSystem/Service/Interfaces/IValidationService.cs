@@ -16,5 +16,9 @@ namespace Service.Interfaces
         Task<ResponseDTO> ValidateStudentUpdateAsync(StudentUpdateDTO studentUpdate);
 
         Task<ResponseDTO> ValidateTeacherUpdateAsync(TeacherUpdateDTO teacherRegisterDTO);
+
+        ResponseDTO ValidateUpdateDetails(StudentAttendanceDetailsDTO updateDetails);
+
+        ResponseDTO ValidateUpdateGradeDetails(StudentGradesDetailsDTO updateDetails);
     }
 }

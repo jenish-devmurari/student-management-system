@@ -673,52 +673,113 @@ namespace Service.Services
         #endregion
 
 
-        //#region update student details on attendance page 
-        //public async Task<ResponseDTO> UpdateStudentDetailByAtteandanceId(int attendanceId)
-        //{
-        //    try
-        //    {
-        //        List<Attendance> attendances = await _attendanceRepository.GetAttedanceOfStudent(studentId);
+        #region update student details on attendance page 
+        public async Task<ResponseDTO> UpdateStudentDetailByAtteandanceId(StudentAttendanceDetailsDTO updateDetails, int userId)
+        {
+            try
+            {
 
-        //        if (attendances == null || !attendances.Any())
-        //        {
-        //            return new ResponseDTO
-        //            {
-        //                Status = 404,
-        //                Message = "No attendance records found for the student.",
-        //                Data = null
-        //            };
-        //        }
+                // Validate input and return if there are errors
+                var validationResponse = _validationService.ValidateUpdateDetails(updateDetails);
+                if (validationResponse != null)
+                {
+                    return validationResponse;
+                }
 
-        //        StudentAttendanceDetailsDTO attendanceDetails = attendances.Select(a => new StudentAttendanceDetailsDTO
-        //        {
-        //            Id = a.id,
-        //            Name = a.Students.Users.Name,
-        //            SubjectName = a.Subjects.SubjectName,
-        //            classId = a.ClassId,
-        //            IsPresent = a.IsPresent,
-        //            Date = a.Date,
-        //        }).ToList();
+                Attendance attendanceDetails = await _attendanceRepository.GetAttendanceAsync(updateDetails.Id);
 
-        //        return new ResponseDTO
-        //        {
-        //            Status = 200,
-        //            Message = "Student update successfully",
-        //            Data = attendanceDetails
-        //        };
-        //    }
-        //    catch (Exception ex)
-        //    {
+                if (attendanceDetails == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Attendance record not found"
+                    };
+                }
 
-        //        return new ResponseDTO
-        //        {
-        //            Status = 500,
-        //            Message = $"An error occurred: {ex.Message}"
-        //        };
-        //    }
-        //}
+                attendanceDetails.IsPresent = updateDetails.IsPresent;
+                attendanceDetails.Date = updateDetails.Date;
+                attendanceDetails.ClassId = updateDetails.classId;
+                attendanceDetails.Students.Users.Name = updateDetails.Name;
+                attendanceDetails.Subjects.SubjectName = updateDetails.SubjectName;
+                attendanceDetails.ModifiedBy = userId;
+                attendanceDetails.ModifiedOn = DateTime.Now;
 
-        //#endregion
+                await _attendanceRepository.UpdateAttendanceAsync(attendanceDetails);
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Student attendance update successfully",
+                    Data = updateDetails
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        #endregion
+
+        #region update student details on grade page 
+        public async Task<ResponseDTO> UpdateStudentDetailByGradeId(StudentGradesDetailsDTO updateDetails,int userId)
+        {
+            try
+            {
+
+                // Validate input and return if there are errors
+                var validationResponse = _validationService.ValidateUpdateGradeDetails(updateDetails);
+                if (validationResponse != null)
+                {
+                    return validationResponse;
+                }
+
+                Grades gradeDetails = await _gradeRepository.GetGradeDetailsByID(updateDetails.gradeId);
+
+                if (gradeDetails == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Grades record not found"
+                    };
+                }
+
+                gradeDetails.Students.Users.Name = updateDetails.Name;
+                gradeDetails.Students.ClassId = updateDetails.ClassId;
+                gradeDetails.Marks = updateDetails.Marks;
+                gradeDetails.TotalMarks = updateDetails.TotalMarks;
+                gradeDetails.Date = updateDetails.Date;
+                gradeDetails.ModifiedBy = userId;
+                gradeDetails.ModifiedOn = DateTime.Now;
+
+                await _gradeRepository.UpdateGrades(gradeDetails);
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "Student grade update successfully",
+                    Data = updateDetails
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        #endregion
 
     }
 }

@@ -152,5 +152,24 @@ namespace StudentManagementSystem.Controllers
             return Ok(await _adminService.GetStudentGradesDetailsById(studentId));
         }
         #endregion
+
+
+        #region update grades details of student using admin
+        [HttpPut("UpdateStudentGradesDetails")]
+        public async Task<IActionResult> UpdateStudentGradesDetails(StudentGradesDetailsDTO updateDetails)
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _adminService.UpdateStudentDetailByGradeId(updateDetails, userId));
+        }
+        #endregion
+
+        #region update attendance details of student using admin
+        [HttpPut("UpdateStudentAttendanceDetails")]
+        public async Task<IActionResult> UpdateStudentAttendanceDetails(StudentAttendanceDetailsDTO updateDetails)
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _adminService.UpdateStudentDetailByAtteandanceId(updateDetails, userId));
+        }
+        #endregion
     }
 }

@@ -291,6 +291,15 @@ namespace Service.Services
                     };
                 }
 
+                if(marksDetails.Marks > marksDetails.TotalMarks)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Marks is not greter than Total marks"
+                    };
+                }
+
                 Grades grades = new Grades
                 {
                     StudentId = user.Student.StudentId,
