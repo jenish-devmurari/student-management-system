@@ -21,5 +21,14 @@ namespace StudentManagementSystem.Controllers
             return Ok(await _studentService.GetAllAttendance(userId));
         }
         #endregion
+
+        #region Get student grades details particular subject
+        [HttpGet("GetStudentGradesDetailsBasedOnSubject/{id}")]
+        public async Task<IActionResult> GetStudentGradesBySubject(int subjectId)
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _studentService.GetStudentSubjectGrades(subjectId, userId));
+        }
+        #endregion
     }
 }

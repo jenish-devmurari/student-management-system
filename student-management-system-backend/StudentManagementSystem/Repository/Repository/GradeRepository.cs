@@ -46,6 +46,15 @@ namespace Repository.Repository
             return await _context.Grades.Where(g => g.Students.UserId == studentUserId && g.Teachers.UserId == teacherUserId).ToListAsync();
 
         }
+
+        public async Task<List<Grades>> StudentGradesBySubject(int studentId, int subjectId)
+        {
+            return await _context.Grades
+                .Include(g => g.Students)
+                .Include(g => g.Teachers)
+                .ThenInclude(t => t.Subject)
+                .Where(g => g.StudentId == studentId && g.Teachers.SubjectId == subjectId).ToListAsync();
+        }
     }
 }
 

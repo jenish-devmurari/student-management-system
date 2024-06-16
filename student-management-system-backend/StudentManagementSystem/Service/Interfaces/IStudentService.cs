@@ -13,5 +13,7 @@ namespace Service.Interfaces
     {
         public Task<ResponseDTO> GetAllAttendance(int userId);
 
+        public Task<ResponseDTO> GetStudentSubjectGrades(int subjectId, int userId);
+
     }
 }
