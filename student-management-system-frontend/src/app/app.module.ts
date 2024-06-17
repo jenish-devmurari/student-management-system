@@ -16,9 +16,9 @@ import { GlobalErrorInterceptor } from './interceptors/global-error.interceptor'
   ],
   imports: [
     BrowserModule,
-    CoreModule,
     AppRoutingModule,
     RouterModule,
+    CoreModule,
     HttpClientModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({

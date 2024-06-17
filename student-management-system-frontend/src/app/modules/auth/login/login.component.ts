@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
+import { Roles } from 'src/app/enums/roles.enum';
 import { ILogin } from 'src/app/interfaces/login.interface';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -27,8 +28,9 @@ export class LoginComponent {
       this.authService.login(this.loginData).subscribe({
         next: (res) => {
           if (res.status === HttpStatusCodes.Success && res.data?.isPasswordReset === true) {
-            this.toaster.success(res.message, 'Login Successful');
-            // navigate to route according to role
+            this.toaster.success('Login Successful');
+            const userRole: string | null = this.authService.getUserRole()
+            this.routeBasedOnRole(userRole);
           }
           if (res.status === HttpStatusCodes.Unauthorized) {
             this.toaster.error(res.message);
@@ -44,6 +46,23 @@ export class LoginComponent {
       this.loginForm.reset();
     } else {
       this.toaster.error("Please fill out the login detail.", 'Validation Error');
+    }
+  }
+
+  private routeBasedOnRole(role: string | null): void {
+    switch (role) {
+      case Roles.Admin:
+        this.router.navigate(['admin']);
+        break;
+      case Roles.Teacher:
+        this.router.navigate(['teacher']);
+        break;
+      case Roles.Student:
+        this.router.navigate(['student']);
+        break;
+      default:
+        this.router.navigate(['login']);
+        break;
     }
   }
 }
