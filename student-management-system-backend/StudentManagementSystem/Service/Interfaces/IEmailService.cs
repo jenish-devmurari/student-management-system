@@ -9,7 +9,7 @@ namespace Service.Interfaces
 {
     public interface IEmailService
     {
-        Task SendEmailToStudentAsync(StudentRegisterDTO student, List<string> ccEmails = null);
+        Task SendEmailToStudentAsync(StudentRegisterDTO student);
 
         Task SendEmailTeacherAsync(string toEmail);
 

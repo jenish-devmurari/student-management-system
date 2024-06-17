@@ -76,7 +76,7 @@ namespace Service.Services
         #endregion
 
         #region MarkAttendance
-        public async Task<ResponseDTO> MarkAttendance(List<StudentAttendanceDTO> attendanceDTOs, int userId)
+        public async Task<ResponseDTO> MarkAttendance(StudentListAttendanceDTO attendanceDTOs, int userId)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace Service.Services
                     };
                 };
 
-                var attendances = attendanceDTOs.Select(a => new Attendance
+                var attendances = attendanceDTOs.Attendances.Select(a => new Attendance
                 {
                     StudentId = a.StudentId,
                     TeacherId = teacher.TeacherId,
@@ -120,14 +120,15 @@ namespace Service.Services
                 await _attendanceRepository.AddAttendancesAsync(attendances);
                 List<string> teacherList = await _teacherRepository.GetTeacherEmailsByClassAsync((int)teacher.ClassId);
 
-                foreach (var a in attendanceDTOs)
+                foreach (var a in attendanceDTOs.Attendances)
                 {
-                    if (!a.IsPresent)
+                    if (a.IsPresent == false)
                     {
                         var student = await _studentRepository.GetStudentDetailsByStudentIdAsync(a.StudentId);
                       
                         if (student != null)
                         {
+                            // send email who is absent 
                             await _emailService.SendAttendanceNotificationEmailAsync(
                                 student.Users.Email,
                                 student.Users.Name,

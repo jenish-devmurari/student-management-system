@@ -165,8 +165,8 @@ namespace Service.Services
 
                 await transaction.CommitAsync();
 
-                List<string> teacherList = await _teacherRepository.GetTeacherEmailsByClassAsync((int)studentRegisterDTO.Class);
-                await _emailService.SendEmailToStudentAsync(studentRegisterDTO, teacherList);
+               
+                await _emailService.SendEmailToStudentAsync(studentRegisterDTO);
 
                 return new ResponseDTO
                 {

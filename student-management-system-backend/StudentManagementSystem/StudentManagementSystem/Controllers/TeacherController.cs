@@ -55,7 +55,7 @@ namespace StudentManagementSystem.Controllers
 
         #region Mark Attendance of student
         [HttpPost("MarkAttendance")]
-        public async Task<IActionResult> MarkAttendance(List<StudentAttendanceDTO> attendanceDTO)
+        public async Task<IActionResult> MarkAttendance(StudentListAttendanceDTO attendanceDTO)
         {
             var userId = int.Parse(User.FindFirst("UserId")?.Value);
             return Ok(await _teacherService.MarkAttendance(attendanceDTO, userId));

@@ -26,7 +26,7 @@ namespace Service.Services
 
 
         #region email for student when enroll
-        public async Task SendEmailToStudentAsync(StudentRegisterDTO student, List<string> ccEmails = null)
+        public async Task SendEmailToStudentAsync(StudentRegisterDTO student)
         {
             var smtpSettings = _configuration.GetSection("SmtpSettings");
 
@@ -123,14 +123,6 @@ namespace Service.Services
             };
 
             mailMessage.To.Add(student.Email);
-
-            if (ccEmails != null)
-            {
-                foreach (var ccEmail in ccEmails)
-                {
-                    mailMessage.CC.Add(ccEmail);
-                }
-            }
 
             await smtpClient.SendMailAsync(mailMessage);
         }
@@ -286,8 +278,6 @@ namespace Service.Services
             // Send the email
             await smtpClient.SendMailAsync(mailMessage);
         }
-
-
         #endregion 
 
     }

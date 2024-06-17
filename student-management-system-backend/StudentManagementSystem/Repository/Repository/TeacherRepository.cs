@@ -33,7 +33,7 @@ namespace Repository.Repository
         {
             return await (from teacher in _context.Teachers
                           join user in _context.Users on teacher.UserId equals user.UserId
-                          where (int)teacher.ClassId == classId
+                          where (int)teacher.ClassId == classId && user.IsActive == true
                           select user.Email).ToListAsync();
         }
 
