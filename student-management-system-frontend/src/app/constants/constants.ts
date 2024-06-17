@@ -1,0 +1,1 @@
+export const passwordRegex: string = '^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,12}$'

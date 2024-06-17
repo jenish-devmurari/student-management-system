@@ -25,7 +25,7 @@ namespace StudentManagementSystem.Controllers
 
         [HttpPut("ChangePassword")]
 
-        public async Task<IActionResult> ChangePassword(string newPassword)
+        public async Task<IActionResult> ChangePassword([FromBody] string newPassword)
         {
             string email = User.FindFirst(ClaimTypes.Email)?.Value;
             return Ok(await _userService.ChangePassword(newPassword,email));
