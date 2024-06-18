@@ -15,15 +15,15 @@ export const authGuard: CanActivateFn = (route, state) => {
     switch (userRole) {
       case Roles.Admin:
         toaster.error("You can not go back you need to logout");
-        router.navigate(['admin', 'dashboard']);
+        router.navigate(['admin']);
         return false;
       case Roles.Teacher:
         toaster.error("Teachers cannot access this route. Please log out first.");
-        router.navigate(['teacher', 'dashboard']);
+        router.navigate(['teacher']);
         return false;
       case Roles.Student:
         toaster.error("Students cannot access this route. Please log out first.");
-        router.navigate(['student', 'dashboard']);
+        router.navigate(['student']);
         return false;
       default:
         return true;

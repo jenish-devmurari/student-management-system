@@ -1,27 +1,27 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { authGuard } from './services/guards/auth.guard';
+import { adminGuard } from './services/guards/admin.guard';
+import { studentGuard } from './services/guards/student.guard';
+import { teacherGuard } from './services/guards/teacher.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
-    path: '',
-    loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule),
-    pathMatch: 'prefix'
+    path: '', pathMatch: 'prefix', canActivate: [authGuard],
+    loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
   },
   {
-    path: 'admin',
-    loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
-    pathMatch: 'prefix'
+    path: 'admin', pathMatch: 'prefix', canActivate: [adminGuard],
+    loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule)
   },
   {
-    path: 'student',
-    loadChildren: () => import('./modules/student/student.module').then(m => m.StudentModule),
-    pathMatch: 'prefix'
+    path: 'student', pathMatch: 'prefix', canActivate: [studentGuard],
+    loadChildren: () => import('./modules/student/student.module').then(m => m.StudentModule)
   },
   {
-    path: 'teacher',
-    loadChildren: () => import('./modules/teacher/teacher.module').then(m => m.TeacherModule),
-    pathMatch: 'prefix'
+    path: 'teacher', pathMatch: 'prefix', canActivate: [teacherGuard],
+    loadChildren: () => import('./modules/teacher/teacher.module').then(m => m.TeacherModule)
   },
   { path: '**', redirectTo: 'login' }
 ];

@@ -17,10 +17,10 @@ export const teacherGuard: CanActivateFn = (route, state) => {
     } else {
       toaster.error("Unauthorize access.");
       if (userRole === Roles.Admin) {
-        router.navigate(['admin', 'dashboard']);
+        router.navigate(['admin']);
         return false;
       } else {
-        router.navigate(['student', 'dashboard']);
+        router.navigate(['student']);
         return false;
       }
     }
