@@ -21,24 +21,8 @@ namespace StudentManagementSystem.Controllers
         [HttpPost("RegisterStudent")]
         public async Task<IActionResult> studentRegister([FromBody] StudentRegisterDTO studentRegisterDTO)
         {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var userId = int.Parse(User.FindFirst("UserId")?.Value);
-
-            var response = await _adminService.studentRegister(studentRegisterDTO, userId);
-
-            if (response.Status == 201)
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return BadRequest(response);
-            }
+            return Ok(await _adminService.studentRegister(studentRegisterDTO, userId));
         }
         #endregion
 
