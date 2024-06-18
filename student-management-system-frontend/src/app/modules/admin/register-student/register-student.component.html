@@ -1,1 +1,110 @@
-<p>register-student works!</p>
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="registration_image.jpg" alt="Registration Image" class="img-fluid">
+                </div>
+                <div class="col-md-6">
+                    <h2 class="text-center">Register Student</h2>
+                    <form [formGroup]="studentRegisterForm" (ngSubmit)="onSubmit()">
+                        <div class="form-group row m-2">
+                            <label for="name" class="col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="name" formControlName="name" class="form-control"
+                                    placeholder="Enter name here"
+                                    [ngClass]="validationClass(studentRegisterForm.get('name'))">
+                                <span *ngIf="isFieldInvalid(studentRegisterForm.get('name'))" class="text-danger">
+                                    First name is required.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <label for="email" class="col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" id="email" formControlName="email" class="form-control"
+                                    placeholder="Enter email here"
+                                    [ngClass]="validationClass(studentRegisterForm.get('email'))">
+                                <span *ngIf="isFieldInvalid(studentRegisterForm.get('email'))" class="text-danger">
+                                    Email is
+                                    required.</span>
+                                <span *ngIf="emailPattern(studentRegisterForm.get('email'))" class="text-danger">
+                                    Please Enter valid email.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <div class="col-sm-6">
+                                <label for="class">Class</label>
+                                <select id="class" formControlName="class" class="form-control"
+                                    [ngClass]="validationClass(studentRegisterForm.get('class'))">
+                                    <option value="" selected>Select Class</option>
+                                    <option *ngFor="let i of classes" [value]="i">{{ i }}</option>
+                                </select>
+                                <span *ngIf="isFieldInvalid(studentRegisterForm.get('class'))" class="text-danger">
+                                    Class is
+                                    required.</span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="rollNumber">Roll Number</label>
+                                <input id="rollNumber" formControlName="rollNumber" class="form-control"
+                                    [ngClass]="validationClass(studentRegisterForm.get('rollNumber'))">
+                                <span *ngIf="isFieldInvalid(studentRegisterForm.get('rollNumber'))" class="text-danger">
+                                    Roll Number is
+                                    required.</span>
+                                <span *ngIf="studentRegisterForm.get('rollNumber')?.hasError('negativeNumber')"
+                                    class="text-danger">
+                                    Roll number must be positive
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <div class="col-sm-6">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input id="dateOfBirth" formControlName="dateOfBirth" type="date" class="form-control"
+                                    [ngClass]="validationClass(studentRegisterForm.get('dateOfBirth'))">
+                                <span *ngIf="isFieldInvalid(studentRegisterForm.get('dateOfBirth'))"
+                                    class="text-danger"> Date
+                                    of birth is
+                                    required</span>
+                                <span *ngIf="studentRegisterForm.get('dateOfBirth')?.hasError('futureDate')"
+                                    class="text-danger">
+                                    Date of Birth cannot be in the future.
+                                </span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="dateOfEnrollment">Date of Enrollment</label>
+                                <input id="dateOfEnrollment" formControlName="dateOfEnrollment" type="date"
+                                    class="form-control"
+                                    [ngClass]="validationClass(studentRegisterForm.get('dateOfEnrollment'))">
+                                <span *ngIf="isFieldInvalid(studentRegisterForm.get('dateOfEnrollment'))"
+                                    class="text-danger"> Date of
+                                    enrollment is
+                                    required</span>
+                                <span *ngIf="studentRegisterForm.get('dateOfEnrollment')?.hasError('futureDate')"
+                                    class="text-danger">
+                                    Date of Enrollment cannot be in the future.
+                                </span>
+                                <span
+                                    *ngIf="studentRegisterForm.get('dateOfEnrollment')?.hasError('dateOfBirthAfterEnrollment')"
+                                    class="text-danger">
+                                    Date of birth cannot be after date of enrollment.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-primary w-75"
+                                    [disabled]="studentRegisterForm.invalid">Register</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-secondary w-75"
+                                    (click)="resetForm()">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

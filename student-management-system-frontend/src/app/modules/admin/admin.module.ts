@@ -12,6 +12,9 @@ import { StudentListComponent } from './student-list/student-list.component';
 import { StudentDetailComponent } from './student-detail/student-detail.component';
 import { StudentAttendanceComponent } from './student-attendance/student-attendance.component';
 import { StudentGradebookComponent } from './student-gradebook/student-gradebook.component';
+import { TeacherListComponent } from './teacher-list/teacher-list.component';
+import { TeacherDetailComponent } from './teacher-detail/teacher-detail.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -23,11 +26,14 @@ import { StudentGradebookComponent } from './student-gradebook/student-gradebook
     StudentListComponent,
     StudentDetailComponent,
     StudentAttendanceComponent,
-    StudentGradebookComponent
+    StudentGradebookComponent,
+    TeacherListComponent,
+    TeacherDetailComponent
   ],
   imports: [
     CommonModule,
     CoreModule,
+    ReactiveFormsModule,
     SharedModule,
     AdminRoutingModule
   ]

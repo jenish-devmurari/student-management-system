@@ -9,13 +9,15 @@ import { StudentListComponent } from './student-list/student-list.component';
 import { StudentDetailComponent } from './student-detail/student-detail.component';
 import { StudentAttendanceComponent } from './student-attendance/student-attendance.component';
 import { StudentGradebookComponent } from './student-gradebook/student-gradebook.component';
+import { TeacherDetailComponent } from './teacher-detail/teacher-detail.component';
+import { TeacherListComponent } from './teacher-list/teacher-list.component';
 
 const routes: Routes = [
   {
     path: '', component: AdminComponent, pathMatch: 'prefix',
     children: [
       {
-        path: '', redirectTo: 'home', pathMatch: 'full',
+        path: '', redirectTo: 'register', pathMatch: 'full',
       },
       {
         path: 'home', component: HomeComponent, pathMatch: 'full',
@@ -50,6 +52,12 @@ const routes: Routes = [
             path: '', redirectTo: 'attendance', pathMatch: 'full'
           }
         ]
+      },
+      {
+        path: 'teacher', component: TeacherListComponent, pathMatch: 'full'
+      },
+      {
+        path: 'teacher-detail', component: TeacherDetailComponent, pathMatch: 'full',
       }
     ]
   },

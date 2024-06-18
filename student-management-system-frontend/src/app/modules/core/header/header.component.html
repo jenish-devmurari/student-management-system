@@ -14,24 +14,45 @@
                 <ul class="navbar-nav ms-auto">
                     <!-- Common links for all roles -->
                     <li class="nav-item">
-                        <a href="#" class="text-white mr-3">Home</a>
+                        <a [routerLink]="['home']" routerLinkActive="active" class="text-white mr-3">Home</a>
                     </li>
                     <!-- Admin specific links -->
                     <ng-container *ngIf="userRole === adminRole">
                         <li class="nav-item">
-                            <a href="#" class="text-white mr-3">Admin Dashboard</a>
+                            <a [routerLink]="['register']" routerLinkActive="active"
+                                class="text-white mr-3">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['teacher']" routerLinkActive="active" class="text-white mr-3">Teacher
+                                Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['student']" routerLinkActive="active" class="text-white mr-3">Student
+                                Management</a>
                         </li>
                     </ng-container>
+
                     <!-- Teacher specific links -->
                     <ng-container *ngIf="userRole === teacherRole">
                         <li class="nav-item">
-                            <a href="#" class="text-white mr-3">Teacher Dashboard</a>
+                            <a [routerLink]="['attendance']" routerLinkActive="active"
+                                class="text-white mr-3">Attendance</a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['gradebook']" routerLinkActive="active"
+                                class="text-white mr-3">Gradebook</a>
                         </li>
                     </ng-container>
+
                     <!-- Student specific links -->
                     <ng-container *ngIf="userRole === studentRole">
                         <li class="nav-item">
-                            <a href="#" class="text-white mr-3">Student Dashboard</a>
+                            <a [routerLink]="['attendance']" routerLinkActive="active"
+                                class="text-white mr-3">Attendance</a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['gradebook']" routerLinkActive="active"
+                                class="text-white mr-3">Gradebook</a>
                         </li>
                     </ng-container>
 

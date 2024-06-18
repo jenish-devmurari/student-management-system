@@ -21,9 +21,9 @@ export class GlobalErrorInterceptor implements HttpInterceptor {
           case HttpStatusCodes.InternalServerError:
             errorMessage = "Internal server error";
             break;
-          case HttpStatusCodes.BadRequest:
-            errorMessage = "Bad request from client side";
-            break;
+          // case HttpStatusCodes.BadRequest:
+          //   errorMessage = "Bad request from client side";
+          //   break;
           case HttpStatusCodes.Unauthorized:
             errorMessage = "Unauthorized";
             break;

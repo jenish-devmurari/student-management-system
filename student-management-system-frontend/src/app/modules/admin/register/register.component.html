@@ -1,1 +1,11 @@
-<p>register works!</p>
+<div class="container m-2">
+    <div class="">
+        <button [routerLink]="['student']" routerLinkActive="active" class="btn btn-primary">Register
+            Student</button>
+        <button [routerLink]="['teacher']" routerLinkActive="active" class="btn btn-secondary m-3">Register
+            Teacher</button>
+    </div>
+    <div>
+        <router-outlet></router-outlet>
+    </div>
+</div>
