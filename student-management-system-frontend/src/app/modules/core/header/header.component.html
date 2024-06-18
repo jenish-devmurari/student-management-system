@@ -17,19 +17,19 @@
                         <a href="#" class="text-white mr-3">Home</a>
                     </li>
                     <!-- Admin specific links -->
-                    <ng-container *ngIf="userRole === 'Admin'">
+                    <ng-container *ngIf="userRole === adminRole">
                         <li class="nav-item">
                             <a href="#" class="text-white mr-3">Admin Dashboard</a>
                         </li>
                     </ng-container>
                     <!-- Teacher specific links -->
-                    <ng-container *ngIf="userRole === 'Teacher'">
+                    <ng-container *ngIf="userRole === teacherRole">
                         <li class="nav-item">
                             <a href="#" class="text-white mr-3">Teacher Dashboard</a>
                         </li>
                     </ng-container>
                     <!-- Student specific links -->
-                    <ng-container *ngIf="userRole === 'Student'">
+                    <ng-container *ngIf="userRole === studentRole">
                         <li class="nav-item">
                             <a href="#" class="text-white mr-3">Student Dashboard</a>
                         </li>

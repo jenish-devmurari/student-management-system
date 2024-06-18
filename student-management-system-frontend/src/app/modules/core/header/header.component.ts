@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Roles } from 'src/app/enums/roles.enum';
 import { AuthService } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 
@@ -11,6 +12,9 @@ import Swal from 'sweetalert2';
 export class HeaderComponent implements OnInit {
   public userRole: string | null = "";
   public isLoggedIn !: boolean;
+  public adminRole: Roles = Roles.Admin;
+  public teacherRole: Roles = Roles.Teacher;
+  public studentRole: Roles = Roles.Student;
 
   constructor(private authService: AuthService, private route: Router) {
   }

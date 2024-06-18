@@ -39,7 +39,6 @@ export class AuthService {
       );
   }
 
-
   public changePassword(confirmPassword: string): Observable<IResponse> {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -81,7 +80,7 @@ export class AuthService {
     return false
   }
 
-  
+
 }
 
 
