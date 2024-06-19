@@ -1,1 +1,117 @@
-<p>student-list works!</p>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3 mb-3" *ngFor="let student of students">
+            <div class="card">
+                <div class="card-body">
+                    <P>{{student.id}}</P>
+                    <h5 class="card-title">{{ student.name }}</h5>
+                    <p class="card-text">{{ student.email }}</p>
+                    <p>{{student.classId}}</p>
+                    <button class="btn btn-primary" (click)="editStudent(student)" data-bs-toggle="modal"
+                        data-bs-target="#editStudentModal">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-danger" (click)="deleteStudent(student)">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                    <button class="btn btn-danger" [routerLink]="['student','student-detail']">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStudentModalLabel">Update Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form [formGroup]="studentEditForm" (ngSubmit)="onSubmit()">
+                        <div class="form-group row m-2">
+                            <label for="name" class="col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="name" formControlName="name" class="form-control"
+                                    placeholder="Enter name here"
+                                    [ngClass]="validationClass(studentEditForm.get('name'))">
+                                <span *ngIf="isFieldInvalid(studentEditForm.get('name'))" class="text-danger">Name
+                                    is required.</span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <label for="email" class="col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" id="email" formControlName="email" class="form-control"
+                                    placeholder="Enter email here"
+                                    [ngClass]="validationClass(studentEditForm.get('email'))">
+                                <span *ngIf="isFieldInvalid(studentEditForm.get('email'))" class="text-danger">Email
+                                    is required.</span>
+                                <span *ngIf="emailPattern(studentEditForm.get('email'))" class="text-danger">Please
+                                    Enter valid email.</span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <div class="col-sm-6">
+                                <label for="rollNumber">Roll Number</label>
+                                <input id="rollNumber" formControlName="rollNumber" class="form-control"
+                                    [ngClass]="validationClass(studentEditForm.get('rollNumber'))">
+                                <span *ngIf="isFieldInvalid(studentEditForm.get('rollNumber'))" class="text-danger">Roll
+                                    Number is required.</span>
+                                <span *ngIf="studentEditForm.get('rollNumber')?.hasError('negativeNumber')"
+                                    class="text-danger">
+                                    Roll number must be positive
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <div class="col-sm-6">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input id="dateOfBirth" formControlName="dateOfBirth" type="date" class="form-control"
+                                    [ngClass]="validationClass(studentEditForm.get('dateOfBirth'))">
+                                <span *ngIf="isFieldInvalid(studentEditForm.get('dateOfBirth'))"
+                                    class="text-danger">Date of birth is required</span>
+                                <span *ngIf="studentEditForm.get('dateOfBirth')?.hasError('futureDate')"
+                                    class="text-danger">
+                                    Date of Birth cannot be in the future.
+                                </span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="dateOfEnrollment">Date of Enrollment</label>
+                                <input id="dateOfEnrollment" formControlName="dateOfEnrollment" type="date"
+                                    class="form-control"
+                                    [ngClass]="validationClass(studentEditForm.get('dateOfEnrollment'))">
+                                <span *ngIf="isFieldInvalid(studentEditForm.get('dateOfEnrollment'))"
+                                    class="text-danger">Date of enrollment is required</span>
+                                <span *ngIf="studentEditForm.get('dateOfEnrollment')?.hasError('futureDate')"
+                                    class="text-danger">
+                                    Date of Enrollment cannot be in the future.
+                                </span>
+                                <span
+                                    *ngIf="studentEditForm.get('dateOfEnrollment')?.hasError('dateOfBirthAfterEnrollment')"
+                                    class="text-danger">
+                                    Date of birth cannot be after date of enrollment.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-primary w-75"
+                                    [disabled]="studentEditForm.invalid">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

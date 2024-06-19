@@ -41,15 +41,12 @@ export class RegisterTeacherComponent implements OnInit {
       const formValues = this.teacherRegisterForm.value;
       formValues.subject = Subjects[formValues.subject as keyof typeof Subjects];
       formValues.class = Classes[formValues.class as keyof typeof Classes];
-      console.log('Form Submitted', this.teacherRegisterForm.value);
-
       this.adminService.addTeacher(this.teacherRegisterForm.value).subscribe({
         next: (res) => {
-          console.log(res);
           if (res.status === HttpStatusCodes.Created) {
             this.toaster.success("Teacher Register Successfully");
           }
-          if (res.status === HttpStatusCodes.NotFound) {
+          if (res.status === HttpStatusCodes.BadRequest) {
             this.toaster.error(res.message);
           }
         },

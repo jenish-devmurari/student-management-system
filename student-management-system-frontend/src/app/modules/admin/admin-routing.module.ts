@@ -37,7 +37,7 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'student', component: StudentListComponent, pathMatch: 'full'
+        path: 'student', component: StudentListComponent, pathMatch: 'full',
       },
       {
         path: 'student-detail', component: StudentDetailComponent, pathMatch: 'prefix',

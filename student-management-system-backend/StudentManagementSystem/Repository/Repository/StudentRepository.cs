@@ -31,7 +31,10 @@ namespace Repository.Repository
 
         public async Task<List<Students>> GetAllStudentsAsync()
         {
-            return await _context.Students.Include(s => s.Users).ToListAsync();
+            return await _context.Students
+                       .Include(s => s.Users)
+                       .Where(s => s.Users.IsActive == true)
+                       .ToListAsync();
         }
 
         public async Task<Students> GetStudentDetailsByIdAsync(int id)

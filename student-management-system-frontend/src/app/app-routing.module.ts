@@ -6,9 +6,9 @@ import { studentGuard } from './services/guards/student.guard';
 import { teacherGuard } from './services/guards/teacher.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'auth', pathMatch: 'full' },
   {
-    path: '', pathMatch: 'prefix', canActivate: [authGuard],
+    path: 'auth', pathMatch: 'prefix', canActivate: [authGuard],
     loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
   },
   {

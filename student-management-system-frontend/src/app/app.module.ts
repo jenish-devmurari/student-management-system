@@ -9,6 +9,8 @@ import { CoreModule } from './modules/core/core.module';
 import { RouterModule } from '@angular/router';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { GlobalErrorInterceptor } from './interceptors/global-error.interceptor';
+import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -26,9 +28,10 @@ import { GlobalErrorInterceptor } from './interceptors/global-error.interceptor'
       closeButton: true,
       progressBar: true,
       positionClass: 'toast-top-right',
-    })
+    }),
+    NgxSpinnerModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, { provide: HTTP_INTERCEPTORS, useClass: GlobalErrorInterceptor, multi: true }],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, { provide: HTTP_INTERCEPTORS, useClass: GlobalErrorInterceptor, multi: true }, { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

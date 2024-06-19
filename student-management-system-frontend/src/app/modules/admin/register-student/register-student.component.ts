@@ -39,11 +39,10 @@ export class RegisterStudentComponent implements OnInit {
       console.log('Form Submitted', this.studentRegisterForm.value);
       this.adminService.addStudent(this.studentRegisterForm.value).subscribe({
         next: (res) => {
-          console.log(res);
           if (res.status === HttpStatusCodes.Created) {
             this.toaster.success("Student Register Successfully");
           }
-          if (res.status === HttpStatusCodes.NotFound) {
+          if (res.status === HttpStatusCodes.BadRequest) {
             this.toaster.error(res.message);
           }
         },

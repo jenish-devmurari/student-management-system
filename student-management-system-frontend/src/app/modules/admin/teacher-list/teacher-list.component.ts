@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ITeacher } from 'src/app/interfaces/teacher.interface';
 
 @Component({
   selector: 'app-teacher-list',
@@ -6,5 +7,4 @@ import { Component } from '@angular/core';
   styleUrls: ['./teacher-list.component.scss']
 })
 export class TeacherListComponent {
-
 }

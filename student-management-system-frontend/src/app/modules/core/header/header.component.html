@@ -60,7 +60,7 @@
                         <button (click)="logout()" class="btn btn-light">Logout</button>
                     </ng-container>
                     <ng-template #loginLink>
-                        <button class="btn btn-light">Login</button>
+                        <button [routerLink]="['login']" routerLinkActive="active" class="btn btn-light">Login</button>
                     </ng-template>
                 </ul>
             </div>
