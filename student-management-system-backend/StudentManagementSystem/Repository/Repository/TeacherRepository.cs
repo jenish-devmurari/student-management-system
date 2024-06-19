@@ -39,7 +39,7 @@ namespace Repository.Repository
 
         public async Task<List<Teachers>> GetAllTeacherAsync()
         {
-            return await _context.Teachers.Include(s => s.Users).ToListAsync();
+            return await _context.Teachers.Include(s => s.Users).Where(s => s.Users.IsActive).ToListAsync();
         }
 
         public async Task<Teachers> GetTeacherDetailsByIdAsync(int id)

@@ -1,1 +1,142 @@
-<p>teacher-list works!</p>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3 mb-3" *ngFor="let teacher of teachers">
+            <div class="card">
+                <div class="card-body">
+                    <p>{{ teacher.id }}</p>
+                    <h5 class="card-title">{{ teacher.name }}</h5>
+                    <p class="card-text">{{ teacher.email }}</p>
+                    <p>{{ teacher.classId }}</p>
+                    <button class="btn btn-primary" (click)="editTeacher(teacher)" data-bs-toggle="modal"
+                        data-bs-target="#editTeacherModal">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-danger" (click)="deleteTeacher(teacher)">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                    <button class="btn btn-danger" [routerLink]="['teacher', 'teacher-detail']">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editTeacherModalLabel">Update Teacher</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form [formGroup]="teacherEditForm" (ngSubmit)="onSubmit()">
+                        <div class="form-group row m-2">
+                            <label for="name" class="col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="name" formControlName="name" class="form-control"
+                                    placeholder="Enter name here"
+                                    [ngClass]="validationClass(teacherEditForm.get('name'))">
+                                <span *ngIf="isFieldInvalid(teacherEditForm.get('name'))" class="text-danger">
+                                    Name is required.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <label for="email" class="col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" id="email" formControlName="email" class="form-control"
+                                    placeholder="Enter email here"
+                                    [ngClass]="validationClass(teacherEditForm.get('email'))">
+                                <span *ngIf="isFieldInvalid(teacherEditForm.get('email'))" class="text-danger">
+                                    Email is required.
+                                </span>
+                                <span *ngIf="emailPattern(teacherEditForm.get('email'))" class="text-danger">
+                                    Please enter a valid email.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <div class="col-sm-6">
+                                <label for="qualification" class="col-form-label">Qualification</label>
+                                <div class="col-sm-10">
+                                    <select id="qualification" formControlName="qualification" class="form-control"
+                                        [ngClass]="validationClass(teacherEditForm.get('qualification'))">
+                                        <option value="" selected>Select Qualification</option>
+                                        <option *ngFor="let qualification of qualifications" [value]="qualification">
+                                            {{ qualification }}
+                                        </option>
+                                    </select>
+                                    <span *ngIf="isFieldInvalid(teacherEditForm.get('qualification'))"
+                                        class="text-danger">
+                                        Qualification is required.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="salary" class="col-form-label">Salary</label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="salary" formControlName="salary" class="form-control"
+                                        placeholder="Enter salary"
+                                        [ngClass]="validationClass(teacherEditForm.get('salary'))">
+                                    <span *ngIf="isFieldInvalid(teacherEditForm.get('salary'))" class="text-danger">
+                                        Salary is required.
+                                    </span>
+                                    <span *ngIf="teacherEditForm.get('salary')?.hasError('negativeNumber')"
+                                        class="text-danger">
+                                        Salary must be positive.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <div class="col-sm-6">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input id="dateOfBirth" formControlName="dateOfBirth" type="date" class="form-control"
+                                    [ngClass]="validationClass(teacherEditForm.get('dateOfBirth'))">
+                                <span *ngIf="isFieldInvalid(teacherEditForm.get('dateOfBirth'))" class="text-danger">
+                                    Date of birth is required.
+                                </span>
+                                <span *ngIf="teacherEditForm.get('dateOfBirth')?.hasError('futureDate')"
+                                    class="text-danger">
+                                    Date of birth cannot be in the future.
+                                </span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="dateOfEnrollment">Date of Enrollment</label>
+                                <input id="dateOfEnrollment" formControlName="dateOfEnrollment" type="date"
+                                    class="form-control"
+                                    [ngClass]="validationClass(teacherEditForm.get('dateOfEnrollment'))">
+                                <span *ngIf="isFieldInvalid(teacherEditForm.get('dateOfEnrollment'))"
+                                    class="text-danger">
+                                    Date of enrollment is required.
+                                </span>
+                                <span *ngIf="teacherEditForm.get('dateOfEnrollment')?.hasError('futureDate')"
+                                    class="text-danger">
+                                    Date of enrollment cannot be in the future.
+                                </span>
+                                <span
+                                    *ngIf="teacherEditForm.get('dateOfEnrollment')?.hasError('dateOfBirthAfterEnrollment')"
+                                    class="text-danger">
+                                    Date of birth cannot be after date of enrollment.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row m-2">
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-primary w-75"
+                                    [disabled]="teacherEditForm.invalid">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
