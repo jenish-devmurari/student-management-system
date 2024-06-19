@@ -59,9 +59,9 @@ namespace Repository.Repository
                 .Where(g => g.StudentId == studentId && g.Teachers.SubjectId == subjectId).ToListAsync();
         }
 
-        public async Task<List<Grades>> GetGradesOfStudent(int studentId)
+        public async Task<List<Grades>> GetGradesOfStudent(int id)
         {
-            return await _context.Grades.Include(s => s.Students).ThenInclude(u => u.Users).Include(t => t.Teachers).ThenInclude(s => s.Subject).Where(s => s.StudentId == studentId).ToListAsync();
+            return await _context.Grades.Include(s => s.Students).ThenInclude(u => u.Users).Include(t => t.Teachers).ThenInclude(s => s.Subject).Where(s => s.Students.UserId == id).ToListAsync();
         }
 
     }

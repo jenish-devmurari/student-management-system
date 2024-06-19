@@ -14,7 +14,7 @@
                     <button class="btn btn-danger" (click)="deleteTeacher(teacher)">
                         <i class="fas fa-trash"></i> Delete
                     </button>
-                    <button class="btn btn-danger" [routerLink]="['teacher', 'teacher-detail']">
+                    <button class="btn btn-danger" [routerLink]="['teacher-detail',teacher.id]">
                         View Details
                     </button>
                 </div>
@@ -29,7 +29,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editTeacherModalLabel">Update Teacher</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" #closeModal></button>
             </div>
             <div class="modal-body">
                 <div class="container">
@@ -135,7 +135,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeModal>Close</button>
             </div>
         </div>
     </div>

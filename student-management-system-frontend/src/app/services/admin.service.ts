@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { IStudent } from '../interfaces/student.interface';
 import { HttpClient } from '@angular/common/http';
-import { IsActiveMatchOptions, Router } from '@angular/router';
-import { BehaviorSubject, Observable, catchError, tap } from 'rxjs';
-import { STRING_TYPE } from '@angular/compiler';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { IAttendance } from '../interfaces/attendance.interface';
+import { IGradebook } from '../interfaces/gradebook.interface';
 import { IResponse } from '../interfaces/response.interface';
+import { IStudent } from '../interfaces/student.interface';
 import { ITeacher } from '../interfaces/teacher.interface';
 
 @Injectable({
@@ -17,6 +18,12 @@ export class AdminService {
 
   private teacherDataSubject: BehaviorSubject<ITeacher[]> = new BehaviorSubject<ITeacher[]>([]);
   public teacherData$: Observable<ITeacher[]> = this.teacherDataSubject.asObservable();
+
+  private attendanceDataSubject: BehaviorSubject<IAttendance[]> = new BehaviorSubject<IAttendance[]>([]);
+  public attendanceData$: Observable<IAttendance[]> = this.attendanceDataSubject.asObservable();
+
+  private gradebookDataSubject: BehaviorSubject<IGradebook[]> = new BehaviorSubject<IGradebook[]>([]);
+  public gradebookData$: Observable<IGradebook[]> = this.gradebookDataSubject.asObservable();
 
   private apiUrl: string = "https://localhost:7080/api/Admin"
   constructor(private http: HttpClient, private route: Router,) { }
@@ -52,7 +59,7 @@ export class AdminService {
     return this.http.post<IResponse>(`${this.apiUrl}/RegisterTeacher`, JSON.stringify(teacher));
   }
 
-  
+
   public getAllTeacher(): Observable<IResponse> {
     return this.http.get<IResponse>(`${this.apiUrl}/GetAllTeacher`).pipe(
       tap(response => {
@@ -63,7 +70,7 @@ export class AdminService {
     );
   }
 
-  public getTeacherDetailById(id: number): Observable<IResponse> {
+  public getTeacherDetailById(id: number | undefined): Observable<IResponse> {
     return this.http.get<IResponse>(`${this.apiUrl}/GetTeacherById/${id}`);
   }
 
@@ -73,6 +80,16 @@ export class AdminService {
 
   public deleteTeacher(id: number | undefined): Observable<IResponse> {
     return this.http.delete<IResponse>(`${this.apiUrl}/DeleteTeacher/${id}`)
+  }
+
+  public getStudentAttendanceDetail(id: number) {
+    console.log(id);
+    return this.http.get<IResponse>(`${this.apiUrl}/GetStudentAttendanceDetails/${id}`)
+  }
+
+  public getStudentGradeBookDetail(id: number) {
+    console.log(id);
+    return this.http.get<IResponse>(`${this.apiUrl}/GetStudentGradesDetails/${id}`)
   }
 
 }

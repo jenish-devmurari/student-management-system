@@ -108,18 +108,18 @@ namespace StudentManagementSystem.Controllers
 
         #region get attendance details of student using 
         [HttpGet("GetStudentAttendanceDetails/{id}")]
-        public async Task<IActionResult> GetStudentAttendanceDetails(int studentId)
+        public async Task<IActionResult> GetStudentAttendanceDetails(int id)
         {
-            return Ok(await _adminService.GetStudentAttendanceDetailsById(studentId));
+            return Ok(await _adminService.GetStudentAttendanceDetailsById(id));
         }
         #endregion
 
 
         #region get grades details of student using 
         [HttpGet("GetStudentGradesDetails/{id}")]
-        public async Task<IActionResult> GetStudentGradesDetails(int studentId)
+        public async Task<IActionResult> GetStudentGradesDetails(int id)
         {
-            return Ok(await _adminService.GetStudentGradesDetailsById(studentId));
+            return Ok(await _adminService.GetStudentGradesDetailsById(id));
         }
         #endregion
 

@@ -40,7 +40,7 @@ const routes: Routes = [
         path: 'student', component: StudentListComponent, pathMatch: 'full',
       },
       {
-        path: 'student-detail', component: StudentDetailComponent, pathMatch: 'prefix',
+        path: 'student/student-detail/:id', component: StudentDetailComponent, pathMatch: 'prefix',
         children: [
           {
             path: 'attendance', component: StudentAttendanceComponent, pathMatch: 'full'
@@ -57,7 +57,7 @@ const routes: Routes = [
         path: 'teacher', component: TeacherListComponent, pathMatch: 'full'
       },
       {
-        path: 'teacher-detail', component: TeacherDetailComponent, pathMatch: 'full',
+        path: 'teacher/teacher-detail/:id', component: TeacherDetailComponent, pathMatch: 'full',
       }
     ]
   },

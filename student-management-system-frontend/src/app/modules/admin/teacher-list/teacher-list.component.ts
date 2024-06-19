@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./teacher-list.component.scss']
 })
 export class TeacherListComponent {
+  @ViewChild('closeModal') closeModal!: ElementRef;
   public teachers !: ITeacher[];
   public selectedTeacher: ITeacher | undefined
   public teacherEditForm !: FormGroup
@@ -128,6 +129,7 @@ export class TeacherListComponent {
           this.toaster.error(err)
         }
       });
+      this.closeModal.nativeElement.click();
       // this.subscriptions.push(putTeacherSubscription);
     } else {
       alert("Please fill form field");

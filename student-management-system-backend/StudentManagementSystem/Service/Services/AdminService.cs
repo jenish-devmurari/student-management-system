@@ -578,11 +578,11 @@ namespace Service.Services
         #endregion
 
         #region  Get Student Attendance Details
-        public async Task<ResponseDTO> GetStudentAttendanceDetailsById(int studentId)
+        public async Task<ResponseDTO> GetStudentAttendanceDetailsById(int id)
         {
             try
             {
-                List<Attendance> attendances = await _attendanceRepository.GetAttedanceOfStudent(studentId);
+                List<Attendance> attendances = await _attendanceRepository.GetAttedanceOfStudent(id);
 
                 if (attendances == null || !attendances.Any())
                 {
@@ -626,11 +626,11 @@ namespace Service.Services
 
 
         #region  Get Student Grades Details
-        public async Task<ResponseDTO> GetStudentGradesDetailsById(int studentId)
+        public async Task<ResponseDTO> GetStudentGradesDetailsById(int id)
         {
             try
             {
-                List<Grades> grades = await _gradeRepository.GetGradesOfStudent(studentId);
+                List<Grades> grades = await _gradeRepository.GetGradesOfStudent(id);
 
                 if (grades == null || !grades.Any())
                 {

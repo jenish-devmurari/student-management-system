@@ -45,6 +45,7 @@ namespace Repository.Repository
             return await _context.Attendance.AnyAsync(a => a.Date == date && a.TeacherId == teacherId);
         }
         public async Task UpdateAttendanceAsync(Attendance attendance)
+
         {
             _context.Attendance.Update(attendance);
             await _context.SaveChangesAsync();
@@ -59,9 +60,14 @@ namespace Repository.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<Attendance>> GetAttedanceOfStudent(int studentId)
+        public async Task<List<Attendance>> GetAttedanceOfStudent(int id)
         {
-            return await _context.Attendance.Include(s => s.Students).ThenInclude(u => u.Users).Include(s => s.Subjects).Where(s => s.StudentId == studentId).ToListAsync();
+            return await _context.Attendance
+                         .Include(a => a.Students)
+                         .ThenInclude(s => s.Users)
+                         .Include(a => a.Subjects)
+                         .Where(a => a.Students.Users.UserId == id)
+                         .ToListAsync(); 
         }
 
         public async Task<List<Attendance>> GetAttendanceDetailsByDate(DateTime date, int teacherId)

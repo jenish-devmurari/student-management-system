@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./student-list.component.scss']
 })
 export class StudentListComponent implements OnInit, OnDestroy {
+  @ViewChild('closeModal') closeModal!: ElementRef;
   public students !: IStudent[];
   private selectedStudent: IStudent | undefined
   public studentEditForm !: FormGroup
@@ -130,6 +131,7 @@ export class StudentListComponent implements OnInit, OnDestroy {
           this.toaster.error(err)
         }
       });
+      this.closeModal.nativeElement.click();
       // this.subscriptions.push(putStudentSubscription);
     } else {
       alert("Please fill form field");

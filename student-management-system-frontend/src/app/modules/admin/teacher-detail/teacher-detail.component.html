@@ -1,1 +1,17 @@
-<p>teacher-detail works!</p>
+<div *ngIf="teacher" class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="assets/teacher-register.jpg" class="img-fluid rounded-start" alt="Teacher Image">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title text-primary">{{ teacher.name }}</h5>
+                <p class="card-text"><strong>Email:</strong> {{ teacher.email }}</p>
+                <p class="card-text"><strong>Qualification:</strong> {{ teacher.qualification }}</p>
+                <p class="card-text"><strong>Date of Birth:</strong> {{ teacher.dateOfBirth | date }}</p>
+                <p class="card-text"><strong>Date of Enrollment:</strong> {{ teacher.dateOfEnrollment | date }}</p>
+                <p class="card-text"><strong>Salary:</strong> {{ teacher.salary | currency : 'INR' }}</p>
+            </div>
+        </div>
+    </div>
+</div>

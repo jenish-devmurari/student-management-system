@@ -1,1 +1,37 @@
-<p>student-detail works!</p>
+<div class="container mt-5">
+    <div *ngIf="student" class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="assets/default-student.jpg" class="img-fluid rounded-start" alt="Default Student Image">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ student.name }}</h5>
+                    <p class="card-text"><strong>ID:</strong> {{ student.id }}</p>
+                    <p class="card-text"><strong>Roll Number:</strong> {{ student.rollNumber }}</p>
+                    <p class="card-text"><strong>Class ID:</strong> {{ student.classId }}</p>
+                    <p class="card-text"><strong>Date of Birth:</strong> {{ student.dateOfBirth | date:'longDate' }}</p>
+                    <p class="card-text"><strong>Date of Enrollment:</strong> {{ student.dateOfEnrollment |
+                        date:'longDate' }}</p>
+                    <p class="card-text"><strong>Email:</strong> {{ student.email }}</p>
+                    <p class="card-text"><strong>Active:</strong> {{ student.isActive ? 'Yes' : 'No' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!student" class="alert alert-info">
+        Loading student details...
+    </div>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" [routerLink]="['attendance']" routerLinkActive="active">Attendance</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" [routerLink]="['gradebook']" routerLinkActive="active">Gradebook</a>
+        </li>
+    </ul>
+    <div class="tab-content mt-3">
+        <router-outlet></router-outlet>
+    </div>
+</div>
