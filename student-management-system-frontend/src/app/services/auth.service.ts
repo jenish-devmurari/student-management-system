@@ -26,7 +26,7 @@ export class AuthService {
             if (responseData['token']) {
               this.authToken = responseData['token'];
               if (responseData['isPasswordReset'] == false) {
-                this.route.navigate(['change-password'])
+                this.route.navigate(['auth/change-password'])
               } else {
                 this.sessionStorageService.setItem('authToken', this.authToken);
               }
@@ -51,7 +51,7 @@ export class AuthService {
 
   public logoutAfterChangePassword(): void {
     this.sessionStorageService.removeItem('authToken');
-    this.route.navigate(['login']);
+    this.route.navigate(['auth/login']);
   }
 
   public getToken(): string | null {

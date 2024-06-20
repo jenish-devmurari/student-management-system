@@ -13,6 +13,7 @@ import { MonthlyAttendanceHistoryComponent } from './monthly-attendance-history/
 import { RecordMarksComponent } from './record-marks/record-marks.component';
 import { GradebookHistoryComponent } from './gradebook-history/gradebook-history.component';
 import { StudentDetailComponent } from './student-detail/student-detail.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import { StudentDetailComponent } from './student-detail/student-detail.componen
     CommonModule,
     CoreModule,
     SharedModule,
+    ReactiveFormsModule,
     TeacherRoutingModule
   ]
 })

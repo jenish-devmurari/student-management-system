@@ -1,1 +1,28 @@
-<p>attendance-history works!</p>
+<!-- src/app/attendance-history/attendance-history.component.html -->
+
+<div class="container mt-4">
+    <h2>Attendance History</h2>
+
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Student Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Present</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let attendance of attendanceList">
+                <td>{{ attendance.name}}</td>
+                <td>{{ attendance.date | date}}</td>
+                <td>{{ attendance.isPresent ? 'Present' : 'Absent' }}</td>
+                <td>
+                    <button class="btn btn-primary" (click)="onEdit(attendance)" [disabled]="!canEdit(attendance)">
+                        Edit
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

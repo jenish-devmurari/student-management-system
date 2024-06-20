@@ -44,7 +44,6 @@ export class HeaderComponent implements OnInit {
         );
         this.isLoggedIn = false;
         this.userRole = null;
-        this.route.navigate(['login'])
       }
     });
   }

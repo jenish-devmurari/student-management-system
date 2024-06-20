@@ -1,1 +1,33 @@
-<p>record-attendance works!</p>
+<div class="container mt-4">
+    <h2>Attendance for {{ currentDate }}</h2>
+
+    <div *ngIf="attendanceTaken" class="alert alert-success">
+        Attendance for today has already been marked.
+    </div>
+
+    <div *ngIf="!attendanceTaken">
+        <form [formGroup]="attendanceForm" (ngSubmit)="onSubmit()">
+            <button type="submit" class="btn btn-primary" [disabled]="attendanceForm.invalid">Mark Attendance</button>
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Student Name</th>
+                        <!-- <th scope="col">Subject Name</th> -->
+                        <th scope="col">Date</th>
+                        <th scope="col">Present</th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="students">
+                    <tr *ngFor="let student of studentsControls(); let i = index" [formGroupName]="i">
+                        <td>{{ studentList[i].name }}</td>
+                        <!-- <td>{{ studentList[i].subjectName }}</td> -->
+                        <td>{{ currentDate }}</td>
+                        <td>
+                            <input type="checkbox" formControlName="isPresent" class="form-check-input">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>

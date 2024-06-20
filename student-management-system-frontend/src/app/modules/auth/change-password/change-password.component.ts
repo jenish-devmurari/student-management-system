@@ -62,7 +62,7 @@ export class ChangePasswordComponent implements OnInit {
               confirmButtonText: 'OK'
             }).then(() => {
               this.authService.logoutAfterChangePassword();
-              this.router.navigate(['login']);
+              this.router.navigate(['auth/login']);
             });
           }
         },

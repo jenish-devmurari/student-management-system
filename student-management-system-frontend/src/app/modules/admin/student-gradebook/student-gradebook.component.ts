@@ -66,8 +66,8 @@ export class StudentGradebookComponent implements OnInit {
     this.marksForm = this.fb.group({
       studentName: [null, Validators.required],
       subjectName: [null, Validators.required],
-      marks: [null, [Validators.required, Validators.min(0), this.marksValidator()]],
-      totalMarks: [null, [Validators.required, Validators.min(0), this.marksValidator()]]
+      marks: [null, [Validators.required, Validators.min(0)]],
+      totalMarks: [null, [Validators.required, Validators.min(0)]]
     });
   }
 
@@ -96,16 +96,5 @@ export class StudentGradebookComponent implements OnInit {
       this.closeModal.nativeElement.click();
     }
   }
-
-  public marksValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
-      const marks = control.get('marks')?.value;
-      const totalMarks = control.get('totalMarks')?.value;
-      return marks != null && totalMarks != null && marks > totalMarks ? { 'marksExceed': true } : null;
-    };
-  }
-
-
-
 
 }

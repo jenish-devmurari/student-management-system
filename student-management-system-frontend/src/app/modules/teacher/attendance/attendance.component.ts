@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { IAttendance } from 'src/app/interfaces/attendance.interface';
 
 @Component({
   selector: 'app-attendance',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./attendance.component.scss']
 })
 export class AttendanceComponent {
-
+ 
 }

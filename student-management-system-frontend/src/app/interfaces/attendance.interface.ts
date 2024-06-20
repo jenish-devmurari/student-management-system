@@ -6,3 +6,14 @@ export interface IAttendance {
     name: string;
     subjectName: string;
 }
+
+
+export interface IAttendanceRecord {
+    studentId: number;
+    isPresent: boolean;
+}
+
+export interface IAttendanceData {
+    date: string;
+    attendances: IAttendanceRecord[];
+}
