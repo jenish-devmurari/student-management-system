@@ -23,7 +23,7 @@ namespace StudentManagementSystem.Controllers
         #endregion
 
         #region Get student grades details particular subject
-        [HttpGet("GetStudentGradesDetailsBasedOnSubject/{id}")]
+        [HttpGet("GetStudentGradesDetailsBasedOnSubject/{subjectId}")]
         public async Task<IActionResult> GetStudentGradesBySubject(int subjectId)
         {
             var userId = int.Parse(User.FindFirst("UserId")?.Value);

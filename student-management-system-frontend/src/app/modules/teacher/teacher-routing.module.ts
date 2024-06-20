@@ -48,7 +48,7 @@ const routes: Routes = [
             path: 'gradebook-history', component: GradebookHistoryComponent, pathMatch: 'full'
           },
           {
-            path: 'student-detail', component: StudentDetailComponent, pathMatch: 'full'
+            path: 'gradebook-history/student-detail', component: StudentDetailComponent, pathMatch: 'full'
           },
           {
             path: '', redirectTo: 'record-marks', pathMatch: 'full',

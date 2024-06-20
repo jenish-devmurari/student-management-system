@@ -1,1 +1,17 @@
-<p>gradebook works!</p>
+<div class="container mt-3">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" [routerLink]="['subject',1]" routerLinkActive="active">English</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" [routerLink]="['subject',2]" routerLinkActive="active">Math</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" [routerLink]="['subject',3]" routerLinkActive="active">Science</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" [routerLink]="['subject',4]" routerLinkActive="active">History</a>
+        </li>
+    </ul>
+    <router-outlet></router-outlet>
+</div>

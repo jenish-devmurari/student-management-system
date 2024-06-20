@@ -4,7 +4,8 @@ import { StudentComponent } from './student.component';
 import { HomeComponent } from '../shared/home/home.component';
 import { AttendanceComponent } from './attendance/attendance.component';
 import { GradebookComponent } from './gradebook/gradebook.component';
-import { SubjcetMarksComponent } from './subjcet-marks/subjcet-marks.component';
+import { SubjectMarksComponent } from './subject-marks/subject-marks.component';
+
 
 const routes: Routes = [
   {
@@ -23,10 +24,10 @@ const routes: Routes = [
         path: 'gradebook', component: GradebookComponent, pathMatch: 'prefix',
         children: [
           {
-            path: ':subject', component: SubjcetMarksComponent, pathMatch: 'full'
+            path: 'subject/:subjectId', component: SubjectMarksComponent, pathMatch: 'full'
           },
           {
-            path: '', redirectTo: 'english', pathMatch: 'full'
+            path: '', redirectTo: 'subject/1', pathMatch: 'full'
           }
         ]
       }

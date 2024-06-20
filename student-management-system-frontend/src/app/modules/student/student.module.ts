@@ -7,7 +7,8 @@ import { CoreModule } from '../core/core.module';
 import { SharedModule } from '../shared/shared.module';
 import { AttendanceComponent } from './attendance/attendance.component';
 import { GradebookComponent } from './gradebook/gradebook.component';
-import { SubjcetMarksComponent } from './subjcet-marks/subjcet-marks.component';
+import { SubjectMarksComponent } from './subject-marks/subject-marks.component';
+
 
 
 @NgModule({
@@ -15,7 +16,7 @@ import { SubjcetMarksComponent } from './subjcet-marks/subjcet-marks.component';
     StudentComponent,
     AttendanceComponent,
     GradebookComponent,
-    SubjcetMarksComponent
+    SubjectMarksComponent,
   ],
   imports: [
     CommonModule,
