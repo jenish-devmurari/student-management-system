@@ -1,6 +1,8 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { IAttendance } from 'src/app/interfaces/attendance.interface';
 import { AdminService } from 'src/app/services/admin.service';
 
@@ -37,6 +39,22 @@ export class StudentAttendanceComponent {
   }
 
   public editAttendance(attendance: IAttendance): void {
-    console.log('Editing attendance:', attendance);
+    attendance.isPresent = !attendance.isPresent
+    this.adminService.updateAttendance(attendance).subscribe({
+      next: (res) => {
+        if (res.status == HttpStatusCodes.Success) {
+          const updatedAttendance = this.attendances.find(a => a.id == attendance.id);
+          if (updatedAttendance) {
+            updatedAttendance.isPresent = attendance.isPresent;
+            this.toaster.success(res.message);
+          }
+        } else {
+          this.toaster.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toaster.error(error);
+      }
+    })
   }
 }

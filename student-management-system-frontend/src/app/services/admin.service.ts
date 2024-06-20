@@ -82,14 +82,23 @@ export class AdminService {
     return this.http.delete<IResponse>(`${this.apiUrl}/DeleteTeacher/${id}`)
   }
 
-  public getStudentAttendanceDetail(id: number) {
-    console.log(id);
+  public getStudentAttendanceDetail(id: number): Observable<IResponse> {
     return this.http.get<IResponse>(`${this.apiUrl}/GetStudentAttendanceDetails/${id}`)
   }
 
-  public getStudentGradeBookDetail(id: number) {
-    console.log(id);
+  public getStudentGradeBookDetail(id: number): Observable<IResponse> {
     return this.http.get<IResponse>(`${this.apiUrl}/GetStudentGradesDetails/${id}`)
+  }
+
+  public updateAttendance(attendance: IAttendance): Observable<IResponse> {
+    return this.http.put<IResponse>(`${this.apiUrl}/UpdateStudentAttendanceDetails`, attendance)
+  }
+
+
+  public updateGrades(grades: IGradebook): Observable<IResponse> {
+    console.log(grades.marks);
+    console.log(grades.totalMarks);
+    return this.http.put<IResponse>(`${this.apiUrl}/UpdateStudentGradesDetails`, grades)
   }
 
 }

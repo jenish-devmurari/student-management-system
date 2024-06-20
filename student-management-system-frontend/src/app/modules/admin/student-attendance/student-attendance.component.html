@@ -4,9 +4,8 @@
         <thead class="thead-dark">
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Class ID</th>
+                <th scope="col">Class</th>
                 <th scope="col">Date</th>
-                <th scope="col">ID</th>
                 <th scope="col">Status</th>
                 <th scope="col">Subject Name</th>
                 <th scope="col">Actions</th>
@@ -17,7 +16,6 @@
                 <td>{{ attendance.name }}</td>
                 <td>{{ attendance.classId }}</td>
                 <td>{{ attendance.date | date }}</td>
-                <td>{{ attendance.id }}</td>
                 <td>{{ attendance.isPresent ? 'Present' : 'Absent' }}</td>
                 <td>{{ attendance.subjectName }}</td>
                 <td>

@@ -23,9 +23,78 @@
                 <td>{{ grade.totalMarks }}</td>
                 <td>{{ calculatePercentage(grade.marks, grade.totalMarks) | number:'1.2-2' }}%</td>
                 <td>
-                    <button class="btn btn-primary btn-sm" (click)="editGrade(grade)">Edit</button>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#updateMarksModal"
+                        (click)="editGrade(grade)">Edit</button>
                 </td>
             </tr>
         </tbody>
     </table>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="updateMarksModal" tabindex="-1" aria-labelledby="updateMarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateMarksModalLabel">Update Marks</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" #closeModal></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="marksForm" (ngSubmit)="onSubmit()">
+                    <div class="mb-3">
+                        <label for="studentName" class="form-label">Student Name:</label>
+                        <input id="studentName" formControlName="studentName" class="form-control">
+                        <div *ngIf="marksForm.get('studentName')?.errors?.['required'] && (marksForm.get('name')?.touched || marksForm.get('name')?.dirty)"
+                            class="text-danger">
+                            Student name is required.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subjectName" class="form-label">Subject Name:</label>
+                        <input id="subjectName" formControlName="subjectName" class="form-control">
+                        <div *ngIf="marksForm.get('subjectName')?.errors?.['required'] && (marksForm.get('subjectName')?.touched || marksForm.get('subjectName')?.dirty)"
+                            class="text-danger">
+                            Subject name is required.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="marks" class="form-label">Marks Obtained:</label>
+                        <input id="marks" type="number" formControlName="marks" class="form-control">
+                        <div *ngIf="marksForm.get('marks')?.errors?.['required'] && (marksForm.get('marks')?.dirty || marksForm.get('marks')?.touched)"
+                            class="text-danger">
+                            Marks is required.
+                        </div>
+                        <div *ngIf="marksForm.get('marks')?.errors?.['min'] && (marksForm.get('marks')?.dirty || marksForm.get('marks')?.touched)"
+                            class="text-danger">
+                            Marks is must positive number.
+                        </div>
+                        <div *ngIf="marksForm.get('marks')?.errors?.['marksExceed']" class="text-danger mb-3">
+                            Marks cannot be greater than Total Marks.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="totalMarks" class="form-label">Total Marks:</label>
+                        <input id="totalMarks" type="number" formControlName="totalMarks" class="form-control">
+                        <div *ngIf="marksForm.get('totalMarks')?.errors?.['required'] && (marksForm.get('marks')?.dirty || marksForm.get('totalMarks')?.touched)"
+                            class="text-danger">
+                            Total marks is required
+                        </div>
+                        <div *ngIf="marksForm.get('totalMarks')?.errors?.['min'] && (marksForm.get('marks')?.dirty || marksForm.get('totalMarks')?.touched)"
+                            class="text-danger">
+                            Total marks must be a positive number.
+                        </div>
+                        <div *ngIf="marksForm.get('totalMarks')?.errors?.['marksExceed']" class="text-danger mb-3">
+                            Marks cannot be greater than Total Marks.
+                        </div>
+                    </div>
+                    <div *ngIf="marksForm?.errors?.['marksExceed']" class="text-danger mb-3">
+                        Marks cannot be greater than Total Marks.
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="marksForm.invalid">Update
+                        Marks</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
