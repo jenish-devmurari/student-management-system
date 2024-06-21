@@ -10,6 +10,7 @@ import { GradebookComponent } from './gradebook/gradebook.component';
 import { RecordMarksComponent } from './record-marks/record-marks.component';
 import { GradebookHistoryComponent } from './gradebook-history/gradebook-history.component';
 import { StudentDetailComponent } from './student-detail/student-detail.component';
+import { RegisterStudentComponent } from '../shared/register-student/register-student.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,9 @@ const routes: Routes = [
       },
       {
         path: 'home', component: HomeComponent, pathMatch: 'full',
+      },
+      {
+        path: 'register-student', component: RegisterStudentComponent, pathMatch: 'full'
       },
       {
         path: 'attendance', component: AttendanceComponent, pathMatch: 'prefix',

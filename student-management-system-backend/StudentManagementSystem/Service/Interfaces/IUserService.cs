@@ -12,5 +12,7 @@ namespace Service.Interfaces
         Task<ResponseDTO> Login(LoginDTO login);
 
         Task<ResponseDTO> ChangePassword(string newPassword, string email);
+
+        Task<ResponseDTO> GetUserDetail(int userId);
     }
 }

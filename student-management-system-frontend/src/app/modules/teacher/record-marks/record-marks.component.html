@@ -1,1 +1,61 @@
-<p>record-marks works!</p>
+<div class="container mt-5">
+    <form [formGroup]="marksForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="email">Student Email</label>
+            <select id="email" class="form-control" formControlName="email"
+                [ngClass]="validationClass(marksForm.get('email'))">
+                <option value="">Select a student</option>
+                <option *ngFor="let student of students" [value]="student.email">
+                    {{student.email}}
+                </option>
+            </select>
+            <div *ngIf="isFieldInvalid(marksForm.get('email'))" class="text-danger">
+                Please select a student.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <input id="subject" class="form-control" type="text" [value]="subjectName" readonly />
+        </div>
+
+
+        <div class="form-group">
+            <label for="date">Exam Date</label>
+            <input id="date" class="form-control" formControlName="date" type="date"
+                [ngClass]="validationClass(marksForm.get('date'))" />
+            <span *ngIf="isFieldInvalid(marksForm.get('date'))" class="text-danger">
+                Date is required.
+            </span>
+            <span *ngIf="marksForm.get('date')?.errors?.['futureDate'] " class="text-danger">
+                Date cannot be in the future.
+            </span>
+        </div>
+
+
+        <div class="form-group">
+            <label for="marks">Marks</label>
+            <input id="marks" class="form-control" formControlName="marks" type="number"
+                [ngClass]="validationClass(marksForm.get('marks'))" />
+            <div *ngIf="isFieldInvalid(marksForm.get('marks'))" class="text-danger">
+                Marks are required and must be a non-negative number.
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="totalMarks">Total Marks</label>
+            <input id="totalMarks" class="form-control" formControlName="totalMarks" type="number"
+                [ngClass]="validationClass(marksForm.get('totalMarks'))" />
+            <div *ngIf="isFieldInvalid(marksForm.get('totalMarks'))" class="text-danger">
+                Total marks are required and must be a non-negative number.
+            </div>
+        </div>
+
+        <div *ngIf="marksForm.errors?.['invalidMarks']" class="alert alert-danger">
+            Marks cannot be greater than Total Marks.
+        </div>
+
+        <button class="btn btn-primary" type="submit" [disabled]="marksForm.invalid">Add Marks</button>
+    </form>
+</div>

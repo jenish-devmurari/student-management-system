@@ -13,6 +13,7 @@ import { SessionStorageService } from './session-storage.service';
 export class AuthService {
   private apiUrl: string = "https://localhost:7080/api/User"
   private authToken: string = "";
+  public userDetails !: any;
 
 
   constructor(private http: HttpClient, private route: Router, private sessionStorageService: SessionStorageService) { }
@@ -80,6 +81,15 @@ export class AuthService {
     return false
   }
 
+  public loggedInUserDetails(): Observable<IResponse> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authToken}`
+      })
+    };
+    return this.http.get<IResponse>(`${this.apiUrl}/GetUserDetails`, httpOptions)
+  }
 
 }
 

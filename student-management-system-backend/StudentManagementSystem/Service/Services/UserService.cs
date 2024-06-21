@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Repository.Enums;
 using Repository.Interfaces;
 using Repository.Modals;
 using Service.DTOs;
@@ -14,18 +15,22 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ITeacherRepository _teachersRepository;
+        private readonly IStudentRepository _studentRepository;
         private readonly IPasswordEncryption _passwordEncryption;
         private readonly IConfiguration _configuration;
-        
 
-        public UserService(IUserRepository userRepository,IPasswordEncryption passwordEncryption,IConfiguration configuration)
+
+        public UserService(IUserRepository userRepository, IPasswordEncryption passwordEncryption, IConfiguration configuration,ITeacherRepository teacherRepository,IStudentRepository studentRepository)
         {
             _userRepository = userRepository;
             _passwordEncryption = passwordEncryption;
             _configuration = configuration;
+            _teachersRepository = teacherRepository;
+            _studentRepository = studentRepository;
         }
 
         public async Task<ResponseDTO> Login(LoginDTO login)
@@ -112,6 +117,85 @@ namespace Service.Services
                 {
                     Status = 200,
                     Message = "Password has been reset successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = "An error occurred while processing your request"
+                };
+            }
+        }
+
+        public async Task<ResponseDTO> GetUserDetail(int userId)
+        {
+            try
+            {
+                Users user = await _userRepository.GetUserByIdAsync(userId);
+
+                if (user == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "User not found."
+                    };
+                }
+
+                if (user.Role == Roles.Teacher)
+                {
+                    Teachers teacherDetails = await _teachersRepository.GetTeacherDetailsByIdAsync(user.UserId);
+
+                    TeacherDetailDTO data = new TeacherDetailDTO
+                    {
+                        Name = teacherDetails.Users.Name,
+                        Email = teacherDetails.Users.Email,
+                        DateOfBirth = teacherDetails.Users.DateOfBirth,
+                        DateOfEnrollment = teacherDetails.Users.DateOfEnrollment,
+                        ClassId = teacherDetails.ClassId,
+                        SubjectId = teacherDetails.SubjectId,
+                        TeacherId = teacherDetails.TeacherId,
+                        Salary = teacherDetails.Salary,
+                        Qualification = teacherDetails.Qualification
+                    };
+
+                    return new ResponseDTO
+                    {
+                        Status = 200,
+                        Message = "Teacher Data retrive successfully",
+                        Data = data
+                    };
+                }
+
+                if (user.Role == Roles.Student)
+                {
+                    Students studentDetails = await _studentRepository.GetStudentDetailsByIdAsync(user.UserId);
+
+                    StudentDetailDTO data = new StudentDetailDTO
+                    {
+                        Name = studentDetails.Users.Name,
+                        Email = studentDetails.Users.Email,
+                        DateOfBirth = studentDetails.Users.DateOfBirth,
+                        DateOfEnrollment = studentDetails.Users.DateOfEnrollment,
+                        ClassId = studentDetails.ClassId,
+                        StudentId = studentDetails.StudentId,
+                        RollNumber = studentDetails.RollNumber,
+                    };
+                    return new ResponseDTO
+                    {
+                        Status = 200,
+                        Message = "Teacher Data retrive successfully",
+                        Data = data
+                    };
+                }
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Message = "User Details Retrive successfully.",
+                    Data = user
                 };
             }
             catch (Exception ex)

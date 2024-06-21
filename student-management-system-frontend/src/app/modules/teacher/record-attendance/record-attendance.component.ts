@@ -17,13 +17,11 @@ export class RecordAttendanceComponent implements OnInit {
   public attendanceTaken: boolean = false;
   public currentDate: string = new Date().toISOString().split('T')[0];
 
-
   constructor(private teacherService: TeacherService, private toaster: ToastrService) {
     this.attendanceForm = new FormGroup({
       students: new FormArray([])
     });
   }
-
 
   ngOnInit(): void {
     this.getAllStudentOfTeacherClass();

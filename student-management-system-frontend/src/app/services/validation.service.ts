@@ -32,25 +32,44 @@ export class ValidationService {
 
   // Validator to check if date is not in the future
   public notFutureDateValidator(control: AbstractControl): { [key: string]: boolean } | null {
-    const value = new Date(control.value);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return value <= today ? null : { 'futureDate': true };
-  }
+  const value = new Date(control.value);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return value <= today ? null : { 'futureDate': true };
+}
 
   // Custom validator function to ensure that the date of birth is before the date of enrollment
   public dateOfBirthBeforeEnrollmentValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
-      const dateOfBirth = control.get('dateOfBirth')?.value;
-      const enrollmentDate = control.get('dateOfEnrollment')?.value;
-      if (dateOfBirth && enrollmentDate && new Date(dateOfBirth) > new Date(enrollmentDate)) {
-        return { 'dateOfBirthAfterEnrollment': true };
-      }
-      if (dateOfBirth && enrollmentDate && new Date(dateOfBirth) > new Date(enrollmentDate)) {
-        return { 'dateOfBirthAfterEnrollment': true };
-      }
-      return null;
-    };
+  return (control: AbstractControl): { [key: string]: boolean } | null => {
+    const dateOfBirth = control.get('dateOfBirth')?.value;
+    const enrollmentDate = control.get('dateOfEnrollment')?.value;
+    if (dateOfBirth && enrollmentDate && new Date(dateOfBirth) > new Date(enrollmentDate)) {
+      return { 'dateOfBirthAfterEnrollment': true };
+    }
+    if (dateOfBirth && enrollmentDate && new Date(dateOfBirth) > new Date(enrollmentDate)) {
+      return { 'dateOfBirthAfterEnrollment': true };
+    }
+    return null;
+  };
+}
+
+  public notFutureDate(control: AbstractControl): { [key: string]: boolean } | null {
+  const today = new Date();
+  const examDate = new Date(control.value);
+  return examDate <= today ? null : { 'futureDate': true };
+}
+
+  public marksValidator(group: AbstractControl): ValidationErrors | null {
+  const marksControl = group.get('marks');
+  const totalMarksControl = group.get('totalMarks');
+
+  if (marksControl && totalMarksControl) {
+    const marks = marksControl.value;
+    const totalMarks = totalMarksControl.value;
+    return marks <= totalMarks ? null : { 'invalidMarks': true };
   }
+
+  return null;
+}
 
 }

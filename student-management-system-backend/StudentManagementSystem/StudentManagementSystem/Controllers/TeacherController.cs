@@ -119,8 +119,12 @@ namespace StudentManagementSystem.Controllers
             var teacherUserID = int.Parse(User.FindFirst("UserId")?.Value);
             return Ok(await _teacherService.GetAttendanceDetailsByDate(date, teacherUserID));
         }
-
         #endregion
 
+        ////[HttpGet("GetTeacherClassId")]
+        ////public async Task<IActionResult> GetTeacherClassId()
+        ////{
+        ////    var 
+        ////}
     }
 }

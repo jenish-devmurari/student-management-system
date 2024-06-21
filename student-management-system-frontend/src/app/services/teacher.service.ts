@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { IResponse } from '../interfaces/response.interface';
 import { Observable } from 'rxjs';
 import { IAttendance, IAttendanceData } from '../interfaces/attendance.interface';
+import { IStudent } from '../interfaces/student.interface';
+import { IGradebook } from '../interfaces/gradebook.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -28,4 +30,13 @@ export class TeacherService {
   public updateAttendance(attendance: IAttendance): Observable<IResponse> {
     return this.http.put<IResponse>(`${this.apiUrl}/EditAttendanceHistory/${attendance.id}`, JSON.stringify(attendance));
   }
+
+  public addStudent(student: IStudent): Observable<IResponse> {
+    return this.http.post<IResponse>(`${this.apiUrl}/RegisterStudent`, JSON.stringify(student));
+  }
+
+  public marksAdd(grade : IGradebook) :Observable<IResponse> {
+    return this.http.post<IResponse>(`${this.apiUrl}/AddMarks`, JSON.stringify(grade));
+  }
+  
 }

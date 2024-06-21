@@ -28,7 +28,15 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> ChangePassword([FromBody] string newPassword)
         {
             string email = User.FindFirst(ClaimTypes.Email)?.Value;
-            return Ok(await _userService.ChangePassword(newPassword,email));
+            return Ok(await _userService.ChangePassword(newPassword, email));
+        }
+
+        [Authorize]
+        [HttpGet("GetUserDetails")]
+        public async Task<IActionResult> GetUserDetail()
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _userService.GetUserDetail(userId));
         }
 
     }

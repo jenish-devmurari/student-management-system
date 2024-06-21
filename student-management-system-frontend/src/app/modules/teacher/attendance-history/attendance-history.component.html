@@ -15,7 +15,7 @@
             <tr *ngFor="let attendance of attendanceList">
                 <td>{{ attendance.name}}</td>
                 <td>{{ attendance.date | date}}</td>
-                <td>{{ attendance.isPresent ? 'Present' : 'Absent' }}</td>
+                <td>{{ attendance.isPresent ? 'Present' : 'Absent' }} </td>
                 <td>
                     <button class="btn btn-primary" (click)="onEdit(attendance)" [disabled]="!canEdit(attendance)">
                         Edit

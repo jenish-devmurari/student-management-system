@@ -4,13 +4,13 @@ import { AdminComponent } from './admin.component';
 import { HomeComponent } from '../shared/home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { RegisterTeacherComponent } from './register-teacher/register-teacher.component';
-import { RegisterStudentComponent } from './register-student/register-student.component';
 import { StudentListComponent } from './student-list/student-list.component';
 import { StudentDetailComponent } from './student-detail/student-detail.component';
 import { StudentAttendanceComponent } from './student-attendance/student-attendance.component';
 import { StudentGradebookComponent } from './student-gradebook/student-gradebook.component';
 import { TeacherDetailComponent } from './teacher-detail/teacher-detail.component';
 import { TeacherListComponent } from './teacher-list/teacher-list.component';
+import { RegisterStudentComponent } from '../shared/register-student/register-student.component';
 
 const routes: Routes = [
   {
