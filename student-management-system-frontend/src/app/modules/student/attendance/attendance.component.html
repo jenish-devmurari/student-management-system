@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let attendance of attendanceList">
+                <tr *ngFor="let attendance of attendanceList | sortDate:'date':'desc'">
                     <td>{{ attendance.subjectName}}</td>
                     <td>{{ attendance.date | date}}</td>
                     <td>{{ attendance.isPresent ? 'Present' : 'Absent' }} </td>

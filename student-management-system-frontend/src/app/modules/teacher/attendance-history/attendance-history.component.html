@@ -1,4 +1,3 @@
-
 <div class="container mt-4">
     <h2>Attendance History</h2>
 
@@ -12,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let attendance of attendanceList">
+            <tr *ngFor="let attendance of attendanceList | sortDate:'date':'desc'">
                 <td>{{ attendance.name}}</td>
                 <td>{{ attendance.date | date}}</td>
                 <td>{{ attendance.isPresent ? 'Present' : 'Absent' }} </td>

@@ -11,16 +11,19 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { GlobalErrorInterceptor } from './interceptors/global-error.interceptor';
 import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { SortDatePipe } from './pipes/sort-date.pipe';
+import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     RouterModule,
     CoreModule,
+    SharedModule,
     HttpClientModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({

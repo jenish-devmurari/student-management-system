@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let grade of gradebooks">
+            <tr *ngFor="let grade of gradebooks | sortDate:'date':'desc'">
                 <td>{{ grade.name }}</td>
                 <td>{{ grade.classId }}</td>
                 <td>{{ grade.date | date }}</td>

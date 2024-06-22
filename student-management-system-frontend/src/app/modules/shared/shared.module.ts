@@ -7,6 +7,7 @@ import { CoreModule } from '../core/core.module';
 import { RegisterStudentComponent } from './register-student/register-student.component';
 import { RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { SortDatePipe } from 'src/app/pipes/sort-date.pipe';
 
 
 
@@ -15,7 +16,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HomeComponent,
     RegisterStudentComponent,
     StudentProfileComponent,
-    DashboardComponent
+    DashboardComponent,
+    SortDatePipe
   ],
   imports: [
     CommonModule,
@@ -27,7 +29,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   exports: [
     HomeComponent,
     RegisterStudentComponent,
-    StudentProfileComponent
+    StudentProfileComponent,
+    SortDatePipe
   ]
 })
 export class SharedModule { }

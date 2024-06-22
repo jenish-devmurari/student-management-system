@@ -12,7 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let grade of gradesList" routerLinkActive="active">
+            <tr *ngFor="let grade of gradesList | sortDate:'date':'desc'" routerLinkActive="active">
                 <td>{{ grade.email }}</td>
                 <td>{{ grade.date | date }}</td>
                 <td>{{ grade.marks }}</td>

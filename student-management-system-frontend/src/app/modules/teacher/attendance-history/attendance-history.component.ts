@@ -26,7 +26,7 @@ export class AttendanceHistoryComponent implements OnInit {
       {
         next: (res) => {
           if (res.status == HttpStatusCodes.Success) {
-            this.attendanceList = this.sortByDateDescending(res.data);
+            this.attendanceList = res.data;
           } else {
             this.toaster.error(res.message);
           }
@@ -64,13 +64,4 @@ export class AttendanceHistoryComponent implements OnInit {
     const date: string = attendance.date.split('T')[0];
     return date === this.currentDate;
   }
-
-  private sortByDateDescending(data: IAttendance[]): IAttendance[] {
-    return data.sort((a, b) => {
-      const dateA = new Date(a.date).getTime();
-      const dateB = new Date(b.date).getTime();
-      return dateB - dateA;
-    });
-  }
-
 }

@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let grade of gradebooks">
+            <tr *ngFor="let grade of gradebooks | sortDate:'date':'desc'">
                 <td>{{ grade.date | date }}</td>
                 <td>{{ grade.marks }}</td>
                 <td>{{ grade.totalMarks }}</td>
