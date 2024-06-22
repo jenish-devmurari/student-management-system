@@ -1,5 +1,7 @@
 import { Component, Input, OnInit, numberAttribute } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { ITeacher } from 'src/app/interfaces/teacher.interface';
 import { AdminService } from 'src/app/services/admin.service';
 
@@ -11,7 +13,7 @@ import { AdminService } from 'src/app/services/admin.service';
 export class TeacherDetailComponent implements OnInit {
   public teacher!: ITeacher;
 
-  constructor(private route: ActivatedRoute, private adminService: AdminService) { }
+  constructor(private route: ActivatedRoute, private adminService: AdminService, private toaster: ToastrService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -25,15 +27,15 @@ export class TeacherDetailComponent implements OnInit {
   public getTeacherDetailById(id: number): void {
     this.adminService.getTeacherDetailById(id).subscribe({
       next: (res) => {
-        if (res.status === 200) {
+        if (res.status === HttpStatusCodes.Success) {
           this.teacher = res.data;
           console.log(this.teacher)
         } else {
-          console.error(res.message);
+          this.toaster.error(res.message)
         }
       },
       error: (err) => {
-        console.error('Error fetching teacher details:', err);
+        this.toaster.error('Error fetching teacher details:', err);
       }
     });
   }

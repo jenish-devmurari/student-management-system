@@ -5,3 +5,11 @@
 .card:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.error {
+    border: 1px solid red;
+}
+
+.success {
+    border: 1px solid rgb(44, 115, 2);
+}

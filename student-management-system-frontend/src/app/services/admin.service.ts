@@ -96,8 +96,6 @@ export class AdminService {
 
 
   public updateGrades(grades: IGradebook): Observable<IResponse> {
-    console.log(grades.marks);
-    console.log(grades.totalMarks);
     return this.http.put<IResponse>(`${this.apiUrl}/UpdateStudentGradesDetails`, grades)
   }
 

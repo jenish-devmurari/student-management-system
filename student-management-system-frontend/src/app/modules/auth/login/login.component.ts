@@ -61,7 +61,7 @@ export class LoginComponent {
         this.router.navigate(['student']);
         break;
       default:
-        this.router.navigate(['login']);
+        this.router.navigate(['auth/login']);
         break;
     }
   }

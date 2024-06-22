@@ -191,6 +191,18 @@ namespace Service.Services
                     };
                 }
 
+                if (user.Role == Roles.Admin)
+                {
+                    Users adminDetails = await _userRepository.GetUserByIdAsync(user.UserId);
+
+                    return new ResponseDTO
+                    {
+                        Status = 200,
+                        Message = "Teacher Data retrive successfully",
+                        Data = adminDetails
+                    };
+                }
+
                 return new ResponseDTO
                 {
                     Status = 200,

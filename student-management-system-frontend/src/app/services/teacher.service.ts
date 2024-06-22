@@ -35,8 +35,23 @@ export class TeacherService {
     return this.http.post<IResponse>(`${this.apiUrl}/RegisterStudent`, JSON.stringify(student));
   }
 
-  public marksAdd(grade : IGradebook) :Observable<IResponse> {
+  public marksAdd(grade: IGradebook): Observable<IResponse> {
     return this.http.post<IResponse>(`${this.apiUrl}/AddMarks`, JSON.stringify(grade));
   }
-  
+
+  public getAllGradesDetails(): Observable<IResponse> {
+    return this.http.get<IResponse>(`${this.apiUrl}/GetAllStudentGrades`);
+  }
+
+  public updateGrades(grades: IGradebook): Observable<IResponse> {
+    return this.http.put<IResponse>(`${this.apiUrl}/UpdateMarksOfStudent`, grades)
+  }
+
+  public getStudentDetailById(id: number): Observable<IResponse> {
+    return this.http.get<IResponse>(`${this.apiUrl}/GetStudentDetailById/${id}`)
+  }
+
+  public getStudentGradesDetailById(id: number): Observable<IResponse> {
+    return this.http.get<IResponse>(`${this.apiUrl}/GetStudentGradesDetailById/${id}`)
+  }
 }

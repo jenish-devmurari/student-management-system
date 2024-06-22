@@ -32,7 +32,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
       text: 'You are not logged in. Please log in first.',
       confirmButtonText: 'OK'
     }).then(() => {
-      router.navigate(['login']);
+      router.navigate(['auth/login']);
     });
     return false;
   }

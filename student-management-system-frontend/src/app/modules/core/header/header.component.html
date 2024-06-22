@@ -12,21 +12,18 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto">
-                    <!-- Common links for all roles -->
-                    <li class="nav-item">
-                        <a [routerLink]="['home']" routerLinkActive="active" class="text-white mr-3">Home</a>
-                    </li>
+
                     <!-- Admin specific links -->
                     <ng-container *ngIf="userRole === adminRole">
-                        <li class="nav-item">
+                        <li class="nav-item m-2">
                             <a [routerLink]="['register']" routerLinkActive="active"
                                 class="text-white mr-3">Register</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item m-2">
                             <a [routerLink]="['teacher']" routerLinkActive="active" class="text-white mr-3">Teacher
                                 Management</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item m-2">
                             <a [routerLink]="['student']" routerLinkActive="active" class="text-white mr-3">Student
                                 Management</a>
                         </li>
@@ -34,11 +31,15 @@
 
                     <!-- Teacher specific links -->
                     <ng-container *ngIf="userRole === teacherRole">
-                        <li class="nav-item">
+                        <li class="nav-item m-2">
+                            <a [routerLink]="['register-student']" routerLinkActive="active" class="text-white mr-3">Add
+                                Student</a>
+                        </li>
+                        <li class="nav-item m-2">
                             <a [routerLink]="['attendance']" routerLinkActive="active"
                                 class="text-white mr-3">Attendance</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item m-2">
                             <a [routerLink]="['gradebook']" routerLinkActive="active"
                                 class="text-white mr-3">Gradebook</a>
                         </li>
@@ -46,20 +47,28 @@
 
                     <!-- Student specific links -->
                     <ng-container *ngIf="userRole === studentRole">
-                        <li class="nav-item">
+                        <li class="nav-item m-2">
                             <a [routerLink]="['attendance']" routerLinkActive="active"
                                 class="text-white mr-3">Attendance</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item m-2">
                             <a [routerLink]="['gradebook']" routerLinkActive="active"
                                 class="text-white mr-3">Gradebook</a>
+                        </li>
+                        <li class="nav-item m-2">
+                            <a [routerLink]="['home']" routerLinkActive="active" class="text-white mr-3"><i
+                                    class="fa-sharp fa-solid fa-user" style="color: #e9eef1;"></i></a>
                         </li>
                     </ng-container>
 
                     <ng-container *ngIf="isLoggedIn; else loginLink">
                         <button (click)="logout()" class="btn btn-light">Logout</button>
                     </ng-container>
+
                     <ng-template #loginLink>
+                        <li class="nav-item m-2">
+                            <a [routerLink]="['home']" routerLinkActive="active" class="text-white mr-3">Home</a>
+                        </li>
                         <button [routerLink]="['login']" routerLinkActive="active" class="btn btn-light">Login</button>
                     </ng-template>
                 </ul>

@@ -5,6 +5,8 @@ import { StudentProfileComponent } from './student-profile/student-profile.compo
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
 import { RegisterStudentComponent } from './register-student/register-student.component';
+import { RouterModule } from '@angular/router';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 
@@ -12,11 +14,13 @@ import { RegisterStudentComponent } from './register-student/register-student.co
   declarations: [
     HomeComponent,
     RegisterStudentComponent,
-    StudentProfileComponent
+    StudentProfileComponent,
+    DashboardComponent
   ],
   imports: [
     CommonModule,
     CoreModule,
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
   ],

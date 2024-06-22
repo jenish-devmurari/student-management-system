@@ -69,9 +69,6 @@
                             class="text-danger">
                             Marks is must positive number.
                         </div>
-                        <div *ngIf="marksForm.get('marks')?.errors?.['marksExceed']" class="text-danger mb-3">
-                            Marks cannot be greater than Total Marks.
-                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="totalMarks" class="form-label">Total Marks:</label>
@@ -84,11 +81,8 @@
                             class="text-danger">
                             Total marks must be a positive number.
                         </div>
-                        <div *ngIf="marksForm.get('totalMarks')?.errors?.['marksExceed']" class="text-danger mb-3">
-                            Marks cannot be greater than Total Marks.
-                        </div>
                     </div>
-                    <div *ngIf="marksForm?.errors?.['marksExceed']" class="text-danger mb-3">
+                    <div *ngIf="marksForm.errors?.['invalidMarks']" class="alert alert-danger">
                         Marks cannot be greater than Total Marks.
                     </div>
                     <button type="submit" class="btn btn-primary" [disabled]="marksForm.invalid">Update

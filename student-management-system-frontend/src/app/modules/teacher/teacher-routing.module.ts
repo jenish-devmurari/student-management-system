@@ -11,16 +11,17 @@ import { RecordMarksComponent } from './record-marks/record-marks.component';
 import { GradebookHistoryComponent } from './gradebook-history/gradebook-history.component';
 import { StudentDetailComponent } from './student-detail/student-detail.component';
 import { RegisterStudentComponent } from '../shared/register-student/register-student.component';
+import { DashboardComponent } from '../shared/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
     path: '', component: TeacherComponent, pathMatch: 'prefix',
     children: [
       {
-        path: '', redirectTo: 'home', pathMatch: 'full',
+        path: '', redirectTo: 'dashboard', pathMatch: 'full',
       },
       {
-        path: 'home', component: HomeComponent, pathMatch: 'full',
+        path: 'dashboard', component: DashboardComponent, pathMatch: 'full',
       },
       {
         path: 'register-student', component: RegisterStudentComponent, pathMatch: 'full'
@@ -52,7 +53,7 @@ const routes: Routes = [
             path: 'gradebook-history', component: GradebookHistoryComponent, pathMatch: 'full'
           },
           {
-            path: 'gradebook-history/student-detail', component: StudentDetailComponent, pathMatch: 'full'
+            path: 'student-detail/:id', component: StudentDetailComponent, pathMatch: 'full'
           },
           {
             path: '', redirectTo: 'record-marks', pathMatch: 'full',

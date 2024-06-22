@@ -6,4 +6,6 @@ export interface IGradebook {
     name: string;
     subjectName: string;
     totalMarks: number;
+    userId?: number;
+    email?:string;
 }

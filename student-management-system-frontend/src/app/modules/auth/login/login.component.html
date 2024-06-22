@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="row no-gutters">
                     <div class="col-md-6">
-                        <img src="assets/login.jpg" class="card-img" alt="...">
+                        <img src="assets/login.jpg" class="card-img" alt="...login image">
                     </div>
                     <div class="col-md-6">
                         <div class="card-body">
@@ -40,8 +40,10 @@
                                         Password is at least 6 characters
                                     </span>
                                 </div>
-                                <button type="submit" class="btn btn-primary "
-                                    [disabled]="loginForm.invalid">Login</button>
+                                <div class="d-flex justify-content-center m-3">
+                                    <button type="submit" class="btn btn-primary"
+                                        [disabled]="loginForm.invalid">Login</button>
+                                </div>
                             </form>
                         </div>
                     </div>

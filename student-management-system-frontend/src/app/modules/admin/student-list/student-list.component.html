@@ -1,28 +1,35 @@
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-md-3 mb-3" *ngFor="let student of students">
-            <div class="card">
-                <div class="card-body">
-                    <P>{{student.id}}</P>
-                    <h5 class="card-title">{{ student.name }}</h5>
-                    <p class="card-text">{{ student.email }}</p>
-                    <p>{{student.classId}}</p>
-                    <button class="btn btn-primary" (click)="editStudent(student)" data-bs-toggle="modal"
+    <h2 class="text-center mb-3 mt-2">Student List</h2>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Class ID</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let student of students">
+                <td>{{ student.name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.classId }}</td>
+                <td>
+                    <button class="btn btn-primary m-2" (click)="editStudent(student)" data-bs-toggle="modal"
                         data-bs-target="#editStudentModal">
                         <i class="fas fa-edit"></i> Edit
                     </button>
-                    <button class="btn btn-danger" (click)="deleteStudent(student)">
+                    <button class="btn btn-danger m-2" (click)="deleteStudent(student)">
                         <i class="fas fa-trash"></i> Delete
                     </button>
-                    <button class="btn btn-danger" [routerLink]="['student-detail',student.id]">
+                    <button class="btn btn-info m-2" [routerLink]="['student-detail',student.id]">
                         View Details
                     </button>
-                </div>
-            </div>
-        </div>
-    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
-
 
 <!-- Modal -->
 <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">

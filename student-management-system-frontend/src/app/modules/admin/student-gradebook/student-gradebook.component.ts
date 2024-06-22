@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { IGradebook } from 'src/app/interfaces/gradebook.interface';
 import { AdminService } from 'src/app/services/admin.service';
+import { ValidationService } from 'src/app/services/validation.service';
 
 @Component({
   selector: 'app-student-gradebook',
@@ -17,7 +18,7 @@ export class StudentGradebookComponent implements OnInit {
   public marksForm!: FormGroup;
   public grade!: IGradebook;
 
-  constructor(private adminService: AdminService, private route: ActivatedRoute, private toaster: ToastrService, private fb: FormBuilder) {
+  constructor(private adminService: AdminService, private route: ActivatedRoute, private toaster: ToastrService, private fb: FormBuilder, private validation: ValidationService) {
   }
 
   ngOnInit(): void {
@@ -68,7 +69,7 @@ export class StudentGradebookComponent implements OnInit {
       subjectName: [null, Validators.required],
       marks: [null, [Validators.required, Validators.min(0)]],
       totalMarks: [null, [Validators.required, Validators.min(0)]]
-    });
+    }, { Validators: this.validation.marksValidator });
   }
 
   public onSubmit(): void {
@@ -98,4 +99,15 @@ export class StudentGradebookComponent implements OnInit {
   }
 
 
+  public validationClass(control: AbstractControl | null): { [key: string]: boolean | undefined } {
+    return this.validation.validationNgClass(control);
+  }
+
+  public isFieldInvalid(control: AbstractControl | null): boolean {
+    return this.validation.isFormFieldInvalid(control);
+  }
+
+  public emailPattern(control: AbstractControl | null): boolean {
+    return this.validation.isEmailPatternMatch(control);
+  }
 }

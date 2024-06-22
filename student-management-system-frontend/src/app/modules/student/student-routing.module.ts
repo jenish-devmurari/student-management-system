@@ -5,6 +5,7 @@ import { HomeComponent } from '../shared/home/home.component';
 import { AttendanceComponent } from './attendance/attendance.component';
 import { GradebookComponent } from './gradebook/gradebook.component';
 import { SubjectMarksComponent } from './subject-marks/subject-marks.component';
+import { DashboardComponent } from '../shared/dashboard/dashboard.component';
 
 
 const routes: Routes = [
@@ -12,10 +13,10 @@ const routes: Routes = [
     path: '', component: StudentComponent, pathMatch: 'prefix',
     children: [
       {
-        path: '', redirectTo: 'home', pathMatch: 'full',
+        path: '', redirectTo: 'dashboard', pathMatch: 'full',
       },
       {
-        path: 'home', component: HomeComponent, pathMatch: 'full',
+        path: 'dashboard', component: DashboardComponent, pathMatch: 'full',
       },
       {
         path: 'attendance', component: AttendanceComponent, pathMatch: 'full'

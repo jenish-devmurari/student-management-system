@@ -11,16 +11,17 @@ import { StudentGradebookComponent } from './student-gradebook/student-gradebook
 import { TeacherDetailComponent } from './teacher-detail/teacher-detail.component';
 import { TeacherListComponent } from './teacher-list/teacher-list.component';
 import { RegisterStudentComponent } from '../shared/register-student/register-student.component';
+import { DashboardComponent } from '../shared/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
     path: '', component: AdminComponent, pathMatch: 'prefix',
     children: [
       {
-        path: '', redirectTo: 'register', pathMatch: 'full',
+        path: '', redirectTo: 'dashboard', pathMatch: 'full',
       },
       {
-        path: 'home', component: HomeComponent, pathMatch: 'full',
+        path: 'dashboard', component: DashboardComponent, pathMatch: 'full',
       },
       {
         path: 'register', component: RegisterComponent, pathMatch: 'prefix',

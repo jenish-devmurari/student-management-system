@@ -7,11 +7,13 @@ import {
 import { Injectable } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { HttpStatusCodes } from '../enums/http-status-code.enum';
+import { SessionStorageService } from '../services/session-storage.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class GlobalErrorInterceptor implements HttpInterceptor {
 
-  constructor() { }
+  constructor(private sessionStorage: SessionStorageService, private router: Router) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler) {
     return next.handle(request).pipe(
@@ -21,11 +23,13 @@ export class GlobalErrorInterceptor implements HttpInterceptor {
           case HttpStatusCodes.InternalServerError:
             errorMessage = "Internal server error";
             break;
-          // case HttpStatusCodes.BadRequest:
-          //   errorMessage = "Bad request from client side";
-          //   break;
+          case HttpStatusCodes.BadRequest:
+            errorMessage = "Bad request from client side";
+            break;
           case HttpStatusCodes.Unauthorized:
             errorMessage = "Unauthorized";
+            this.sessionStorage.removeItem('authToken');
+            this.router.navigate(['auth/login']);
             break;
           case HttpStatusCodes.NotFound:
             errorMessage = "Resource not found";

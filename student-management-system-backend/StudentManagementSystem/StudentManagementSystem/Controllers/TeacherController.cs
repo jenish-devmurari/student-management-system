@@ -105,10 +105,10 @@ namespace StudentManagementSystem.Controllers
 
         #region get student grade details of teacher subject by user id
         [HttpGet("GetStudentGradesDetailById/{id}")]
-        public async Task<IActionResult> GetStudentGradeDetailsByTeacher(int studentUserId)
+        public async Task<IActionResult> GetStudentGradeDetailsByTeacher(int id)
         {
             var teacherUserID = int.Parse(User.FindFirst("UserId")?.Value);
-            return Ok(await _teacherService.GetStudentGradeDetailsByStudentID(studentUserId, teacherUserID));
+            return Ok(await _teacherService.GetStudentGradeDetailsByStudentID(id, teacherUserID));
         }
         #endregion
 
@@ -120,11 +120,5 @@ namespace StudentManagementSystem.Controllers
             return Ok(await _teacherService.GetAttendanceDetailsByDate(date, teacherUserID));
         }
         #endregion
-
-        ////[HttpGet("GetTeacherClassId")]
-        ////public async Task<IActionResult> GetTeacherClassId()
-        ////{
-        ////    var 
-        ////}
     }
 }

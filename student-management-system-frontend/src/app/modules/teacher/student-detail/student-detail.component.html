@@ -1,1 +1,24 @@
-<p>student-detail works!</p>
+
+<app-student-profile [student]="student"></app-student-profile>
+
+<div class="container">
+    <h2>Grade List</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Marks</th>
+                <th>Total Marks</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let grade of studentGrades" routerLinkActive="active">
+                <td>{{ grade.date | date }}</td>
+                <td>{{ grade.marks }}</td>
+                <td>{{ grade.totalMarks }}</td>
+                <td>{{ calculatePercentage(grade.marks,grade.totalMarks)}}%</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
