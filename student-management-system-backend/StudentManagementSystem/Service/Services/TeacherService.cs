@@ -495,7 +495,7 @@ namespace Service.Services
                     };
                 }
 
-                List<Attendance> attendanceDetails = await _attendanceRepository.GetAttendanceDetailsOfStudent((int)teacher.TeacherId);
+                List<Attendance> attendanceDetails = await _attendanceRepository.GetAttendanceDetailsByDate(date, teacher.TeacherId);
 
                 if(attendanceDetails == null)
                 {

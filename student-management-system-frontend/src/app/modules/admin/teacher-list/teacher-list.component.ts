@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -16,20 +16,25 @@ import Swal from 'sweetalert2';
   templateUrl: './teacher-list.component.html',
   styleUrls: ['./teacher-list.component.scss']
 })
-export class TeacherListComponent {
+export class TeacherListComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
   public teachers !: ITeacher[];
   public selectedTeacher: ITeacher | undefined
   public teacherEditForm !: FormGroup
-  private subscriptions !: Subscription[]
+  private subscriptions: Subscription[] = [] as Subscription[];
+  public currentPage = 1;
+  public itemsPerPage = 10;
+  public totalItems = 0;
 
   constructor(private adminService: AdminService, private toaster: ToastrService, private router: Router, private validation: ValidationService) {
   }
 
   ngOnInit(): void {
-    this.adminService.teacherData$.subscribe(data => {
+    const sub = this.adminService.teacherData$.subscribe(data => {
       this.teachers = data;
+      this.totalItems = data.length;
     });
+    this.subscriptions.push(sub);
     this.getAllTeacherData();
     this.initializeForm();
   }
@@ -40,6 +45,7 @@ export class TeacherListComponent {
       next: (res) => {
         if (res.status == HttpStatusCodes.Success) {
           this.teachers = res.data;
+          this.totalItems = res.data.length;
         } else {
           this.toaster.error(res.message);
         }
@@ -48,7 +54,7 @@ export class TeacherListComponent {
         this.toaster.error(err);
       }
     });
-    // this.subscriptions.push(getTeacherSubscription);
+    this.subscriptions.push(getTeacherSubscription);
   }
 
   private initializeForm(): void {
@@ -101,7 +107,7 @@ export class TeacherListComponent {
             this.toaster.error(err)
           }
         });
-        // this.subscriptions.push(deleteteacherSubscription);
+        this.subscriptions.push(deleteTeacherSubscription);
       }
     });
   }
@@ -130,7 +136,7 @@ export class TeacherListComponent {
         }
       });
       this.closeModal.nativeElement.click();
-      // this.subscriptions.push(putTeacherSubscription);
+      this.subscriptions.push(putTeacherSubscription);
     } else {
       alert("Please fill form field");
     }
@@ -156,4 +162,13 @@ export class TeacherListComponent {
     return Object.values(Qualification);
   }
 
+  public onPageChange(page: number): void {
+    this.currentPage = page;
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscriptions.length > 0) {
+      this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
+  }
 }

@@ -10,25 +10,29 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let teacher of teachers">
+            <tr
+                *ngFor="let teacher of teachers | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
                 <td>{{ teacher.name }}</td>
                 <td>{{ teacher.email }}</td>
                 <td>{{ teacher.classId }}</td>
                 <td>
-                    <button class="btn btn-primary m-2" (click)="editTeacher(teacher)" data-bs-toggle="modal"
+                    <button class=" btn btn-primary m-2" (click)="editTeacher(teacher)" data-bs-toggle="modal"
                         data-bs-target="#editTeacherModal">
                         <i class="fas fa-edit"></i> Edit
                     </button>
                     <button class="btn btn-danger m-2" (click)="deleteTeacher(teacher)">
                         <i class="fas fa-trash"></i> Delete
                     </button>
-                    <button class="btn btn-info" [routerLink]="['teacher-detail',teacher.id]">
+                    <button class="btn btn-info" [routerLink]="['../teacher-detail',teacher.id]">
                         View Details
                     </button>
                 </td>
             </tr>
         </tbody>
     </table>
+    <div class="d-flex align-item-center justify-content-center">
+        <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+    </div>
 </div>
 
 <!-- Modal -->

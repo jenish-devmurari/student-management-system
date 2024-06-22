@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { IAttendanceData } from 'src/app/interfaces/attendance.interface';
 import { IStudent } from 'src/app/interfaces/student.interface';
@@ -11,11 +12,12 @@ import { TeacherService } from 'src/app/services/teacher.service';
   templateUrl: './record-attendance.component.html',
   styleUrls: ['./record-attendance.component.scss']
 })
-export class RecordAttendanceComponent implements OnInit {
+export class RecordAttendanceComponent implements OnInit, OnDestroy {
   public studentList: IStudent[] = [] as IStudent[]
   public attendanceForm !: FormGroup;
   public attendanceTaken: boolean = false;
   public currentDate: string = new Date().toISOString().split('T')[0];
+  private subscription: Subscription[] = [] as Subscription[];
 
   constructor(private teacherService: TeacherService, private toaster: ToastrService) {
     this.attendanceForm = new FormGroup({
@@ -28,7 +30,7 @@ export class RecordAttendanceComponent implements OnInit {
   }
 
   private getAllStudentOfTeacherClass() {
-    this.teacherService.getAllStudentOfTeacherClass().subscribe({
+    const sub = this.teacherService.getAllStudentOfTeacherClass().subscribe({
       next: (res) => {
         if (res.status == HttpStatusCodes.Success) {
           this.studentList = res.data;
@@ -36,9 +38,10 @@ export class RecordAttendanceComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Error fetching student list:', err);
+        this.toaster.error('Error fetching student list:', err);
       }
     });
+    this.subscription.push(sub);
   }
 
   private initializeForm(): void {
@@ -61,8 +64,8 @@ export class RecordAttendanceComponent implements OnInit {
           isPresent: student.isPresent
         }))
       };
-      this.teacherService.markAttendance(attendanceData).subscribe(
-        (response) => {
+      const sub = this.teacherService.markAttendance(attendanceData).subscribe({
+        next: (response) => {
           if (response.status == HttpStatusCodes.Success) {
             this.attendanceTaken = true;
             this.toaster.success(response.message);
@@ -73,10 +76,12 @@ export class RecordAttendanceComponent implements OnInit {
             this.toaster.error(response.message);
           }
         },
-        (error) => {
-          console.error('Error marking attendance:', error);
+        error: (error) => {
+          this.toaster.error('Error marking attendance:', error);
         }
+      }
       );
+      this.subscription.push(sub);
     }
   }
 
@@ -84,5 +89,10 @@ export class RecordAttendanceComponent implements OnInit {
     return (<FormArray>this.attendanceForm.get('students')).controls
   }
 
+  ngOnDestroy(): void {
+    if (this.subscription.length > 0) {
+      this.subscription.forEach(sub => sub.unsubscribe());
+    }
+  }
 
 }

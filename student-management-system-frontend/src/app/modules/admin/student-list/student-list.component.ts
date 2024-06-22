@@ -19,18 +19,23 @@ import Swal from 'sweetalert2';
 export class StudentListComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
   public students !: IStudent[];
-  private selectedStudent: IStudent | undefined
   public studentEditForm !: FormGroup
   private classId !: number;
-  private subscriptions !: Subscription[]
+  private selectedStudent: IStudent | undefined;
+  private subscriptions: Subscription[] = [] as Subscription[];
+  public currentPage = 1;
+  public itemsPerPage = 10;
+  public totalItems = 0;
 
   constructor(private adminService: AdminService, private toaster: ToastrService, private router: Router, private validation: ValidationService) {
   }
 
   ngOnInit(): void {
-    this.adminService.studentData$.subscribe(data => {
+    const sub = this.adminService.studentData$.subscribe(data => {
       this.students = data;
+      this.totalItems = data.length;
     });
+    this.subscriptions.push(sub);
     this.getAllStudentData();
     this.initializeForm()
   }
@@ -41,6 +46,7 @@ export class StudentListComponent implements OnInit, OnDestroy {
       next: (res) => {
         if (res.status == HttpStatusCodes.Success) {
           this.students = res.data;
+          this.totalItems = res.data.length;
         } else {
           this.toaster.error(res.message);
         }
@@ -49,7 +55,7 @@ export class StudentListComponent implements OnInit, OnDestroy {
         this.toaster.error(err);
       }
     });
-    // this.subscriptions.push(getStudentSubscription);
+    this.subscriptions.push(getStudentSubscription);
   }
 
   public editStudent(student: IStudent): void {
@@ -92,7 +98,7 @@ export class StudentListComponent implements OnInit, OnDestroy {
             this.toaster.error(err)
           }
         });
-        // this.subscriptions.push(deleteStudentSubscription);
+        this.subscriptions.push(deleteStudentSubscription);
       }
     });
   }
@@ -131,10 +137,10 @@ export class StudentListComponent implements OnInit, OnDestroy {
           this.toaster.error(err)
         }
       });
+      this.subscriptions.push(putStudentSubscription);
       this.closeModal.nativeElement.click();
-      // this.subscriptions.push(putStudentSubscription);
     } else {
-      alert("Please fill form field");
+      Swal.fire("Please fill form field");
     }
   }
 
@@ -157,9 +163,15 @@ export class StudentListComponent implements OnInit, OnDestroy {
   get classes(): string[] {
     return Object.keys(Classes).filter(key => isNaN(Number(key)));
   }
+  
+  public onPageChange(page: number): void {
+    this.currentPage = page;
+  }
 
   ngOnDestroy(): void {
-    // this.subscriptions.forEach(sub => sub.unsubscribe());
+    if (this.subscriptions.length > 0) {
+      this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
   }
 
 }

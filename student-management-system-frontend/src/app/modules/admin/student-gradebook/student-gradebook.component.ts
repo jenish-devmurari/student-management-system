@@ -2,6 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { IGradebook } from 'src/app/interfaces/gradebook.interface';
 import { AdminService } from 'src/app/services/admin.service';
@@ -12,27 +13,29 @@ import { ValidationService } from 'src/app/services/validation.service';
   templateUrl: './student-gradebook.component.html',
   styleUrls: ['./student-gradebook.component.scss']
 })
-export class StudentGradebookComponent implements OnInit {
+export class StudentGradebookComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
   public gradebooks!: IGradebook[];
   public marksForm!: FormGroup;
   public grade!: IGradebook;
+  private subscription: Subscription[] = [] as Subscription[];
 
   constructor(private adminService: AdminService, private route: ActivatedRoute, private toaster: ToastrService, private fb: FormBuilder, private validation: ValidationService) {
   }
 
   ngOnInit(): void {
-    this.adminService.gradebookData$.subscribe(data => {
+    const sub = this.adminService.gradebookData$.subscribe(data => {
       this.gradebooks = data;
     });
+    this.subscription.push(sub);
     this.initializeForm()
     this.getStudentGradeBookDetail();
   }
 
-  public getStudentGradeBookDetail() {
+  public getStudentGradeBookDetail(): void {
     const id = +this.route.snapshot.parent?.params['id'];
     if (id) {
-      this.adminService.getStudentGradeBookDetail(id).subscribe({
+      const sub = this.adminService.getStudentGradeBookDetail(id).subscribe({
         next: (res) => {
           if (res.status == HttpStatusCodes.Success) {
             this.gradebooks = res.data;
@@ -44,6 +47,7 @@ export class StudentGradebookComponent implements OnInit {
           this.toaster.error(error);
         }
       });
+      this.subscription.push(sub);
     }
   }
 
@@ -76,7 +80,7 @@ export class StudentGradebookComponent implements OnInit {
     if (this.marksForm.valid) {
       this.grade.marks = this.marksForm.value.marks;
       this.grade.totalMarks = this.marksForm.value.totalMarks;
-      this.adminService.updateGrades(this.grade).subscribe({
+      const sub = this.adminService.updateGrades(this.grade).subscribe({
         next: (res) => {
           if (res.status == 200) {
             const updateGrade = this.gradebooks.find(g => g.gradeId == this.grade.gradeId);
@@ -94,10 +98,10 @@ export class StudentGradebookComponent implements OnInit {
           this.toaster.error(error);
         }
       });
+      this.subscription.push(sub);
       this.closeModal.nativeElement.click();
     }
   }
-
 
   public validationClass(control: AbstractControl | null): { [key: string]: boolean | undefined } {
     return this.validation.validationNgClass(control);
@@ -109,5 +113,11 @@ export class StudentGradebookComponent implements OnInit {
 
   public emailPattern(control: AbstractControl | null): boolean {
     return this.validation.isEmailPatternMatch(control);
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription.length > 0) {
+      this.subscription.forEach(sub => sub.unsubscribe());
+    }
   }
 }

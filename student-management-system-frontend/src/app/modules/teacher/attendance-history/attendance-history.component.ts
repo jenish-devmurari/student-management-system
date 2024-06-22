@@ -1,6 +1,7 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { IAttendance } from 'src/app/interfaces/attendance.interface';
 import { TeacherService } from 'src/app/services/teacher.service';
@@ -10,9 +11,10 @@ import { TeacherService } from 'src/app/services/teacher.service';
   templateUrl: './attendance-history.component.html',
   styleUrls: ['./attendance-history.component.scss']
 })
-export class AttendanceHistoryComponent implements OnInit {
+export class AttendanceHistoryComponent implements OnInit, OnDestroy {
   public attendanceList: IAttendance[] = [] as IAttendance[];
   private currentDate: string = new Date().toISOString().split('T')[0];
+  private subscription: Subscription[] = [] as Subscription[];
 
   constructor(private teacherService: TeacherService, private toaster: ToastrService) {
   }
@@ -22,7 +24,7 @@ export class AttendanceHistoryComponent implements OnInit {
   }
 
   private getAttendanceHistory(): void {
-    this.teacherService.getAttendanceHistory().subscribe(
+    const sub = this.teacherService.getAttendanceHistory().subscribe(
       {
         next: (res) => {
           if (res.status == HttpStatusCodes.Success) {
@@ -35,7 +37,8 @@ export class AttendanceHistoryComponent implements OnInit {
           this.toaster.error(err);
         }
       }
-    )
+    );
+    this.subscription.push(sub);
   }
 
   public onEdit(attendance: IAttendance): void {
@@ -43,7 +46,7 @@ export class AttendanceHistoryComponent implements OnInit {
       attendance.isPresent = !attendance.isPresent;
       const updateAttendance: IAttendance | undefined = this.attendanceList.find(a => a.id == attendance.id);
       if (updateAttendance) {
-        this.teacherService.updateAttendance(attendance).subscribe({
+        const sub = this.teacherService.updateAttendance(attendance).subscribe({
           next: (res) => {
             if (res.status == HttpStatusCodes.Success) {
               updateAttendance.isPresent == attendance.isPresent;
@@ -53,7 +56,8 @@ export class AttendanceHistoryComponent implements OnInit {
           error: (err) => {
             this.toaster.error(err);
           }
-        })
+        });
+        this.subscription.push(sub);
       }
     } else {
       this.toaster.error('Editing is allowed only for today\'s attendance.');
@@ -63,5 +67,11 @@ export class AttendanceHistoryComponent implements OnInit {
   public canEdit(attendance: IAttendance): boolean {
     const date: string = attendance.date.split('T')[0];
     return date === this.currentDate;
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription.length > 0) {
+      this.subscription.forEach(sub => sub.unsubscribe());
+    }
   }
 }

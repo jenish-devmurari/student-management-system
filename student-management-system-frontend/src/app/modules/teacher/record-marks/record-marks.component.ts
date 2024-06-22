@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, Subscription, map, startWith } from 'rxjs';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { Subjects } from 'src/app/enums/subjects.enum';
 import { IStudent } from 'src/app/interfaces/student.interface';
@@ -16,12 +16,13 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './record-marks.component.html',
   styleUrls: ['./record-marks.component.scss']
 })
-export class RecordMarksComponent {
+export class RecordMarksComponent implements OnInit, OnDestroy {
   public marksForm!: FormGroup;
   public students: IStudent[] = [] as IStudent[];
   public userDetails !: any
   public subjectId: number = 0;
   public subjectName !: string;
+  private subscription: Subscription[] = [] as Subscription[];
 
   constructor(
     private teacherService: TeacherService,
@@ -32,7 +33,7 @@ export class RecordMarksComponent {
 
   ngOnInit() {
     this.initializeForm();
-    this.authService.loggedInUserDetails().subscribe(
+    const sub = this.authService.loggedInUserDetails().subscribe(
       (res) => {
         this.userDetails = res.data;
         this.subjectId = this.userDetails.subjectId;
@@ -42,7 +43,7 @@ export class RecordMarksComponent {
     this.getAllStudentOfTeacherClass();
   }
 
-  private initializeForm() {
+  private initializeForm(): void {
     this.marksForm = new FormGroup({
       email: new FormControl(null, Validators.required),
       date: new FormControl(null, [Validators.required, this.validation.notFutureDate]),
@@ -51,8 +52,8 @@ export class RecordMarksComponent {
     }, { validators: this.validation.marksValidator });
   }
 
-  private getAllStudentOfTeacherClass() {
-    this.teacherService.getAllStudentOfTeacherClass().subscribe({
+  private getAllStudentOfTeacherClass(): void {
+    const sub = this.teacherService.getAllStudentOfTeacherClass().subscribe({
       next: (res) => {
         if (res.status === HttpStatusCodes.Success) {
           this.students = res.data;
@@ -64,9 +65,9 @@ export class RecordMarksComponent {
     });
   }
 
-  public onSubmit() {
+  public onSubmit(): void {
     if (this.marksForm.valid) {
-      this.teacherService.marksAdd(this.marksForm.value).subscribe({
+      const sub = this.teacherService.marksAdd(this.marksForm.value).subscribe({
         next: (res) => {
           if (res.status === HttpStatusCodes.Success) {
             this.toaster.success(res.message);
@@ -91,6 +92,12 @@ export class RecordMarksComponent {
 
   public isFieldInvalid(control: AbstractControl | null): boolean {
     return this.validation.isFormFieldInvalid(control);
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription.length > 0) {
+      this.subscription.forEach(sub => sub.unsubscribe());
+    }
   }
 
 }

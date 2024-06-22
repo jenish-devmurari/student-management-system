@@ -10,7 +10,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let student of students">
+            <tr
+                *ngFor="let student of students | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
                 <td>{{ student.name }}</td>
                 <td>{{ student.email }}</td>
                 <td>{{ student.classId }}</td>
@@ -22,13 +23,16 @@
                     <button class="btn btn-danger m-2" (click)="deleteStudent(student)">
                         <i class="fas fa-trash"></i> Delete
                     </button>
-                    <button class="btn btn-info m-2" [routerLink]="['student-detail',student.id]">
+                    <button class="btn btn-info m-2" [routerLink]="['../student-detail',student.id]">
                         View Details
                     </button>
                 </td>
             </tr>
         </tbody>
     </table>
+    <div class="d-flex align-item-center justify-content-center">
+        <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+    </div>
 </div>
 
 <!-- Modal -->

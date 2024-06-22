@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { IGradebook } from 'src/app/interfaces/gradebook.interface';
 import { IStudent } from 'src/app/interfaces/student.interface';
@@ -13,7 +14,8 @@ import { TeacherService } from 'src/app/services/teacher.service';
 })
 export class StudentDetailComponent {
   public student !: IStudent;
-  public studentGrades!: IGradebook[]
+  public studentGrades!: IGradebook[];
+  private subscription: Subscription[] = [] as Subscription[];
 
   constructor(private teacherService: TeacherService, private route: ActivatedRoute, private toaster: ToastrService) {
   }
@@ -38,6 +40,7 @@ export class StudentDetailComponent {
           this.toaster.error(error);
         }
       });
+      this.subscription.push(sub);
     }
   }
 
@@ -56,11 +59,17 @@ export class StudentDetailComponent {
           this.toaster.error(error);
         }
       });
+      this.subscription.push(sub);
     }
   }
 
-
   public calculatePercentage(marks: number, totalMarks: number): number {
     return (marks / totalMarks) * 100;
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription.length > 0) {
+      this.subscription.forEach(sub => sub.unsubscribe());
+    }
   }
 }

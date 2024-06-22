@@ -7,17 +7,18 @@ import { IGradebook } from 'src/app/interfaces/gradebook.interface';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-gradebook-history',
   templateUrl: './gradebook-history.component.html',
   styleUrls: ['./gradebook-history.component.scss']
 })
 export class GradebookHistoryComponent implements OnInit, OnDestroy {
-
-  public gradesList: IGradebook[] = [] as IGradebook[];
   @ViewChild('closeModal') closeModal!: ElementRef;
+  public gradesList: IGradebook[] = [] as IGradebook[];
   public marksForm!: FormGroup;
   public grade!: IGradebook;
+  private subscription: Subscription[] = [] as Subscription[];
 
   constructor(
     private teacherService: TeacherService,
@@ -43,6 +44,7 @@ export class GradebookHistoryComponent implements OnInit, OnDestroy {
         this.toaster.error(err)
       }
     });
+    this.subscription.push(sub);
   }
 
   public editGrade(gradebook: IGradebook): void {
@@ -71,7 +73,7 @@ export class GradebookHistoryComponent implements OnInit, OnDestroy {
     if (this.marksForm.valid) {
       this.grade.marks = this.marksForm.value.marks;
       this.grade.totalMarks = this.marksForm.value.totalMarks;
-      this.teacherService.updateGrades(this.grade).subscribe({
+      const sub = this.teacherService.updateGrades(this.grade).subscribe({
         next: (res) => {
           if (res.status == HttpStatusCodes.Success) {
             const updateGrade = this.gradesList.find(g => g.gradeId == this.grade.gradeId);
@@ -89,13 +91,15 @@ export class GradebookHistoryComponent implements OnInit, OnDestroy {
           this.toaster.error(error);
         }
       });
+      this.subscription.push(sub);
       this.closeModal.nativeElement.click();
     }
   }
 
-
   ngOnDestroy(): void {
-    // throw new Error('Method not implemented.');
+    if (this.subscription.length > 0) {
+      this.subscription.forEach(sub => sub.unsubscribe());
+    }
   }
 
 

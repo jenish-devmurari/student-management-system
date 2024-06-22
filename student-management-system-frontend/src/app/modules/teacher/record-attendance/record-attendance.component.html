@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="container mt-4 overflow-auto">
     <h2>Attendance for {{ currentDate }}</h2>
 
     <div *ngIf="attendanceTaken" class="alert alert-success">
@@ -7,7 +7,9 @@
 
     <div *ngIf="!attendanceTaken">
         <form [formGroup]="attendanceForm" (ngSubmit)="onSubmit()">
-            <button type="submit" class="btn btn-primary" [disabled]="attendanceForm.invalid">Mark Attendance</button>
+            <div class="d-flex justify-content-end mb-3">
+                <button type="submit" class="btn btn-primary" [disabled]="attendanceForm.invalid">Mark Attendance</button>
+            </div>
             <table class="table table-striped table-bordered">
                 <thead class="thead-dark">
                     <tr>

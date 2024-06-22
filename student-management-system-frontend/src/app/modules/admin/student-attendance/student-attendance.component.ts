@@ -2,6 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { IAttendance } from 'src/app/interfaces/attendance.interface';
 import { AdminService } from 'src/app/services/admin.service';
@@ -13,21 +14,23 @@ import { AdminService } from 'src/app/services/admin.service';
 })
 export class StudentAttendanceComponent {
   public attendances !: IAttendance[];
+  private subscription: Subscription[] = [] as Subscription[];
 
   constructor(private adminService: AdminService, private route: ActivatedRoute, private toaster: ToastrService) {
   }
 
   ngOnInit(): void {
-    this.adminService.attendanceData$.subscribe(data => {
+    const sub = this.adminService.attendanceData$.subscribe(data => {
       this.attendances = data;
     });
+    this.subscription.push(sub);
     this.getStudentAttendanceFDetail();
   }
 
   public getStudentAttendanceFDetail() {
     const id = +this.route.snapshot.parent?.params['id'];
     if (id) {
-      this.adminService.getStudentAttendanceDetail(id).subscribe({
+      const sub = this.adminService.getStudentAttendanceDetail(id).subscribe({
         next: (res) => {
           this.attendances = res.data;
         },
@@ -35,12 +38,13 @@ export class StudentAttendanceComponent {
           this.toaster.error(error);
         }
       });
+      this.subscription.push(sub);
     }
   }
 
   public editAttendance(attendance: IAttendance): void {
     attendance.isPresent = !attendance.isPresent
-    this.adminService.updateAttendance(attendance).subscribe({
+    const sub = this.adminService.updateAttendance(attendance).subscribe({
       next: (res) => {
         if (res.status == HttpStatusCodes.Success) {
           const updatedAttendance = this.attendances.find(a => a.id == attendance.id);
@@ -56,5 +60,12 @@ export class StudentAttendanceComponent {
         this.toaster.error(error);
       }
     })
+    this.subscription.push(sub);
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription.length > 0) {
+      this.subscription.forEach(sub => sub.unsubscribe());
+    }
   }
 }

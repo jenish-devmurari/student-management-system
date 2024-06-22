@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-
+import { Subscription } from 'rxjs';
 import { emailRegex } from 'src/app/constants/constants';
 import { Classes } from 'src/app/enums/classes.enum';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
@@ -9,13 +9,17 @@ import { Qualification } from 'src/app/enums/qualifications.enum';
 import { Subjects } from 'src/app/enums/subjects.enum';
 import { AdminService } from 'src/app/services/admin.service';
 import { ValidationService } from 'src/app/services/validation.service';
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-register-teacher',
   templateUrl: './register-teacher.component.html',
   styleUrls: ['./register-teacher.component.scss']
 })
-export class RegisterTeacherComponent implements OnInit {
+export class RegisterTeacherComponent implements OnInit, OnDestroy {
   public teacherRegisterForm !: FormGroup;
+  private subscription: Subscription[] = [] as Subscription[];
+
   constructor(private validation: ValidationService, private toaster: ToastrService, private adminService: AdminService) {
   }
 
@@ -41,7 +45,7 @@ export class RegisterTeacherComponent implements OnInit {
       const formValues = this.teacherRegisterForm.value;
       formValues.subject = Subjects[formValues.subject as keyof typeof Subjects];
       formValues.class = Classes[formValues.class as keyof typeof Classes];
-      this.adminService.addTeacher(this.teacherRegisterForm.value).subscribe({
+      const sub = this.adminService.addTeacher(this.teacherRegisterForm.value).subscribe({
         next: (res) => {
           if (res.status === HttpStatusCodes.Created) {
             this.toaster.success("Teacher Register Successfully");
@@ -54,10 +58,10 @@ export class RegisterTeacherComponent implements OnInit {
           this.toaster.error(err)
         }
       });
-
+      this.subscription.push(sub);
       this.resetForm();
     } else {
-      console.log('Form is invalid');
+      Swal.fire("Please fill up all required field in form")
     }
   }
 
@@ -86,5 +90,11 @@ export class RegisterTeacherComponent implements OnInit {
 
   get classes(): string[] {
     return Object.keys(Classes).filter(key => isNaN(Number(key)));
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription.length > 0) {
+      this.subscription.forEach(sub => sub.unsubscribe());
+    }
   }
 }

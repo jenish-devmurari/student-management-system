@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container overflow-auto">
     <h2>Grade List</h2>
     <table class="table table-striped">
         <thead>
@@ -64,11 +64,11 @@
                     <div class="mb-3">
                         <label for="totalMarks" class="form-label">Total Marks:</label>
                         <input id="totalMarks" type="number" formControlName="totalMarks" class="form-control">
-                        <div *ngIf="marksForm.get('totalMarks')?.errors?.['required'] && (marksForm.get('marks')?.dirty || marksForm.get('totalMarks')?.touched)"
+                        <div *ngIf="marksForm.get('totalMarks')?.errors?.['required'] && (marksForm.get('totalMarks')?.dirty || marksForm.get('totalMarks')?.touched)"
                             class="text-danger">
                             Total marks is required
                         </div>
-                        <div *ngIf="marksForm.get('totalMarks')?.errors?.['min'] && (marksForm.get('marks')?.dirty || marksForm.get('totalMarks')?.touched)"
+                        <div *ngIf="marksForm.get('totalMarks')?.errors?.['min'] && (marksForm.get('totalMarks')?.dirty || marksForm.get('totalMarks')?.touched)"
                             class="text-danger">
                             Total marks must be a positive number.
                         </div>

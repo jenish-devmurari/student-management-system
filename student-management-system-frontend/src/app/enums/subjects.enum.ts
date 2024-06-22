@@ -1,6 +1,6 @@
 export enum Subjects {
-    English = 1,
-    Maths,
+    Maths = 1,
     Science,
+    English,
     SocialStudies
 }

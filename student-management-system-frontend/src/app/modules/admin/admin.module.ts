@@ -14,6 +14,7 @@ import { StudentGradebookComponent } from './student-gradebook/student-gradebook
 import { StudentListComponent } from './student-list/student-list.component';
 import { TeacherDetailComponent } from './teacher-detail/teacher-detail.component';
 import { TeacherListComponent } from './teacher-list/teacher-list.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { TeacherListComponent } from './teacher-list/teacher-list.component';
     ReactiveFormsModule,
     SharedModule,
     FormsModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    NgxPaginationModule
   ]
 })
 export class AdminModule { }

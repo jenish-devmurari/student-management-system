@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { passwordRegex } from 'src/app/constants/constants';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { AuthService } from 'src/app/services/auth.service';
@@ -12,8 +13,9 @@ import Swal from 'sweetalert2';
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss']
 })
-export class ChangePasswordComponent implements OnInit {
+export class ChangePasswordComponent implements OnInit, OnDestroy {
   public changePasswordForm!: FormGroup;
+  private subscription: Subscription[] = [] as Subscription[];
 
   constructor(
     private fb: FormBuilder,
@@ -52,7 +54,7 @@ export class ChangePasswordComponent implements OnInit {
 
   public onSubmit(): void {
     if (this.changePasswordForm.valid) {
-      this.authService.changePassword(this.changePasswordForm.value.confirmPassword).subscribe({
+      const sub = this.authService.changePassword(this.changePasswordForm.value.confirmPassword).subscribe({
         next: (res) => {
           if (res.status === HttpStatusCodes.Success) {
             Swal.fire({
@@ -70,6 +72,7 @@ export class ChangePasswordComponent implements OnInit {
           this.toastr.error(err);
         }
       });
+      this.subscription.push(sub);
     } else {
       this.toastr.error('Please fill out the form correctly.', 'Error');
     }
@@ -82,5 +85,11 @@ export class ChangePasswordComponent implements OnInit {
       text: 'For security reasons, you need to change your password.',
       confirmButtonText: 'OK'
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription.length > 0) {
+      this.subscription.forEach(sub => sub.unsubscribe());
+    }
   }
 }

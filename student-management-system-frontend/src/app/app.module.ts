@@ -13,6 +13,7 @@ import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SortDatePipe } from './pipes/sort-date.pipe';
 import { SharedModule } from './modules/shared/shared.module';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { SharedModule } from './modules/shared/shared.module';
       progressBar: true,
       positionClass: 'toast-top-right',
     }),
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    NgxPaginationModule,
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, { provide: HTTP_INTERCEPTORS, useClass: GlobalErrorInterceptor, multi: true }, { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true }],
   bootstrap: [AppComponent]

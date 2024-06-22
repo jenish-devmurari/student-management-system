@@ -21,7 +21,7 @@ export class StudentDetailComponent implements OnInit, OnDestroy {
     this.getStudentFDetail();
   }
 
-  public getStudentFDetail() {
+  public getStudentFDetail(): void {
     const id = +this.route.snapshot.params['id']
     if (id) {
       const sub = this.adminService.getStudentDetailById(id).subscribe({
