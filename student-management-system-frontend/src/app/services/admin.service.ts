@@ -7,6 +7,7 @@ import { IGradebook } from '../interfaces/gradebook.interface';
 import { IResponse } from '../interfaces/response.interface';
 import { IStudent } from '../interfaces/student.interface';
 import { ITeacher } from '../interfaces/teacher.interface';
+import { AdminApi } from '../constants/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +20,7 @@ export class AdminService {
   private teacherDataSubject: BehaviorSubject<ITeacher[]> = new BehaviorSubject<ITeacher[]>([]);
   public teacherData$: Observable<ITeacher[]> = this.teacherDataSubject.asObservable();
 
-  private attendanceDataSubject: BehaviorSubject<IAttendance[]> = new BehaviorSubject<IAttendance[]>([]);
-  public attendanceData$: Observable<IAttendance[]> = this.attendanceDataSubject.asObservable();
-
-  private gradebookDataSubject: BehaviorSubject<IGradebook[]> = new BehaviorSubject<IGradebook[]>([]);
-  public gradebookData$: Observable<IGradebook[]> = this.gradebookDataSubject.asObservable();
-
-  private apiUrl: string = "https://localhost:7080/api/Admin"
+  private apiUrl: string = AdminApi;
   constructor(private http: HttpClient, private route: Router,) { }
 
   public addStudent(student: IStudent): Observable<IResponse> {
@@ -58,7 +53,6 @@ export class AdminService {
   public addTeacher(teacher: ITeacher): Observable<IResponse> {
     return this.http.post<IResponse>(`${this.apiUrl}/RegisterTeacher`, JSON.stringify(teacher));
   }
-
 
   public getAllTeacher(): Observable<IResponse> {
     return this.http.get<IResponse>(`${this.apiUrl}/GetAllTeacher`).pipe(

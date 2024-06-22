@@ -7,6 +7,7 @@ import { Classes } from 'src/app/enums/classes.enum';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { Roles } from 'src/app/enums/roles.enum';
 import { ITeacher } from 'src/app/interfaces/teacher.interface';
+import { IUser } from 'src/app/interfaces/user.interface';
 import { AdminService } from 'src/app/services/admin.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
@@ -20,8 +21,8 @@ import { ValidationService } from 'src/app/services/validation.service';
 export class RegisterStudentComponent implements OnInit, OnDestroy {
   public studentRegisterForm !: FormGroup;
   public role: string | null = "";
-  public userDetails !: any;
-  public classId: number = 0;
+  public userDetails: IUser = {} as IUser;
+  public classId: number | undefined = 0;
   public className !: string;
   private subscription: Subscription[] = [] as Subscription[];
 
@@ -35,7 +36,9 @@ export class RegisterStudentComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.userDetails = res.data;
         this.classId = this.userDetails.classId;
-        this.className = Classes[this.classId];
+        if (this.classId) {
+          this.className = Classes[this.classId];
+        }
         this.customizeForm();
       },
       error: (error) => {
@@ -52,8 +55,8 @@ export class RegisterStudentComponent implements OnInit, OnDestroy {
       class: new FormControl(null, [Validators.required]),
       rollNumber: new FormControl(null, [Validators.required, Validators.pattern('^[0-9]*$'), this.validation.positiveNumberValidator.bind(this)]),
       dateOfBirth: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator.bind(this)]),
-      dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator, this.validation.dateOfBirthBeforeEnrollmentValidator()]),
-    });
+      dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator]),
+    }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
   }
 
   public onSubmit(): void {

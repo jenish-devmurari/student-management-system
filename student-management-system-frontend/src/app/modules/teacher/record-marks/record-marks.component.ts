@@ -1,15 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Observable, Subscription, map, startWith } from 'rxjs';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { Subjects } from 'src/app/enums/subjects.enum';
 import { IStudent } from 'src/app/interfaces/student.interface';
-import { ITeacher } from 'src/app/interfaces/teacher.interface';
+import { IUser } from 'src/app/interfaces/user.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { ValidationService } from 'src/app/services/validation.service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-record-marks',
@@ -19,8 +18,8 @@ import { ToastrService } from 'ngx-toastr';
 export class RecordMarksComponent implements OnInit, OnDestroy {
   public marksForm!: FormGroup;
   public students: IStudent[] = [] as IStudent[];
-  public userDetails !: any
-  public subjectId: number = 0;
+  public userDetails: IUser = {} as IUser
+  public subjectId: number | undefined = 0;
   public subjectName !: string;
   private subscription: Subscription[] = [] as Subscription[];
 
@@ -37,7 +36,9 @@ export class RecordMarksComponent implements OnInit, OnDestroy {
       (res) => {
         this.userDetails = res.data;
         this.subjectId = this.userDetails.subjectId;
-        this.subjectName = Subjects[this.subjectId];
+        if (this.subjectId) {
+          this.subjectName = Subjects[this.subjectId];
+        }
       }
     )
     this.getAllStudentOfTeacherClass();
@@ -46,10 +47,10 @@ export class RecordMarksComponent implements OnInit, OnDestroy {
   private initializeForm(): void {
     this.marksForm = new FormGroup({
       email: new FormControl(null, Validators.required),
-      date: new FormControl(null, [Validators.required, this.validation.notFutureDate]),
-      marks: new FormControl(null, [Validators.required, Validators.min(0)]),
-      totalMarks: new FormControl(null, [Validators.required, Validators.min(0)])
-    }, { validators: this.validation.marksValidator });
+      date: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator]),
+      marks: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
+      totalMarks: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)])
+    }, { validators: this.validation.marksTotalMarksValidator });
   }
 
   private getAllStudentOfTeacherClass(): void {

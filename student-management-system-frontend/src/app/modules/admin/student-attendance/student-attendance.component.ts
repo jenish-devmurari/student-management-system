@@ -20,10 +20,6 @@ export class StudentAttendanceComponent {
   }
 
   ngOnInit(): void {
-    const sub = this.adminService.attendanceData$.subscribe(data => {
-      this.attendances = data;
-    });
-    this.subscription.push(sub);
     this.getStudentAttendanceFDetail();
   }
 

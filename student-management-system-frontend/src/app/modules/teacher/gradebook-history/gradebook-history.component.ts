@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { IGradebook } from 'src/app/interfaces/gradebook.interface';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-gradebook-history',
@@ -64,9 +64,9 @@ export class GradebookHistoryComponent implements OnInit, OnDestroy {
   public initializeForm() {
     this.marksForm = this.fb.group({
       email: [null, Validators.required],
-      marks: [null, [Validators.required, Validators.min(0)]],
-      totalMarks: [null, [Validators.required, Validators.min(0)]]
-    }, { Validators: this.validation.marksValidator });
+      marks: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]],
+      totalMarks: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]]
+    }, { validators: this.validation.marksTotalMarksValidator });
   }
 
   public onSubmit(): void {

@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -24,10 +24,6 @@ export class StudentGradebookComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const sub = this.adminService.gradebookData$.subscribe(data => {
-      this.gradebooks = data;
-    });
-    this.subscription.push(sub);
     this.initializeForm()
     this.getStudentGradeBookDetail();
   }
@@ -71,9 +67,9 @@ export class StudentGradebookComponent implements OnInit, OnDestroy {
     this.marksForm = this.fb.group({
       studentName: [null, Validators.required],
       subjectName: [null, Validators.required],
-      marks: [null, [Validators.required, Validators.min(0)]],
-      totalMarks: [null, [Validators.required, Validators.min(0)]]
-    }, { Validators: this.validation.marksValidator });
+      marks: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]],
+      totalMarks: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]]
+    }, { validator: this.validation.marksTotalMarksValidator });
   }
 
   public onSubmit(): void {
@@ -82,7 +78,7 @@ export class StudentGradebookComponent implements OnInit, OnDestroy {
       this.grade.totalMarks = this.marksForm.value.totalMarks;
       const sub = this.adminService.updateGrades(this.grade).subscribe({
         next: (res) => {
-          if (res.status == 200) {
+          if (res.status == HttpStatusCodes.Success) {
             const updateGrade = this.gradebooks.find(g => g.gradeId == this.grade.gradeId);
             if (updateGrade) {
               updateGrade.marks == this.grade.marks;

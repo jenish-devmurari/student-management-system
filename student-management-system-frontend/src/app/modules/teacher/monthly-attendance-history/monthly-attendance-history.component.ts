@@ -32,14 +32,13 @@ export class MonthlyAttendanceHistoryComponent {
     if (selectedDates.length > 0) {
       this.selectedDate = selectedDates[0];
       this.selectedDate.setUTCDate(this.selectedDate.getUTCDate() + 1);
-      console.log(this.selectedDate)
       this.fetchAttendanceDetails(this.selectedDate);
     }
   }
 
   private fetchAttendanceDetails(date: Date): void {
     this.formattedSelectedDate = date.toISOString().split('T')[0];
-    const sub = this.teacherService.getAttendanceBasedOnDate(this.formattedSelectedDate).pipe(take(1)).subscribe({
+    this.teacherService.getAttendanceBasedOnDate(this.formattedSelectedDate).pipe(take(1)).subscribe({
       next: (res) => {
         if (res.status == HttpStatusCodes.Success) {
           this.attendanceDetails = res.data;

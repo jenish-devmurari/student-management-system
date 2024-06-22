@@ -39,6 +39,10 @@
             <div *ngIf="isFieldInvalid(marksForm.get('marks'))" class="text-danger">
                 Marks are required and must be a non-negative number.
             </div>
+            <div *ngIf="marksForm.get('marks')?.errors?.['pattern'] && (marksForm.get('marks')?.dirty || marksForm.get('marks')?.touched)"
+                class="text-danger">
+                Marks must be an integer.
+            </div>
         </div>
 
 
@@ -48,6 +52,10 @@
                 [ngClass]="validationClass(marksForm.get('totalMarks'))" />
             <div *ngIf="isFieldInvalid(marksForm.get('totalMarks'))" class="text-danger">
                 Total marks are required and must be a non-negative number.
+            </div>
+            <div *ngIf="marksForm.get('totalMarks')?.errors?.['pattern'] && (marksForm.get('totalMarks')?.dirty || marksForm.get('totalMarks')?.touched)"
+                class="text-danger">
+                Total marks must be an integer.
             </div>
         </div>
 

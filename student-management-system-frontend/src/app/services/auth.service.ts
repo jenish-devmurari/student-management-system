@@ -6,15 +6,16 @@ import { IResponse } from '../interfaces/response.interface';
 import { Router } from '@angular/router';
 import * as jwt_decode from "jwt-decode";
 import { SessionStorageService } from './session-storage.service';
+import { IUser } from '../interfaces/user.interface';
+import { UserApi } from '../constants/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl: string = "https://localhost:7080/api/User"
+  private apiUrl: string = UserApi;
   private authToken: string = "";
-  public userDetails !: any;
-
+  public userDetails !: IUser;
 
   constructor(private http: HttpClient, private route: Router, private sessionStorageService: SessionStorageService) { }
 
@@ -59,7 +60,6 @@ export class AuthService {
     return this.sessionStorageService.getItem('authToken');
   }
 
-
   public getUserRole(): string | null {
     const token = this.getToken();
     if (token) {
@@ -88,7 +88,7 @@ export class AuthService {
         'Authorization': `Bearer ${this.authToken}`
       })
     };
-    return this.http.get<IResponse>(`${this.apiUrl}/GetUserDetails`, httpOptions)
+    return this.http.get<IResponse>(`${this.apiUrl}/GetUserDetails`, httpOptions);
   }
 
 }

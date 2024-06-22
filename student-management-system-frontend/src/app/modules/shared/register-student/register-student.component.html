@@ -85,12 +85,11 @@
                                     class="text-danger">
                                     Date of Enrollment cannot be in the future.
                                 </span>
-                                <span
-                                    *ngIf="studentRegisterForm.get('dateOfEnrollment')?.hasError('dateOfBirthAfterEnrollment')"
-                                    class="text-danger">
-                                    Date of birth cannot be after date of enrollment.
-                                </span>
                             </div>
+                        </div>
+                        <div *ngIf="studentRegisterForm?.hasError('dateOfBirthAfterEnrollment')"
+                            class="alert alert-danger">
+                            Date of birth cannot be after date of enrollment.
                         </div>
                         <div class="form-group row m-2">
                             <div class="col-6">

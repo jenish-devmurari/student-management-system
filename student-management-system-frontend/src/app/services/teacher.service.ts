@@ -6,12 +6,13 @@ import { Observable } from 'rxjs';
 import { IAttendance, IAttendanceData } from '../interfaces/attendance.interface';
 import { IStudent } from '../interfaces/student.interface';
 import { IGradebook } from '../interfaces/gradebook.interface';
+import { TeacherApi } from '../constants/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TeacherService {
-  private apiUrl: string = "https://localhost:7080/api/Teacher";
+  private apiUrl: string = TeacherApi;
 
   constructor(private http: HttpClient, private route: Router,) { }
 

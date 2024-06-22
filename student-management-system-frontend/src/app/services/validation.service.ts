@@ -53,22 +53,13 @@ export class ValidationService {
     };
   }
 
-  public notFutureDate(control: AbstractControl): { [key: string]: boolean } | null {
-    const today = new Date();
-    const examDate = new Date(control.value);
-    return examDate <= today ? null : { 'futureDate': true };
-  }
-
-  public marksValidator(group: AbstractControl): ValidationErrors | null {
-    const marksControl = group.get('marks');
-    const totalMarksControl = group.get('totalMarks');
-
-    if (marksControl && totalMarksControl) {
-      const marks = marksControl.value;
-      const totalMarks = totalMarksControl.value;
-      return marks <= totalMarks ? null : { 'invalidMarks': true };
+  //marks and total marks validator
+  public marksTotalMarksValidator(group: AbstractControl): ValidationErrors | null {
+    const marks = group.get('marks')?.value;
+    const totalMarks = group.get('totalMarks')?.value;
+    if (marks > totalMarks) {
+      return { invalidMarks: true };
     }
-
     return null;
   }
 

@@ -69,6 +69,10 @@
                             class="text-danger">
                             Marks is must positive number.
                         </div>
+                        <div *ngIf="marksForm.get('marks')?.errors?.['pattern'] && (marksForm.get('marks')?.dirty || marksForm.get('marks')?.touched)"
+                            class="text-danger">
+                            Marks must be an integer.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="totalMarks" class="form-label">Total Marks:</label>
@@ -80,6 +84,10 @@
                         <div *ngIf="marksForm.get('totalMarks')?.errors?.['min'] && (marksForm.get('marks')?.dirty || marksForm.get('totalMarks')?.touched)"
                             class="text-danger">
                             Total marks must be a positive number.
+                        </div>
+                        <div *ngIf="marksForm.get('totalMarks')?.errors?.['pattern'] && (marksForm.get('totalMarks')?.dirty || marksForm.get('totalMarks')?.touched)"
+                            class="text-danger">
+                            Total marks must be an integer.
                         </div>
                     </div>
                     <div *ngIf="marksForm.errors?.['invalidMarks']" class="alert alert-danger">
