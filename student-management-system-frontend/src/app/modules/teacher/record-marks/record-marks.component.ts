@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { Subjects } from 'src/app/enums/subjects.enum';
+import { IResponse } from 'src/app/interfaces/response.interface';
 import { IStudent } from 'src/app/interfaces/student.interface';
 import { IUser } from 'src/app/interfaces/user.interface';
 import { AuthService } from 'src/app/services/auth.service';
@@ -21,6 +22,8 @@ export class RecordMarksComponent implements OnInit, OnDestroy {
   public userDetails: IUser = {} as IUser
   public subjectId: number | undefined = 0;
   public subjectName !: string;
+  public emailSuggestions: string[] = [];
+  public noResultsFound: boolean = false;
   private subscription: Subscription[] = [] as Subscription[];
 
   constructor(
@@ -40,13 +43,24 @@ export class RecordMarksComponent implements OnInit, OnDestroy {
           this.subjectName = Subjects[this.subjectId];
         }
       }
-    )
+    );
+    const searchEmailSubscription = this.marksForm
+      .get('email')
+      ?.valueChanges.pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap((value) => this.searchEmail(value))
+      )
+      .subscribe((emails: string[]) => {
+        this.emailSuggestions = emails;
+        this.noResultsFound = emails.length === 0;
+      });
     this.getAllStudentOfTeacherClass();
   }
 
   private initializeForm(): void {
     this.marksForm = new FormGroup({
-      email: new FormControl(null, Validators.required),
+      email: new FormControl(null, [Validators.required, this.emailFromListValidator()]),
       date: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator]),
       marks: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
       totalMarks: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)])
@@ -64,6 +78,27 @@ export class RecordMarksComponent implements OnInit, OnDestroy {
         this.toaster.error('Error fetching student list:', err);
       }
     });
+    this.subscription.push(sub);
+  }
+
+  private searchEmail(query: string): Observable<string[]> {
+    if (query.length < 3) {
+      return of([]);
+    }
+    return this.teacherService.getStudentEmailListBasedOnSearch(query).pipe(
+      switchMap((response: IResponse) => {
+        return of(response.data);
+      })
+    );
+  }
+
+  private emailFromListValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (this.emailSuggestions.includes(control.value)) {
+        return null;
+      }
+      return { emailNotFromList: true };
+    };
   }
 
   public onSubmit(): void {
@@ -81,6 +116,7 @@ export class RecordMarksComponent implements OnInit, OnDestroy {
           this.toaster.error(err)
         }
       });
+      this.subscription.push(sub);
     } else {
       alert("Please fill up form");
     }

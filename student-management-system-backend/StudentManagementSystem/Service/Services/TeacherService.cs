@@ -2,6 +2,7 @@
 using Repository.Modals;
 using Service.DTOs;
 using Service.Interfaces;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace Service.Services
@@ -125,7 +126,7 @@ namespace Service.Services
                     if (a.IsPresent == false)
                     {
                         var student = await _studentRepository.GetStudentDetailsByStudentIdAsync(a.StudentId);
-                      
+
                         if (student != null)
                         {
                             // send email who is absent 
@@ -292,7 +293,7 @@ namespace Service.Services
                     };
                 }
 
-                if(marksDetails.Marks > marksDetails.TotalMarks)
+                if (marksDetails.Marks > marksDetails.TotalMarks)
                 {
                     return new ResponseDTO
                     {
@@ -480,7 +481,7 @@ namespace Service.Services
 
 
         #region particular month's date attendance for teacher
-        public async Task<ResponseDTO> GetAttendanceDetailsByDate(DateTime date,int userId)
+        public async Task<ResponseDTO> GetAttendanceDetailsByDate(DateTime date, int userId)
         {
             try
             {
@@ -497,7 +498,7 @@ namespace Service.Services
 
                 List<Attendance> attendanceDetails = await _attendanceRepository.GetAttendanceDetailsByDate(date, teacher.TeacherId);
 
-                if(attendanceDetails == null)
+                if (attendanceDetails == null)
                 {
                     return new ResponseDTO
                     {
@@ -533,5 +534,52 @@ namespace Service.Services
         }
 
         #endregion
+
+
+        #region get student email list based on search 
+        public async Task<ResponseDTO> GetStudentEmailList(string searchEmail, int userId)
+        {
+            try
+            {
+                Teachers teacher = await _teacherRepository.GetTeacherDetailsByIdAsync(userId);
+
+                if (teacher == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "Teacher Not Found"
+                    };
+                }
+
+                List<string> emailList= await _userRepository.GetStudentEmails(searchEmail);
+
+
+                if (emailList == null)
+                {
+                    return new ResponseDTO
+                    {
+                        Status = 404,
+                        Message = "No student found"
+                    };
+                }
+
+                return new ResponseDTO
+                {
+                    Status = 200,
+                    Data = emailList,
+                    Message = "Get all student emails based on search."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    Status = 500,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+            #endregion
+        }
     }
 }

@@ -56,7 +56,11 @@ export class TeacherService {
     return this.http.get<IResponse>(`${this.apiUrl}/GetStudentGradesDetailById/${id}`)
   }
 
-  public getAttendanceBasedOnDate(date: string) {
+  public getAttendanceBasedOnDate(date: string): Observable<IResponse> {
     return this.http.get<IResponse>(`${this.apiUrl}/GetStudentAttendanceDetailByDate/${date}`)
+  }
+
+  public getStudentEmailListBasedOnSearch(query: string): Observable<IResponse> {
+    return this.http.get<IResponse>(`${this.apiUrl}/GetStudentEmailList/${query}`)
   }
 }

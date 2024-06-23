@@ -120,5 +120,15 @@ namespace StudentManagementSystem.Controllers
             return Ok(await _teacherService.GetAttendanceDetailsByDate(date, teacherUserID));
         }
         #endregion
+
+
+        #region get student email based on search 
+        [HttpGet("GetStudentEmailList/{query}")]
+        public async Task<IActionResult> GetStudentEmail(string query)
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            return Ok(await _teacherService.GetStudentEmailList(query,userId));
+        }
+        #endregion
     }
 }

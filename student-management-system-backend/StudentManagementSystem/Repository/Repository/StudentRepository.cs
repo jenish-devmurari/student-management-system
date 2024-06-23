@@ -60,7 +60,8 @@ namespace Repository.Repository
 
         public async Task<List<Students>> GetAllStudentByTeacherClass(int classId)
         {
-           return  await _context.Students.Include(u => u.Users).Where(t => (int)t.ClassId == classId && t.Users.IsActive == true).ToListAsync();
+            return await _context.Students.Include(u => u.Users).Where(t => (int)t.ClassId == classId && t.Users.IsActive == true).ToListAsync();
         }
+
     }
 }

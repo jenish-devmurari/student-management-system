@@ -28,5 +28,7 @@ namespace Service.Interfaces
         public Task<ResponseDTO> GetStudentGradeDetailsByStudentID(int studentUserID, int userID);
 
         public Task<ResponseDTO> GetAttendanceDetailsByDate(DateTime date, int userId);
+
+        public Task<ResponseDTO> GetStudentEmailList(string searchEmail,int userId);
     }
 }

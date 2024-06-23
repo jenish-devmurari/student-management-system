@@ -57,5 +57,12 @@ namespace Repository.Repository
             .Include(u => u.Student)
             .FirstOrDefaultAsync(u => u.Email == email);
         }
+        public async Task<List<string>> GetStudentEmails(string searchEmail)
+        {
+            return await _context.Users
+                .Where(u => u.Email.ToLower().Contains(searchEmail.ToLower()) && u.IsActive)
+                .Select(u => u.Email)
+                .ToListAsync();
+        }
     }
 }

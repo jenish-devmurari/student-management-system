@@ -7,14 +7,12 @@
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title">{{ student.name }}</h5>
-                    <p class="card-text"><strong>ID:</strong> {{ student.id }}</p>
                     <p class="card-text"><strong>Roll Number:</strong> {{ student.rollNumber }}</p>
                     <p class="card-text"><strong>Class ID:</strong> {{ student.classId }}</p>
                     <p class="card-text"><strong>Date of Birth:</strong> {{ student.dateOfBirth | date:'longDate' }}</p>
                     <p class="card-text"><strong>Date of Enrollment:</strong> {{ student.dateOfEnrollment |
                         date:'longDate' }}</p>
                     <p class="card-text"><strong>Email:</strong> {{ student.email }}</p>
-                    <p class="card-text"><strong>Active:</strong> {{ student.isActive ? 'Yes' : 'No' }}</p>
                 </div>
             </div>
         </div>
