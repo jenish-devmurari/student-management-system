@@ -552,7 +552,7 @@ namespace Service.Services
                     };
                 }
 
-                List<string> emailList= await _userRepository.GetStudentEmails(searchEmail);
+                List<string> emailList= await _userRepository.GetStudentEmails(searchEmail,(int)teacher.ClassId);
 
 
                 if (emailList == null)

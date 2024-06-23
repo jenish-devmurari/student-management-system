@@ -13,7 +13,7 @@ import { AdminService } from 'src/app/services/admin.service';
   styleUrls: ['./student-attendance.component.scss']
 })
 export class StudentAttendanceComponent {
-  public attendances !: IAttendance[];
+  public attendances: IAttendance[] = [] as IAttendance[];
   private subscription: Subscription[] = [] as Subscription[];
 
   constructor(private adminService: AdminService, private route: ActivatedRoute, private toaster: ToastrService) {
@@ -23,7 +23,7 @@ export class StudentAttendanceComponent {
     this.getStudentAttendanceFDetail();
   }
 
-  public getStudentAttendanceFDetail() {
+  public getStudentAttendanceFDetail(): void {
     const id = +this.route.snapshot.parent?.params['id'];
     if (id) {
       const sub = this.adminService.getStudentAttendanceDetail(id).subscribe({

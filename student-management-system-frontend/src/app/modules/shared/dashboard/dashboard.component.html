@@ -1,66 +1,76 @@
-<div class="container mt-5">
-    <div class="user-details mb-4 d-flex align-items-center">
-        <img src="assets/user.png" alt="User Image" class="user-image mr-3">
-        <div class="text-center w-100">
-            <p><strong>Name:</strong> {{ user.name }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Date of Birth:</strong> {{ user.dateOfBirth | date }}</p>
-            <p><strong>Date of Enrollment:</strong> {{ user.dateOfEnrollment | date }}</p>
+<div class="container overflow-auto">
+    <div class="container mt-5 overflow-auto">
+        <div class="user-details mb-4 d-flex align-items-center">
+            <img src="assets/user.png" alt="User Image" class="user-image mr-3">
+            <div class="text-center w-100">
+                <p><strong>Name:</strong> {{ user.name }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Date of Birth:</strong> {{ user.dateOfBirth | date }}</p>
+                <p><strong>Date of Enrollment:</strong> {{ user.dateOfEnrollment | date }}</p>
+                <ng-container *ngIf="userRole === teacherRole">
+                    <p><strong>Class:</strong> {{ getClassName(user.classId) }}</p>
+                    <p><strong>Subject:</strong> {{ getSubjectName(user.subjectId) }}</p>
+                </ng-container>
+                <ng-container *ngIf="userRole === studentRole">
+                    <p><strong>Roll Number:</strong> {{ user.rollNumber }}</p>
+                    <p><strong>Class:</strong> {{ getClassName(user.classId) }}</p>
+                </ng-container>
+            </div>
         </div>
     </div>
+
+    <ng-container *ngIf="userRole === adminRole">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="square text-center" [routerLink]="['../register']">
+                    <span class="square-text">Add Student and Teacher</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="square text-center" [routerLink]="['../teacher']">
+                    <span class="square-text">Teacher Management</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="square text-center" [routerLink]="['../student']">
+                    <span class="square-text">Student Management</span>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="userRole === teacherRole">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="square text-center" [routerLink]="['../register-student']">
+                    <span class="square-text">Add Student</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="square text-center" [routerLink]="['../attendance']">
+                    <span class="square-text">Attendance</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="square text-center" [routerLink]="['../gradebook']">
+                    <span class="square-text">Gradebook</span>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="userRole === studentRole">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="square text-center" [routerLink]="['../attendance']">
+                    <span class="square-text">Attendance</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="square text-center" [routerLink]="['../gradebook']">
+                    <span class="square-text">Gradebook</span>
+                </div>
+            </div>
+        </div>
+    </ng-container>
 </div>
-
-<ng-container *ngIf="userRole === adminRole">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="square text-center" [routerLink]="['../register']">
-                <span class="square-text">Add Student and Teacher</span>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="square text-center" [routerLink]="['../teacher']">
-                <span class="square-text">Teacher Management</span>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="square text-center" [routerLink]="['../student']">
-                <span class="square-text">Student Management</span>
-            </div>
-        </div>
-    </div>
-</ng-container>
-
-<ng-container *ngIf="userRole === teacherRole">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="square text-center" [routerLink]="['../register-student']">
-                <span class="square-text">Add Student</span>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="square text-center" [routerLink]="['../attendance']">
-                <span class="square-text">Attendance</span>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="square text-center" [routerLink]="['../gradebook']">
-                <span class="square-text">Gradebook</span>
-            </div>
-        </div>
-    </div>
-</ng-container>
-
-<ng-container *ngIf="userRole === studentRole">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="square text-center" [routerLink]="['../attendance']">
-                <span class="square-text">Attendance</span>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="square text-center" [routerLink]="['../gradebook']">
-                <span class="square-text">Gradebook</span>
-            </div>
-        </div>
-    </div>
-</ng-container>

@@ -20,7 +20,7 @@ namespace Repository.Interfaces
 
         Task<Users> GetUserByEmailAsync(string email);
 
-        Task<List<string>> GetStudentEmails(string searchEmail);
+        Task<List<string>> GetStudentEmails(string searchEmail,int classId);
 
     }
 }

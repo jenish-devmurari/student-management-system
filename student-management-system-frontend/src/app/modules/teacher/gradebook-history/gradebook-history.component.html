@@ -1,35 +1,40 @@
 <div class="container overflow-auto">
     <h2>Grade List</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Email</th>
-                <th>Date</th>
-                <th>Marks</th>
-                <th>Total Marks</th>
-                <th>Percentage</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let grade of gradesList | sortDate:'date':'desc'" routerLinkActive="active">
-                <td>{{ grade.email }}</td>
-                <td>{{ grade.date | date }}</td>
-                <td>{{ grade.marks }}</td>
-                <td>{{ grade.totalMarks }}</td>
-                <td>{{ calculatePercentage(grade.marks,grade.totalMarks)}}%</td>
-                <td>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateMarksModal"
-                        (click)="editGrade(grade)">Edit</button>
-                    <button class="btn btn-info" [routerLink]="['../student-detail',grade.userId]">View
-                        Details</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div *ngIf="gradesList.length > 0; else noData">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Marks</th>
+                    <th>Total Marks</th>
+                    <th>Percentage</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let grade of gradesList | sortDate:'date':'desc'" routerLinkActive="active">
+                    <td>{{ grade.email }}</td>
+                    <td>{{ grade.date | date }}</td>
+                    <td>{{ grade.marks }}</td>
+                    <td>{{ grade.totalMarks }}</td>
+                    <td>{{ calculatePercentage(grade.marks,grade.totalMarks)}}%</td>
+                    <td>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateMarksModal"
+                            (click)="editGrade(grade)">Edit</button>
+                        <button class="btn btn-info" [routerLink]="['../student-detail',grade.userId]">View
+                            Details</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ng-template #noData>
+        <div class="alert alert-info" role="alert">
+            No grade records available.
+        </div>
+    </ng-template>
 </div>
-
-
 
 <!-- Modal -->
 <div class="modal fade" id="updateMarksModal" tabindex="-1" aria-labelledby="updateMarksModalLabel" aria-hidden="true">

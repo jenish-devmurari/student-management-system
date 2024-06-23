@@ -2,7 +2,9 @@ import { Component, Input, OnDestroy, OnInit, numberAttribute } from '@angular/c
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import { Classes } from 'src/app/enums/classes.enum';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
+import { Subjects } from 'src/app/enums/subjects.enum';
 import { ITeacher } from 'src/app/interfaces/teacher.interface';
 import { AdminService } from 'src/app/services/admin.service';
 
@@ -41,6 +43,14 @@ export class TeacherDetailComponent implements OnInit, OnDestroy {
       }
     });
     this.subscription.push(sub);
+  }
+
+  getSubjectName(subjectId: number | undefined): string {
+    return subjectId ? Subjects[subjectId] : 'Unknown Subject';
+  }
+
+  getClassName(classId: number | undefined): string {
+    return classId ? Classes[classId] : 'Unknown Class';
   }
 
   ngOnDestroy(): void {

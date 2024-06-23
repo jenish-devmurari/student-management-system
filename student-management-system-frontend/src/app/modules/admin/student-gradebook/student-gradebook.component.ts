@@ -15,7 +15,7 @@ import { ValidationService } from 'src/app/services/validation.service';
 })
 export class StudentGradebookComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
-  public gradebooks!: IGradebook[];
+  public gradebooks: IGradebook[] = [] as IGradebook[];
   public marksForm!: FormGroup;
   public grade!: IGradebook;
   private subscription: Subscription[] = [] as Subscription[];

@@ -37,7 +37,7 @@ export class RegisterTeacherComponent implements OnInit, OnDestroy {
       subject: new FormControl(null, [Validators.required]),
       qualification: new FormControl(null, [Validators.required]),
       salary: new FormControl(null, [Validators.required, this.validation.positiveNumberValidator])
-    },);
+    }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
   }
 
   public onSubmit(): void {

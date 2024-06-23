@@ -28,7 +28,7 @@ const routes: Routes = [
             path: 'subject/:subjectId', component: SubjectMarksComponent, pathMatch: 'full'
           },
           {
-            path: '', redirectTo: 'subject/1', pathMatch: 'full'
+            path: '', redirectTo: 'subject/2', pathMatch: 'full'
           }
         ]
       }

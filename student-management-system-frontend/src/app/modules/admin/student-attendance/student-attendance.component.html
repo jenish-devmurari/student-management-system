@@ -1,27 +1,34 @@
 <div class="container mt-4">
     <h2>Attendance Records</h2>
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Class</th>
-                <th scope="col">Date</th>
-                <th scope="col">Status</th>
-                <th scope="col">Subject Name</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let attendance of attendances | sortDate:'date':'desc'">
-                <td>{{ attendance.name }}</td>
-                <td>{{ attendance.classId }}</td>
-                <td>{{ attendance.date | date }}</td>
-                <td>{{ attendance.isPresent ? 'Present' : 'Absent' }}</td>
-                <td>{{ attendance.subjectName }}</td>
-                <td>
-                    <button class="btn btn-primary btn-sm" (click)="editAttendance(attendance)">Edit</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div *ngIf="attendances.length > 0; else noData">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Class</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Subject Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let attendance of attendances | sortDate:'date':'desc'">
+                    <td>{{ attendance.name }}</td>
+                    <td>{{ attendance.classId }}</td>
+                    <td>{{ attendance.date | date }}</td>
+                    <td>{{ attendance.isPresent ? 'Present' : 'Absent' }}</td>
+                    <td>{{ attendance.subjectName }}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" (click)="editAttendance(attendance)">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ng-template #noData>
+        <div class="alert alert-info" role="alert">
+            No attendance records available.
+        </div>
+    </ng-template>
 </div>

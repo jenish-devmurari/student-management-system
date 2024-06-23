@@ -1,35 +1,42 @@
 <div class="container mt-4">
     <h2 class="text-center mb-3 mt-2">Teacher List</h2>
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Class ID</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr
-                *ngFor="let teacher of teachers | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
-                <td>{{ teacher.name }}</td>
-                <td>{{ teacher.email }}</td>
-                <td>{{ teacher.classId }}</td>
-                <td>
-                    <button class=" btn btn-primary m-2" (click)="editTeacher(teacher)" data-bs-toggle="modal"
-                        data-bs-target="#editTeacherModal">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <button class="btn btn-danger m-2" (click)="deleteTeacher(teacher)">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                    <button class="btn btn-info" [routerLink]="['../teacher-detail',teacher.id]">
-                        View Details
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div *ngIf="teachers.length > 0; else noData">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Class ID</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let teacher of teachers | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                    <td>{{ teacher.name }}</td>
+                    <td>{{ teacher.email }}</td>
+                    <td>{{ teacher.classId }}</td>
+                    <td>
+                        <button class=" btn btn-primary m-2" (click)="editTeacher(teacher)" data-bs-toggle="modal"
+                            data-bs-target="#editTeacherModal">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-danger m-2" (click)="deleteTeacher(teacher)">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        <button class="btn btn-info" [routerLink]="['../teacher-detail',teacher.id]">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ng-template #noData>
+        <div class="alert alert-info" role="alert">
+            No teacher available.
+        </div>
+    </ng-template>
     <div class="d-flex align-item-center justify-content-center">
         <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
     </div>
@@ -130,12 +137,10 @@
                                     class="text-danger">
                                     Date of enrollment cannot be in the future.
                                 </span>
-                                <span
-                                    *ngIf="teacherEditForm.get('dateOfEnrollment')?.hasError('dateOfBirthAfterEnrollment')"
-                                    class="text-danger">
-                                    Date of birth cannot be after date of enrollment.
-                                </span>
                             </div>
+                        </div>
+                        <div *ngIf="teacherEditForm?.hasError('dateOfBirthAfterEnrollment')" class="alert alert-danger">
+                            Date of birth cannot be after date of enrollment.
                         </div>
                         <div class="form-group row m-2">
                             <div class="col-6">

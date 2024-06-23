@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 })
 export class StudentListComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
-  public students !: IStudent[];
+  public students: IStudent[] = [] as IStudent[];
   public studentEditForm !: FormGroup
   private classId !: number;
   private selectedStudent: IStudent | undefined;
@@ -110,7 +110,7 @@ export class StudentListComponent implements OnInit, OnDestroy {
       rollNumber: new FormControl(null, [Validators.required, Validators.pattern('^[0-9]*$'), this.validation.positiveNumberValidator.bind(this)]),
       dateOfBirth: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator.bind(this)]),
       dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator, this.validation.dateOfBirthBeforeEnrollmentValidator()]),
-    });
+    }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
   }
 
   public onSubmit(): void {
@@ -163,7 +163,7 @@ export class StudentListComponent implements OnInit, OnDestroy {
   get classes(): string[] {
     return Object.keys(Classes).filter(key => isNaN(Number(key)));
   }
-  
+
   public onPageChange(page: number): void {
     this.currentPage = page;
   }

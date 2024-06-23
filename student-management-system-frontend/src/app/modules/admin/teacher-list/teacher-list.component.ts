@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 })
 export class TeacherListComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
-  public teachers !: ITeacher[];
+  public teachers: ITeacher[] = [] as ITeacher[];
   public selectedTeacher: ITeacher | undefined
   public teacherEditForm !: FormGroup
   private subscriptions: Subscription[] = [] as Subscription[];
@@ -65,7 +65,7 @@ export class TeacherListComponent implements OnInit, OnDestroy {
       qualification: new FormControl(null, [Validators.required]),
       dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator, this.validation.dateOfBirthBeforeEnrollmentValidator()]),
       salary: new FormControl(null, [Validators.required, this.validation.positiveNumberValidator])
-    });
+    }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
   }
 
   public editTeacher(teacher: ITeacher): void {

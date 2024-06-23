@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Classes } from 'src/app/enums/classes.enum';
 import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
 import { Roles } from 'src/app/enums/roles.enum';
+import { Subjects } from 'src/app/enums/subjects.enum';
 import { IUser } from 'src/app/interfaces/user.interface';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -37,5 +39,13 @@ export class DashboardComponent implements OnInit {
         this.toaster.error(err)
       }
     });
+  }
+
+  getSubjectName(subjectId: number | undefined): string {
+    return subjectId ? Subjects[subjectId] : 'Unknown Subject';
+  }
+
+  getClassName(classId: number | undefined): string {
+    return classId ? Classes[classId] : 'Unknown Class';
   }
 }

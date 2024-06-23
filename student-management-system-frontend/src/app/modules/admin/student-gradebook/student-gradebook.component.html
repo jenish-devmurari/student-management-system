@@ -1,34 +1,41 @@
 <div class="container mt-4">
     <h2>Grade Details</h2>
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Class</th>
-                <th scope="col">Date</th>
-                <th scope="col">Subject Name</th>
-                <th scope="col">Marks</th>
-                <th scope="col">Total Marks</th>
-                <th scope="col">Percentage</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let grade of gradebooks | sortDate:'date':'desc'">
-                <td>{{ grade.name }}</td>
-                <td>{{ grade.classId }}</td>
-                <td>{{ grade.date | date }}</td>
-                <td>{{ grade.subjectName }}</td>
-                <td>{{ grade.marks }}</td>
-                <td>{{ grade.totalMarks }}</td>
-                <td>{{ calculatePercentage(grade.marks, grade.totalMarks) | number:'1.2-2' }}%</td>
-                <td>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#updateMarksModal"
-                        (click)="editGrade(grade)">Edit</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div *ngIf="gradebooks.length > 0; else noData">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Class</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Subject Name</th>
+                    <th scope="col">Marks</th>
+                    <th scope="col">Total Marks</th>
+                    <th scope="col">Percentage</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let grade of gradebooks | sortDate:'date':'desc'">
+                    <td>{{ grade.name }}</td>
+                    <td>{{ grade.classId }}</td>
+                    <td>{{ grade.date | date }}</td>
+                    <td>{{ grade.subjectName }}</td>
+                    <td>{{ grade.marks }}</td>
+                    <td>{{ grade.totalMarks }}</td>
+                    <td>{{ calculatePercentage(grade.marks, grade.totalMarks) | number:'1.2-2' }}%</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#updateMarksModal"
+                            (click)="editGrade(grade)">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ng-template #noData>
+        <div class="alert alert-info" role="alert">
+            No grades records available.
+        </div>
+    </ng-template>
 </div>
 
 

@@ -7,7 +7,6 @@ export interface IAttendance {
     subjectName: string;
 }
 
-
 export interface IAttendanceRecord {
     studentId: number;
     isPresent: boolean;
