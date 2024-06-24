@@ -40,24 +40,6 @@ export class StudentListComponent implements OnInit, OnDestroy {
     this.initializeForm()
   }
 
-  public getAllStudentData(): void {
-    // get api
-    const getStudentSubscription = this.adminService.getAllStudent().subscribe({
-      next: (res) => {
-        if (res.status == HttpStatusCodes.Success) {
-          this.students = res.data;
-          this.totalItems = res.data.length;
-        } else {
-          this.toaster.error(res.message);
-        }
-      },
-      error: (err) => {
-        this.toaster.error(err);
-      }
-    });
-    this.subscriptions.push(getStudentSubscription);
-  }
-
   public editStudent(student: IStudent): void {
     this.studentEditForm.get('email')?.disable();
     this.selectedStudent = this.students.find(s => s.id === student.id)
@@ -101,16 +83,6 @@ export class StudentListComponent implements OnInit, OnDestroy {
         this.subscriptions.push(deleteStudentSubscription);
       }
     });
-  }
-
-  private initializeForm(): void {
-    this.studentEditForm = new FormGroup({
-      name: new FormControl(null, [Validators.required]),
-      email: new FormControl(null, [Validators.required, Validators.pattern(emailRegex)]),
-      rollNumber: new FormControl(null, [Validators.required, Validators.pattern('^[0-9]*$'), this.validation.positiveNumberValidator.bind(this)]),
-      dateOfBirth: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator.bind(this)]),
-      dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator, this.validation.dateOfBirthBeforeEnrollmentValidator()]),
-    }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
   }
 
   public onSubmit(): void {
@@ -166,6 +138,35 @@ export class StudentListComponent implements OnInit, OnDestroy {
 
   public onPageChange(page: number): void {
     this.currentPage = page;
+  }
+
+  private initializeForm(): void {
+    this.studentEditForm = new FormGroup({
+      name: new FormControl(null, [Validators.required]),
+      email: new FormControl(null, [Validators.required, Validators.pattern(emailRegex)]),
+      rollNumber: new FormControl(null, [Validators.required, Validators.pattern('^[0-9]*$'), this.validation.positiveNumberValidator.bind(this)]),
+      dateOfBirth: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator.bind(this)]),
+      dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator, this.validation.dateOfBirthBeforeEnrollmentValidator()]),
+    }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
+  }
+
+
+  private getAllStudentData(): void {
+    // get api
+    const getStudentSubscription = this.adminService.getAllStudent().subscribe({
+      next: (res) => {
+        if (res.status == HttpStatusCodes.Success) {
+          this.students = res.data;
+          this.totalItems = res.data.length;
+        } else {
+          this.toaster.error(res.message);
+        }
+      },
+      error: (err) => {
+        this.toaster.error(err);
+      }
+    });
+    this.subscriptions.push(getStudentSubscription);
   }
 
   ngOnDestroy(): void {

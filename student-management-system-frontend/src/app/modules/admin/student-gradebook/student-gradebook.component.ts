@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -28,25 +28,6 @@ export class StudentGradebookComponent implements OnInit, OnDestroy {
     this.getStudentGradeBookDetail();
   }
 
-  public getStudentGradeBookDetail(): void {
-    const id = +this.route.snapshot.parent?.params['id'];
-    if (id) {
-      const sub = this.adminService.getStudentGradeBookDetail(id).subscribe({
-        next: (res) => {
-          if (res.status == HttpStatusCodes.Success) {
-            this.gradebooks = res.data;
-          } else {
-            this.toaster.error(res.message)
-          }
-        },
-        error: (error) => {
-          this.toaster.error(error);
-        }
-      });
-      this.subscription.push(sub);
-    }
-  }
-
   public editGrade(gradebook: IGradebook): void {
     this.marksForm.get('studentName')?.disable();
     this.marksForm.get('subjectName')?.disable();
@@ -61,15 +42,6 @@ export class StudentGradebookComponent implements OnInit, OnDestroy {
 
   public calculatePercentage(marks: number, totalMarks: number): number {
     return (marks / totalMarks) * 100;
-  }
-
-  public initializeForm() {
-    this.marksForm = this.fb.group({
-      studentName: [null, Validators.required],
-      subjectName: [null, Validators.required],
-      marks: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]],
-      totalMarks: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]]
-    }, { validator: this.validation.marksTotalMarksValidator });
   }
 
   public onSubmit(): void {
@@ -109,6 +81,34 @@ export class StudentGradebookComponent implements OnInit, OnDestroy {
 
   public emailPattern(control: AbstractControl | null): boolean {
     return this.validation.isEmailPatternMatch(control);
+  }
+
+  private initializeForm(): void {
+    this.marksForm = this.fb.group({
+      studentName: [null, Validators.required],
+      subjectName: [null, Validators.required],
+      marks: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]],
+      totalMarks: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]]
+    }, { validator: this.validation.marksTotalMarksValidator });
+  }
+
+  private getStudentGradeBookDetail(): void {
+    const id = +this.route.snapshot.parent?.params['id'];
+    if (id) {
+      const sub = this.adminService.getStudentGradeBookDetail(id).subscribe({
+        next: (res) => {
+          if (res.status == HttpStatusCodes.Success) {
+            this.gradebooks = res.data;
+          } else {
+            this.toaster.error(res.message)
+          }
+        },
+        error: (error) => {
+          this.toaster.error(error);
+        }
+      });
+      this.subscription.push(sub);
+    }
   }
 
   ngOnDestroy(): void {

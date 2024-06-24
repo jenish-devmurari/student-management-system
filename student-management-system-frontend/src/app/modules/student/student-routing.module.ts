@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StudentComponent } from './student.component';
-import { HomeComponent } from '../shared/home/home.component';
+import { DashboardComponent } from '../shared/dashboard/dashboard.component';
 import { AttendanceComponent } from './attendance/attendance.component';
 import { GradebookComponent } from './gradebook/gradebook.component';
+import { StudentComponent } from './student.component';
 import { SubjectMarksComponent } from './subject-marks/subject-marks.component';
-import { DashboardComponent } from '../shared/dashboard/dashboard.component';
 
 
 const routes: Routes = [

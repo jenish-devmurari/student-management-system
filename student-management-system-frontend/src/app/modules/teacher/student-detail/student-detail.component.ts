@@ -25,7 +25,7 @@ export class StudentDetailComponent {
     this.getStudentGradesDetail()
   }
 
-  public getStudentFDetail(): void {
+  private getStudentFDetail(): void {
     const id = +this.route.snapshot.params['id']
     if (id) {
       const sub = this.teacherService.getStudentDetailById(id).subscribe({
@@ -44,7 +44,7 @@ export class StudentDetailComponent {
     }
   }
 
-  public getStudentGradesDetail(): void {
+  private getStudentGradesDetail(): void {
     const id = +this.route.snapshot.params['id']
     if (id) {
       const sub = this.teacherService.getStudentGradesDetailById(id).subscribe({

@@ -21,10 +21,10 @@ export class TeacherListComponent implements OnInit, OnDestroy {
   public teachers: ITeacher[] = [] as ITeacher[];
   public selectedTeacher: ITeacher | undefined
   public teacherEditForm !: FormGroup
-  private subscriptions: Subscription[] = [] as Subscription[];
   public currentPage = 1;
   public itemsPerPage = 10;
   public totalItems = 0;
+  private subscriptions: Subscription[] = [] as Subscription[];
 
   constructor(private adminService: AdminService, private toaster: ToastrService, private router: Router, private validation: ValidationService) {
   }
@@ -37,35 +37,6 @@ export class TeacherListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
     this.getAllTeacherData();
     this.initializeForm();
-  }
-
-  public getAllTeacherData(): void {
-    // get api
-    const getTeacherSubscription = this.adminService.getAllTeacher().subscribe({
-      next: (res) => {
-        if (res.status == HttpStatusCodes.Success) {
-          this.teachers = res.data;
-          this.totalItems = res.data.length;
-        } else {
-          this.toaster.error(res.message);
-        }
-      },
-      error: (err) => {
-        this.toaster.error(err);
-      }
-    });
-    this.subscriptions.push(getTeacherSubscription);
-  }
-
-  private initializeForm(): void {
-    this.teacherEditForm = new FormGroup({
-      name: new FormControl(null, [Validators.required]),
-      email: new FormControl(null, [Validators.required, Validators.pattern(emailRegex)]),
-      dateOfBirth: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator.bind(this)]),
-      qualification: new FormControl(null, [Validators.required]),
-      dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator, this.validation.dateOfBirthBeforeEnrollmentValidator()]),
-      salary: new FormControl(null, [Validators.required, this.validation.positiveNumberValidator])
-    }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
   }
 
   public editTeacher(teacher: ITeacher): void {
@@ -164,6 +135,35 @@ export class TeacherListComponent implements OnInit, OnDestroy {
 
   public onPageChange(page: number): void {
     this.currentPage = page;
+  }
+
+  private getAllTeacherData(): void {
+    // get api
+    const getTeacherSubscription = this.adminService.getAllTeacher().subscribe({
+      next: (res) => {
+        if (res.status == HttpStatusCodes.Success) {
+          this.teachers = res.data;
+          this.totalItems = res.data.length;
+        } else {
+          this.toaster.error(res.message);
+        }
+      },
+      error: (err) => {
+        this.toaster.error(err);
+      }
+    });
+    this.subscriptions.push(getTeacherSubscription);
+  }
+
+  private initializeForm(): void {
+    this.teacherEditForm = new FormGroup({
+      name: new FormControl(null, [Validators.required]),
+      email: new FormControl(null, [Validators.required, Validators.pattern(emailRegex)]),
+      dateOfBirth: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator.bind(this)]),
+      qualification: new FormControl(null, [Validators.required]),
+      dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator, this.validation.dateOfBirthBeforeEnrollmentValidator()]),
+      salary: new FormControl(null, [Validators.required, this.validation.positiveNumberValidator])
+    }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
   }
 
   ngOnDestroy(): void {

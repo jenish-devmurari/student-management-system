@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormControl, FormControlDirective, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'

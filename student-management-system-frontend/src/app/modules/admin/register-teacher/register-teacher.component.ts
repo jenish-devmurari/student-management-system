@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { emailRegex } from 'src/app/constants/constants';
@@ -25,19 +25,6 @@ export class RegisterTeacherComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeForm();
-  }
-
-  private initializeForm(): void {
-    this.teacherRegisterForm = new FormGroup({
-      name: new FormControl(null, [Validators.required]),
-      email: new FormControl(null, [Validators.required, Validators.pattern(emailRegex)]),
-      class: new FormControl(null, [Validators.required]),
-      dateOfBirth: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator]),
-      dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator, this.validation.dateOfBirthBeforeEnrollmentValidator()]),
-      subject: new FormControl(null, [Validators.required]),
-      qualification: new FormControl(null, [Validators.required]),
-      salary: new FormControl(null, [Validators.required, this.validation.positiveNumberValidator])
-    }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
   }
 
   public onSubmit(): void {
@@ -90,6 +77,19 @@ export class RegisterTeacherComponent implements OnInit, OnDestroy {
 
   get classes(): string[] {
     return Object.keys(Classes).filter(key => isNaN(Number(key)));
+  }
+
+  private initializeForm(): void {
+    this.teacherRegisterForm = new FormGroup({
+      name: new FormControl(null, [Validators.required]),
+      email: new FormControl(null, [Validators.required, Validators.pattern(emailRegex)]),
+      class: new FormControl(null, [Validators.required]),
+      dateOfBirth: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator]),
+      dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator, this.validation.dateOfBirthBeforeEnrollmentValidator()]),
+      subject: new FormControl(null, [Validators.required]),
+      qualification: new FormControl(null, [Validators.required]),
+      salary: new FormControl(null, [Validators.required, this.validation.positiveNumberValidator])
+    }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
   }
 
   ngOnDestroy(): void {

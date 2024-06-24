@@ -1,4 +1,3 @@
-import { HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -23,21 +22,6 @@ export class StudentAttendanceComponent {
     this.getStudentAttendanceFDetail();
   }
 
-  public getStudentAttendanceFDetail(): void {
-    const id = +this.route.snapshot.parent?.params['id'];
-    if (id) {
-      const sub = this.adminService.getStudentAttendanceDetail(id).subscribe({
-        next: (res) => {
-          this.attendances = res.data;
-        },
-        error: (error) => {
-          this.toaster.error(error);
-        }
-      });
-      this.subscription.push(sub);
-    }
-  }
-
   public editAttendance(attendance: IAttendance): void {
     attendance.isPresent = !attendance.isPresent
     const sub = this.adminService.updateAttendance(attendance).subscribe({
@@ -57,6 +41,21 @@ export class StudentAttendanceComponent {
       }
     })
     this.subscription.push(sub);
+  }
+
+  private getStudentAttendanceFDetail(): void {
+    const id = +this.route.snapshot.parent?.params['id'];
+    if (id) {
+      const sub = this.adminService.getStudentAttendanceDetail(id).subscribe({
+        next: (res) => {
+          this.attendances = res.data;
+        },
+        error: (error) => {
+          this.toaster.error(error);
+        }
+      });
+      this.subscription.push(sub);
+    }
   }
 
   ngOnDestroy(): void {

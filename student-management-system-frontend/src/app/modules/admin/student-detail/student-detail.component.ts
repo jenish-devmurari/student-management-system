@@ -12,7 +12,7 @@ import { AdminService } from 'src/app/services/admin.service';
 })
 export class StudentDetailComponent implements OnInit, OnDestroy {
   public student !: IStudent;
-  public subscription: Subscription[] = [] as Subscription[]
+  private subscription: Subscription[] = [] as Subscription[]
 
   constructor(private adminService: AdminService, private route: ActivatedRoute, private toaster: ToastrService) {
   }
@@ -21,7 +21,7 @@ export class StudentDetailComponent implements OnInit, OnDestroy {
     this.getStudentFDetail();
   }
 
-  public getStudentFDetail(): void {
+  private getStudentFDetail(): void {
     const id = +this.route.snapshot.params['id']
     if (id) {
       const sub = this.adminService.getStudentDetailById(id).subscribe({

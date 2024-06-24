@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TeacherComponent } from './teacher.component';
-import { HomeComponent } from '../shared/home/home.component';
-import { AttendanceComponent } from './attendance/attendance.component';
-import { RecordAttendanceComponent } from './record-attendance/record-attendance.component';
-import { AttendanceHistoryComponent } from './attendance-history/attendance-history.component';
-import { MonthlyAttendanceHistoryComponent } from './monthly-attendance-history/monthly-attendance-history.component';
-import { GradebookComponent } from './gradebook/gradebook.component';
-import { RecordMarksComponent } from './record-marks/record-marks.component';
-import { GradebookHistoryComponent } from './gradebook-history/gradebook-history.component';
-import { StudentDetailComponent } from './student-detail/student-detail.component';
-import { RegisterStudentComponent } from '../shared/register-student/register-student.component';
 import { DashboardComponent } from '../shared/dashboard/dashboard.component';
+import { RegisterStudentComponent } from '../shared/register-student/register-student.component';
+import { AttendanceHistoryComponent } from './attendance-history/attendance-history.component';
+import { AttendanceComponent } from './attendance/attendance.component';
+import { GradebookHistoryComponent } from './gradebook-history/gradebook-history.component';
+import { GradebookComponent } from './gradebook/gradebook.component';
+import { MonthlyAttendanceHistoryComponent } from './monthly-attendance-history/monthly-attendance-history.component';
+import { RecordAttendanceComponent } from './record-attendance/record-attendance.component';
+import { RecordMarksComponent } from './record-marks/record-marks.component';
+import { StudentDetailComponent } from './student-detail/student-detail.component';
+import { TeacherComponent } from './teacher.component';
 
 const routes: Routes = [
   {

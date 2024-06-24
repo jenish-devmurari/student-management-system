@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import flatpickr from 'flatpickr';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
@@ -13,7 +13,7 @@ import { TeacherService } from 'src/app/services/teacher.service';
   templateUrl: './monthly-attendance-history.component.html',
   styleUrls: ['./monthly-attendance-history.component.scss']
 })
-export class MonthlyAttendanceHistoryComponent {
+export class MonthlyAttendanceHistoryComponent implements AfterViewInit {
   public selectedDate: Date | null = null;
   public isDateSelected = false;
   public attendanceDetails: IAttendance[] = [] as IAttendance[];

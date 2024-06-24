@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
     this.getUserDetails()
   }
 
-  public getUserDetails() {
+  private getUserDetails() {
     this.authService.loggedInUserDetails().subscribe({
       next: (res) => {
         if (res.status === HttpStatusCodes.Success) {

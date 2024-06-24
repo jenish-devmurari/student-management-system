@@ -1,13 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
+import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
+import { IGradebook } from 'src/app/interfaces/gradebook.interface';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { ValidationService } from 'src/app/services/validation.service';
-import { ToastrService } from 'ngx-toastr';
-import { IGradebook } from 'src/app/interfaces/gradebook.interface';
-import { HttpStatusCodes } from 'src/app/enums/http-status-code.enum';
-import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-gradebook-history',
   templateUrl: './gradebook-history.component.html',
