@@ -37,6 +37,7 @@ namespace Service.Services
         {
             try
             {
+
                 Users user = await _userRepository.GetUsersAsync(login.Email);
 
                 if (user == null)

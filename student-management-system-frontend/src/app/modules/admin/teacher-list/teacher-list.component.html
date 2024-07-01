@@ -82,7 +82,7 @@
                             <div class="col-sm-6">
                                 <label for="qualification" class="col-form-label">Qualification</label>
                                 <div class="col-sm-10">
-                                    <select id="qualification" formControlName="qualification" class="form-control"
+                                    <select id="qualification" formControlName="qualification" class="form-select"
                                         [ngClass]="validationClass(teacherEditForm.get('qualification'))">
                                         <option value="" selected>Select Qualification</option>
                                         <option *ngFor="let qualification of qualifications" [value]="qualification">

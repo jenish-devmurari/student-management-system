@@ -36,7 +36,7 @@
                         <div class="form-group row m-2">
                             <div class="col-sm-6">
                                 <label for="class">Class</label>
-                                <select id="class" formControlName="class" class="form-control"
+                                <select id="class" formControlName="class" class="form-select"
                                     [ngClass]="validationClass(teacherRegisterForm.get('class'))">
                                     <option value="" selected>Select Class</option>
                                     <option *ngFor="let i of classes" [value]="i">{{ i }}</option>
@@ -48,7 +48,7 @@
                             <div class="col-sm-6">
                                 <label for="subject" class="col-form-label">Subject</label>
                                 <div class="col-sm-10">
-                                    <select id="subject" formControlName="subject" class="form-control"
+                                    <select id="subject" formControlName="subject" class="form-select"
                                         [ngClass]="validationClass(teacherRegisterForm.get('subject'))">
                                         <option value="" selected>Select Subject</option>
                                         <option *ngFor="let subject of subjects" [value]="subject">{{ subject }}
@@ -65,7 +65,7 @@
                             <div class="col-sm-6">
                                 <label for="qualification" class="col-form-label">Qualification</label>
                                 <div class="col-sm-10">
-                                    <select id="qualification" formControlName="qualification" class="form-control"
+                                    <select id="qualification" formControlName="qualification" class="form-select"
                                         [ngClass]="validationClass(teacherRegisterForm.get('qualification'))">
                                         <option value="" selected>Select Qualification</option>
                                         <option *ngFor="let qualification of qualifications" [value]="qualification">{{

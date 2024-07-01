@@ -18,7 +18,7 @@
                     <td>{{ grade.date | date }}</td>
                     <td>{{ grade.marks }}</td>
                     <td>{{ grade.totalMarks }}</td>
-                    <td>{{ calculatePercentage(grade.marks,grade.totalMarks)}}%</td>
+                    <td>{{ calculatePercentage(grade.marks,grade.totalMarks) | number:'1.2-2'}}%</td>
                     <td>
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateMarksModal"
                             (click)="editGrade(grade)">Edit</button>

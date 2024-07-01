@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { emailRegex } from 'src/app/constants/constants';
@@ -20,7 +21,7 @@ export class RegisterTeacherComponent implements OnInit, OnDestroy {
   public teacherRegisterForm !: FormGroup;
   private subscription: Subscription[] = [] as Subscription[];
 
-  constructor(private validation: ValidationService, private toaster: ToastrService, private adminService: AdminService) {
+  constructor(private validation: ValidationService, private toaster: ToastrService, private adminService: AdminService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -36,6 +37,8 @@ export class RegisterTeacherComponent implements OnInit, OnDestroy {
         next: (res) => {
           if (res.status === HttpStatusCodes.Created) {
             this.toaster.success("Teacher Register Successfully");
+            this.resetForm();
+            this.router.navigate(['admin', 'teacher']);
           }
           if (res.status === HttpStatusCodes.BadRequest) {
             this.toaster.error(res.message);
@@ -46,7 +49,6 @@ export class RegisterTeacherComponent implements OnInit, OnDestroy {
         }
       });
       this.subscription.push(sub);
-      this.resetForm();
     } else {
       Swal.fire("Please fill up all required field in form")
     }

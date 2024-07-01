@@ -17,7 +17,7 @@
                     <td>{{ attendance.isPresent ? 'Present' : 'Absent' }} </td>
                     <td>
                         <button class="btn btn-primary" (click)="onEdit(attendance)" [disabled]="!canEdit(attendance)">
-                            Edit
+                            {{attendance.isPresent ? 'Mark Absent' : 'Mark Present' }}
                         </button>
                     </td>
                 </tr>

@@ -20,7 +20,8 @@
                     <td>{{ attendance.isPresent ? 'Present' : 'Absent' }}</td>
                     <td>{{ attendance.subjectName }}</td>
                     <td>
-                        <button class="btn btn-primary btn-sm" (click)="editAttendance(attendance)">Edit</button>
+                        <button class="btn btn-primary btn-sm" (click)="editAttendance(attendance)">{{
+                            attendance.isPresent ? 'Mark Absent' : 'Mark Present' }} </button>
                     </td>
                 </tr>
             </tbody>

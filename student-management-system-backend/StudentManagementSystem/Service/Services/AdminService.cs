@@ -165,7 +165,7 @@ namespace Service.Services
 
                 await transaction.CommitAsync();
 
-               
+
                 await _emailService.SendEmailToStudentAsync(studentRegisterDTO);
 
                 return new ResponseDTO

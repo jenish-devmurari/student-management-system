@@ -36,7 +36,7 @@
                         <div class="form-group row m-2">
                             <div class="col-sm-6">
                                 <label for="class">Class</label>
-                                <select id="class" formControlName="class" class="form-control"
+                                <select id="class" formControlName="class" class="form-select"
                                     [ngClass]="validationClass(studentRegisterForm.get('class'))">
                                     <option value="" selected>Select Class</option>
                                     <option *ngFor="let i of classes" [value]="i">{{ i }}</option>

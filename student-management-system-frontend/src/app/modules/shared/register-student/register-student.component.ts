@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { emailRegex } from 'src/app/constants/constants';
@@ -26,7 +27,7 @@ export class RegisterStudentComponent implements OnInit, OnDestroy {
   public className !: string;
   private subscription: Subscription[] = [] as Subscription[];
 
-  constructor(private validation: ValidationService, private adminService: AdminService, private toaster: ToastrService, private authService: AuthService, private teacherService: TeacherService) {
+  constructor(private validation: ValidationService, private adminService: AdminService, private toaster: ToastrService, private authService: AuthService, private teacherService: TeacherService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -68,6 +69,8 @@ export class RegisterStudentComponent implements OnInit, OnDestroy {
           next: (res) => {
             if (res.status === HttpStatusCodes.Created) {
               this.toaster.success("Student Register Successfully");
+              this.resetForm();
+              this.router.navigate(['admin', 'student']);
             }
             if (res.status === HttpStatusCodes.BadRequest) {
               this.toaster.error(res.message);
@@ -78,7 +81,6 @@ export class RegisterStudentComponent implements OnInit, OnDestroy {
           }
         });
         this.subscription.push(sub);
-        this.resetForm();
       }
 
       if (this.role == Roles.Teacher) {
@@ -87,6 +89,7 @@ export class RegisterStudentComponent implements OnInit, OnDestroy {
           next: (res) => {
             if (res.status === HttpStatusCodes.Created) {
               this.toaster.success("Student Register Successfully");
+              this.resetForm();
             }
             if (res.status === HttpStatusCodes.BadRequest) {
               this.toaster.error(res.message);
@@ -97,7 +100,6 @@ export class RegisterStudentComponent implements OnInit, OnDestroy {
           }
         });
         this.subscription.push(sub);
-        this.resetForm();
         this.customizeForm();
       }
     } else {
