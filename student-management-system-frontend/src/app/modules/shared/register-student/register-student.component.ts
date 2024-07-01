@@ -54,7 +54,6 @@ export class RegisterStudentComponent implements OnInit, OnDestroy {
       name: new FormControl(null, [Validators.required]),
       email: new FormControl(null, [Validators.required, Validators.pattern(emailRegex)]),
       class: new FormControl(null, [Validators.required]),
-      rollNumber: new FormControl(null, [Validators.required, Validators.pattern('^[0-9]*$'), this.validation.positiveNumberValidator.bind(this)]),
       dateOfBirth: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator.bind(this)]),
       dateOfEnrollment: new FormControl(null, [Validators.required, this.validation.notFutureDateValidator]),
     }, { validators: this.validation.dateOfBirthBeforeEnrollmentValidator() });
@@ -90,6 +89,7 @@ export class RegisterStudentComponent implements OnInit, OnDestroy {
             if (res.status === HttpStatusCodes.Created) {
               this.toaster.success("Student Register Successfully");
               this.resetForm();
+              this.customizeForm();
             }
             if (res.status === HttpStatusCodes.BadRequest) {
               this.toaster.error(res.message);
@@ -100,7 +100,6 @@ export class RegisterStudentComponent implements OnInit, OnDestroy {
           }
         });
         this.subscription.push(sub);
-        this.customizeForm();
       }
     } else {
       alert("Please fill form field");

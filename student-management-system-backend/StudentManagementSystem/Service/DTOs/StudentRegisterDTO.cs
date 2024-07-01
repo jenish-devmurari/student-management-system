@@ -11,7 +11,5 @@ namespace Service.DTOs
     {
             public Classes Class { get; set; }
 
-            public int RollNumber { get; set; }
-
     }
 }

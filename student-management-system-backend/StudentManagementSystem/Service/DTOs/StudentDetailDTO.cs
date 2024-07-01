@@ -14,7 +14,7 @@ namespace Service.DTOs
         public int StudentId { get; set; }
 
         public Classes ClassId { get; set; }
-        public int RollNumber { get; set; }
+        public string RollNumber { get; set; }
 
         public bool IsActive { get; set; }
 

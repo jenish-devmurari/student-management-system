@@ -9,7 +9,7 @@ namespace Repository.Interfaces
 {
     public interface IStudentRepository
     {
-        Task<bool> IsRollNumberIsExist(int number);
+        Task<bool> IsRollNumberIsExist(string number);
 
         Task AddStudentAsync(Students student);
 
@@ -23,5 +23,7 @@ namespace Repository.Interfaces
         Task<List<Students>> GetAllStudentByTeacherClass(int classId);
 
         Task<Students> GetStudentDetailsByStudentIdAsync(int id);
+        Task<string> GetLatestRollNumber(int classId);
+        Task<Students> GetStudentDetailsByEmailAsync(string email);
     }
 }

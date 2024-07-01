@@ -10,7 +10,7 @@ namespace Service.DTOs
     public  class StudentUpdateDTO :BaseUpdateDTO
     {
         public Classes ClassId { get; set; }
-        public int RollNumber { get; set; }
+        public string RollNumber { get; set; }
 
     }
 }

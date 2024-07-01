@@ -149,12 +149,15 @@ namespace Service.Services
                 await _userRepository.AddUserAsync(user);
 
                 Users userDetail = await _userRepository.GetUsersAsync(studentRegisterDTO.Email);
+                int currentYear = DateTime.Now.Year;
+                int schoolCode = 1234;
+                string rollNumber = await GenerateUniqueRollNumber(schoolCode, currentYear, (int)studentRegisterDTO.Class);
 
                 Students student = new Students
                 {
                     UserId = userDetail.UserId,
                     ClassId = studentRegisterDTO.Class,
-                    RollNumber = studentRegisterDTO.RollNumber,
+                    RollNumber = rollNumber,
                     CreatedOn = DateTime.Now,
                     ModifiedOn = DateTime.Now,
                     CreatedBy = id,
@@ -728,7 +731,7 @@ namespace Service.Services
         #endregion
 
         #region update student details on grade page 
-        public async Task<ResponseDTO> UpdateStudentDetailByGradeId(StudentGradesDetailsDTO updateDetails,int userId)
+        public async Task<ResponseDTO> UpdateStudentDetailByGradeId(StudentGradesDetailsDTO updateDetails, int userId)
         {
             try
             {
@@ -777,6 +780,26 @@ namespace Service.Services
                     Message = $"An error occurred: {ex.Message}"
                 };
             }
+        }
+
+        #endregion
+
+        #region generate unique rollNumber of student
+        private async Task<string> GenerateUniqueRollNumber(int schoolCode,int year,int classId)
+        {
+            var latestRollNumber = await _studentRepository.GetLatestRollNumber(classId);
+
+            int sequenceNumber = 1;
+
+            if (latestRollNumber != null)
+            {
+                var parts = latestRollNumber.Substring(latestRollNumber.Length - 3);
+                sequenceNumber = int.Parse(parts) + 1;
+            }
+
+            string newRollNumber = $"{year}{schoolCode}{sequenceNumber:D3}";
+
+            return newRollNumber;
         }
 
         #endregion

@@ -21,7 +21,7 @@ namespace Repository.Modals
         public Classes ClassId { get; set; }
 
         [Required]
-        public int RollNumber { get; set; }
+        public string RollNumber { get; set; }
 
 
         [Column(TypeName = "date")]

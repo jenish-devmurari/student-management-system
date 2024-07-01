@@ -16,11 +16,12 @@ namespace Service.Services
         private readonly SmtpClient _smtpClient;
         private readonly IConfiguration _configuration;
         private readonly ISubjectRepository _subjectRepository;
-
-        public EmailService(IConfiguration configuration, ISubjectRepository subjectRepository)
+        private readonly IStudentRepository _studentRepository;
+        public EmailService(IConfiguration configuration, ISubjectRepository subjectRepository,IStudentRepository studentRepository)
         {
             _configuration = configuration;
             _subjectRepository = subjectRepository;
+            _studentRepository = studentRepository;
         }
         #endregion
 
@@ -36,6 +37,8 @@ namespace Service.Services
                 Credentials = new NetworkCredential(smtpSettings["Username"], smtpSettings["Password"]),
                 EnableSsl = true
             };
+
+            Students students = await _studentRepository.GetStudentDetailsByEmailAsync(student.Email);
 
             string htmlContent = $@"
                 <!DOCTYPE html>
@@ -100,6 +103,7 @@ namespace Service.Services
                             <p>We are pleased to inform you that your enrollment has been successfully processed. Below are the details of your admission:</p>
                             <p><strong>Student Name:</strong> {student.Name}</p>
                             <p><strong>Class:</strong> {student.Class}</p>
+                            <p><strong>RollNumber:</strong> {students.RollNumber}</p>
                             <p>We look forward to seeing you excel in your studies. If you have any questions, please feel free to contact us.</p>
                             <p>Below are your login details:</p>
                             <p><strong>Email:</strong> {student.Email}</p>

@@ -91,9 +91,6 @@ namespace Service.Services
             ResponseDTO classValidation = ValidateClass((int)studentRegisterDTO.Class);
             if (classValidation.Status != 200) return classValidation;
 
-            ResponseDTO rollNumberValidation = await ValidateRollNumberAsync(studentRegisterDTO.RollNumber);
-            if (rollNumberValidation.Status != 200) return rollNumberValidation;
-
             return new ResponseDTO { Status = 200 };
         }
 
@@ -208,28 +205,6 @@ namespace Service.Services
                 {
                     Status = 400,
                     Message = "Salary cannot be negative."
-                };
-            }
-            return new ResponseDTO { Status = 200 };
-        }
-
-        private async Task<ResponseDTO> ValidateRollNumberAsync(int rollNumber)
-        {
-            if (rollNumber <= 0)
-            {
-                return new ResponseDTO
-                {
-                    Status = 400,
-                    Message = "Roll number must be a positive value."
-                };
-            }
-
-            if (await _studentRepository.IsRollNumberIsExist(rollNumber))
-            {
-                return new ResponseDTO
-                {
-                    Status = 400,
-                    Message = "Roll number is already registered with a student."
                 };
             }
             return new ResponseDTO { Status = 200 };

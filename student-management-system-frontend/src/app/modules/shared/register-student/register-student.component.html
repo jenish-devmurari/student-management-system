@@ -45,18 +45,6 @@
                                     Class is
                                     required.</span>
                             </div>
-                            <div class="col-sm-6">
-                                <label for="rollNumber">Roll Number</label>
-                                <input id="rollNumber" formControlName="rollNumber" class="form-control"
-                                    [ngClass]="validationClass(studentRegisterForm.get('rollNumber'))">
-                                <span *ngIf="isFieldInvalid(studentRegisterForm.get('rollNumber'))" class="text-danger">
-                                    Roll Number is
-                                    required.</span>
-                                <span *ngIf="studentRegisterForm.get('rollNumber')?.hasError('negativeNumber')"
-                                    class="text-danger">
-                                    Roll number must be positive
-                                </span>
-                            </div>
                         </div>
                         <div class="form-group row m-2">
                             <div class="col-sm-6">

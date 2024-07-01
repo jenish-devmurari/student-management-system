@@ -24,7 +24,7 @@ namespace Repository.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> IsRollNumberIsExist(int number)
+        public async Task<bool> IsRollNumberIsExist(string number)
         {
             return await _context.Students.AnyAsync(s => s.RollNumber == number && s.Users.IsActive == true);
         }
@@ -61,6 +61,21 @@ namespace Repository.Repository
         public async Task<List<Students>> GetAllStudentByTeacherClass(int classId)
         {
             return await _context.Students.Include(u => u.Users).Where(t => (int)t.ClassId == classId && t.Users.IsActive == true).ToListAsync();
+        }
+        public async Task<string> GetLatestRollNumber(int classId)
+        {
+            return await _context.Students
+                                 .Where(s => (int)s.ClassId == classId && s.Users.IsActive)
+                                 .OrderByDescending(s => s.RollNumber)
+                                 .Select(s => s.RollNumber)
+                                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<Students> GetStudentDetailsByEmailAsync(string email)
+        {
+            return await _context.Students
+                                 .Include(s => s.Users)
+                                 .FirstOrDefaultAsync(s => s.Users.Email == email);
         }
 
     }
