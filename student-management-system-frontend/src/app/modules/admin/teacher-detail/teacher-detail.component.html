@@ -1,5 +1,5 @@
 <div class="container mt-5">
-    <div *ngIf="teacher" class="card mb-3 shadow-sm">
+    <div *ngIf="teacher;else noData" class="card mb-3 shadow-sm">
         <div class="row g-0">
             <div class="col-md-4">
                 <img src="assets/teacher-register.jpg" class="img-fluid rounded-start" alt="Teacher Image">
@@ -18,7 +18,9 @@
             </div>
         </div>
     </div>
-    <div *ngIf="!teacher" class="alert alert-info">
-        Loading teacher details...
-    </div>
+    <ng-template #noData>
+        <div class="alert alert-info" role="alert">
+            No teacher data found.
+        </div>
+    </ng-template>
 </div>

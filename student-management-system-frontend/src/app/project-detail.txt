@@ -2,8 +2,8 @@ details which i want to implement
 
 1.pagination whenever needed (tables list attendance history,grade history)
 2.i want to implement roll number of student at backend side automatic(like unique roll number instead of entered by teacher or admin)
-  example year wise generate 20241001 or mixup some unique like university enrollment that combination of year with college code 
-3.register form value reset after valid and go for post api instead of clear all value after getting error response
+  example year wise generate 20241001 or mixup some unique like university enrollment that combination of year with college code  -- completed
+3.register form value reset after valid and go for post api instead of clear all value after getting error response  -- completed
 4.more ui design so that will increase user experience
-5.navigation to student or teacher page after adding 
-6 route error (22222) no detail found for that student
+5.navigation to student or teacher page after adding  -- completed 
+6 route error (22222) no detail found for that student --completed

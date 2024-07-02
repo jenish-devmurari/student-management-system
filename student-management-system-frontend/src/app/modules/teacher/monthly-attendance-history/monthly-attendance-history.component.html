@@ -28,7 +28,7 @@
 
     <ng-template #noData>
         <div *ngIf="selectedDate == null" class="text-center text-danger">
-            <h2>Please Select date to get details of attendance </h2>
+            <h2>Please select date to get details of attendance </h2>
         </div>
         <div *ngIf="isDateSelected" class="text-center text-danger">
             <h2>No Attendance Details Found for {{ formattedSelectedDate | date }}</h2>

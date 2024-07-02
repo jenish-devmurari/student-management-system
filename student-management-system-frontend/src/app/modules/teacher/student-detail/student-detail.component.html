@@ -1,7 +1,14 @@
+<ng-container *ngIf="student;else noData">
+    <app-student-profile [student]="student"></app-student-profile>
+</ng-container>
 
-<app-student-profile [student]="student"></app-student-profile>
+<ng-template #noData>
+    <div class="alert alert-info" role="alert">
+        No student data found.
+    </div>
+</ng-template>
 
-<div class="container">
+<ng-container *ngIf="student">
     <h2>Grade Details</h2>
     <table class="table table-striped">
         <thead>
@@ -21,4 +28,4 @@
             </tr>
         </tbody>
     </table>
-</div>
+</ng-container>

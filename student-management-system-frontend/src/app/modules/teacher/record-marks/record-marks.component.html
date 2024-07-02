@@ -1,74 +1,87 @@
-<div class="container mt-5 overflow-auto">
-    <form [formGroup]="marksForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label for="email" class="form-label">Email:</label>
-            <input id="email" formControlName="email" class="form-control" (focus)="emailSuggestions = []" />
-            <ul *ngIf="emailSuggestions.length > 0" class="list-group">
-                <li *ngFor="let email of emailSuggestions" (click)="
-                  marksForm.get('email')?.setValue(email); emailSuggestions = []
-                " class="list-group-item list-group-item-action">
-                    {{ email }}
-                </li>
-            </ul>
-            <div *ngIf="noResultsFound" class="text-danger">
-                No results found for the given email.
-            </div>
-            <div *ngIf="
-              marksForm.get('email')?.invalid &&
-              marksForm.get('email')?.touched
-            " class="text-danger">
-                <span *ngIf="marksForm.get('email')?.errors?.['required']">Email is required.</span>
-                <span *ngIf="marksForm.get('email')?.errors?.['emailNotFromList']">Select an email from the list.</span>
-            </div>
-        </div>
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="col-md-6">
+        <form [formGroup]="marksForm" (ngSubmit)="onSubmit()">
+            <div class="card rounded shadow-lg">
+                <div class="mt-3 text-center">
+                    <h3>Add Marks</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email:</label>
+                        <input id="email" formControlName="email" class="form-control"
+                            (focus)="emailSuggestions = []" />
+                        <ul *ngIf="emailSuggestions.length > 0" class="list-group">
+                            <li *ngFor="let email of emailSuggestions" (click)="
+                              marksForm.get('email')?.setValue(email); emailSuggestions = []
+                            " class="list-group-item list-group-item-action">
+                                {{ email }}
+                            </li>
+                        </ul>
+                        <div *ngIf="noResultsFound" class="text-danger">
+                            No results found for the given email.
+                        </div>
+                        <div *ngIf="
+                          marksForm.get('email')?.invalid &&
+                          marksForm.get('email')?.touched
+                        " class="text-danger">
+                            <span *ngIf="marksForm.get('email')?.errors?.['required']">Email is required.</span>
+                            <span *ngIf="marksForm.get('email')?.errors?.['emailNotFromList']">Select an email from the
+                                list.</span>
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            <label for="subject">Subject</label>
-            <input id="subject" class="form-control" type="text" [value]="subjectName" readonly />
-        </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="subject">Subject</label>
+                            <input id="subject" class="form-control" type="text" [value]="subjectName" readonly />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="date">Exam Date</label>
+                            <input id="date" class="form-control" formControlName="date" type="date"
+                                [ngClass]="validationClass(marksForm.get('date'))" />
+                            <span *ngIf="isFieldInvalid(marksForm.get('date'))" class="text-danger">
+                                Date is required.
+                            </span>
+                            <span *ngIf="marksForm.get('date')?.errors?.['futureDate'] " class="text-danger">
+                                Date cannot be in the future.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="marks">Marks</label>
+                            <input id="marks" class="form-control" formControlName="marks" type="number"
+                                [ngClass]="validationClass(marksForm.get('marks'))" />
+                            <div *ngIf="isFieldInvalid(marksForm.get('marks'))" class="text-danger">
+                                Marks are required and must be a non-negative number.
+                            </div>
+                            <div *ngIf="marksForm.get('marks')?.errors?.['pattern'] && (marksForm.get('marks')?.dirty || marksForm.get('marks')?.touched)"
+                                class="text-danger">
+                                Marks must be an integer.
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="totalMarks">Total Marks</label>
+                            <input id="totalMarks" class="form-control" formControlName="totalMarks" type="number"
+                                [ngClass]="validationClass(marksForm.get('totalMarks'))" />
+                            <div *ngIf="isFieldInvalid(marksForm.get('totalMarks'))" class="text-danger">
+                                Total marks are required and must be a non-negative number.
+                            </div>
+                            <div *ngIf="marksForm.get('totalMarks')?.errors?.['pattern'] && (marksForm.get('totalMarks')?.dirty || marksForm.get('totalMarks')?.touched)"
+                                class="text-danger">
+                                Total marks must be an integer.
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            <label for="date">Exam Date</label>
-            <input id="date" class="form-control" formControlName="date" type="date"
-                [ngClass]="validationClass(marksForm.get('date'))" />
-            <span *ngIf="isFieldInvalid(marksForm.get('date'))" class="text-danger">
-                Date is required.
-            </span>
-            <span *ngIf="marksForm.get('date')?.errors?.['futureDate'] " class="text-danger">
-                Date cannot be in the future.
-            </span>
-        </div>
-
-        <div class="form-group">
-            <label for="marks">Marks</label>
-            <input id="marks" class="form-control" formControlName="marks" type="number"
-                [ngClass]="validationClass(marksForm.get('marks'))" />
-            <div *ngIf="isFieldInvalid(marksForm.get('marks'))" class="text-danger">
-                Marks are required and must be a non-negative number.
+                    <div *ngIf="marksForm.errors?.['invalidMarks']" class="alert alert-danger">
+                        Marks cannot be greater than Total Marks.
+                    </div>
+                </div>
+                <div class="mb-3 text-center">
+                    <button class="btn btn-dark mt-3" type="submit" [disabled]="marksForm.invalid">Add Marks</button>
+                </div>
             </div>
-            <div *ngIf="marksForm.get('marks')?.errors?.['pattern'] && (marksForm.get('marks')?.dirty || marksForm.get('marks')?.touched)"
-                class="text-danger">
-                Marks must be an integer.
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="totalMarks">Total Marks</label>
-            <input id="totalMarks" class="form-control" formControlName="totalMarks" type="number"
-                [ngClass]="validationClass(marksForm.get('totalMarks'))" />
-            <div *ngIf="isFieldInvalid(marksForm.get('totalMarks'))" class="text-danger">
-                Total marks are required and must be a non-negative number.
-            </div>
-            <div *ngIf="marksForm.get('totalMarks')?.errors?.['pattern'] && (marksForm.get('totalMarks')?.dirty || marksForm.get('totalMarks')?.touched)"
-                class="text-danger">
-                Total marks must be an integer.
-            </div>
-        </div>
-
-        <div *ngIf="marksForm.errors?.['invalidMarks']" class="alert alert-danger">
-            Marks cannot be greater than Total Marks.
-        </div>
-
-        <button class="btn btn-dark mt-3" type="submit" [disabled]="marksForm.invalid">Add Marks</button>
-    </form>
+        </form>
+    </div>
 </div>

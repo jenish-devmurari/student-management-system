@@ -1,13 +1,21 @@
-<app-student-profile [student]="student"></app-student-profile>
+<ng-container *ngIf="student;else noData">
+    <app-student-profile [student]="student"></app-student-profile>
+</ng-container>
 
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link" [routerLink]="['attendance']" routerLinkActive="active">Attendance</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" [routerLink]="['gradebook']" routerLinkActive="active">Gradebook</a>
-        </li>
-    </ul>
-    <div class="tab-content mt-3">
-        <router-outlet></router-outlet>
+<ng-template #noData>
+    <div class="alert alert-info" role="alert">
+        No student data found.
     </div>
+</ng-template>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" [routerLink]="['attendance']" routerLinkActive="active">Attendance</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" [routerLink]="['gradebook']" routerLinkActive="active">Gradebook</a>
+    </li>
+</ul>
+<div class="tab-content mt-3">
+    <router-outlet></router-outlet>
+</div>
